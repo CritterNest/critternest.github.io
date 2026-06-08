@@ -918,6 +918,39 @@ hr {
   margin-bottom: 10px;
 }
 
+/* ── TUTORIAL HIGHLIGHT ── */
+@keyframes tutorialPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(3, 168, 161, 0.7); }
+  70%  { box-shadow: 0 0 0 10px rgba(3, 168, 161, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(3, 168, 161, 0); }
+}
+
+.tutorial-highlight {
+  animation: tutorialPulse 1s ease-out infinite;
+  outline: 4px solid var(--teal);
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.tutorial-highlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 168, 161, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Quest track row layout */
+.quest-track-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9em;
+}
+
 /* ==============================================
    HOME PAGE
    ============================================== */
@@ -1110,16 +1143,19 @@ button:disabled {
 
 /* Back/forth navigation buttons */
 .back-forth-buttons {
-  display: flex;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+  margin: 20px 0;
 }
 
 .back-button {
-  flex: 1;
-  flex-wrap: nowrap;
+
 }
 
 .forth-button {
-  flex: 1;
+
+  
 }
 
 .center-button {
@@ -1236,76 +1272,6 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 .combo-card     { width: 80px; text-align: center; font-size: 0.75em; }
 .silhouette     { width: 80px; height: 80px; filter: brightness(0); opacity: 0.5; }
 
-
-
-/* ==============================================
-   LOCATION & MAP INTERFACE
-   ============================================== */
-
-.location-links {
-  
-}
-
-.hallway-links {
-  margin-top: -20px;
-}
-
-.location-links a {
-  color: var(--mid-text);
-  text-decoration: none;
-  font-size: 1.4em;
-  font-family: 'Lilita One', sans-serif;
-  background-color: var(--satyellow);
-  border-radius: 10px;
-  padding: 10px 5px 10px 5px;
-  border-bottom: none;
-  transition: all 0.3s ease;
-}
-
-.location-links a:hover {
-  color: var(--dark-text);
-  text-decoration: underline;
-}
-
-.location-links a:visited {
-  color: var(--teal);
-}
-
-.location-icon {
-  width: 60px;
-  height: auto;
-  transform: translateY(15px);
-  display: inline-block;
-  margin-left: -14px;
-  margin-right: -10px;
-}
-
-/* Map container */
-.map-container {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-}
-
-.map-container img {
-  display: block;
-  border: 8px dashed var(--coral);
-  border-radius: 10px;
-}
-
-area:hover {
-  cursor: pointer;
-}
-
-.map-container::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-}
-
-.map-highlight {
-  transition: opacity 0.2s;
-}
 
 /* ==============================================
    VET CLINIC
@@ -2739,44 +2705,33 @@ max-width: 600px;
   width: 100%;
 }
 
-/* All creatures grid */
-.all-eggs-panel {
+
+/* ==============================================
+   VIEW GRID (Adults, Babies, Eggs)
+   ============================================== */
+
+.view-grid-panel {
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   background-color: var(--paleyellow);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.all-eggs-panel h2 {
-  margin-top: 0;
+.view-grid-panel h2 {
+  margin: 0 0 16px 0;
   text-align: center;
   font-family: "Fontdiner Swanky", sans-serif;
   color: var(--mid-text);
-  margin-bottom: -20px;
 }
 
-.eggs-grid {
+.view-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-  max-height: 600px;
-  overflow-y: auto;
-  padding: 10px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 4px;
 }
 
-.adults-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 15px;
-  max-height: 600px;
-  overflow-y: auto;
-  padding: 40px;
-}
-
-.grid-egg-card {
-  text-align: center;
-  border-radius: 10px;
-  transition: all 0.3s;
+.view-grid-card {
   background: repeating-linear-gradient(
     45deg,
     #F8E6C8,
@@ -2784,93 +2739,65 @@ max-width: 600px;
     #F7CDAE 10px,
     #F7CDAE 20px
   );
-  position: relative;
-}
-
-.grid-egg-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.grid-egg-card a {
-  font-family: "Quicksand", sans-serif;
-  font-style: bold;
-  font-size: 24px;
-  background-color: #F8E6C8;
   border-radius: 10px;
+  text-align: center;
+  padding: 12px 8px;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+    position: relative;
 }
 
-.grid-egg-card img {
-  position: absolute;
-  top: -20px;
+.view-grid-card:hover,
+.view-grid-card:active {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-.grid-egg-card a:hover {
+.view-grid-card a {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+    position: absolute;
+  inset: 0;
+  z-index: 1;
+  text-indent: -9999px;
+}
+
+.view-grid-card a:hover {
   text-decoration: none;
 }
 
-/* Creature details panel */
-.egg-details-panel {
-  overflow-y: auto;
-  max-height: 600px;
-}
-
-.detail-header {
-  color: var(--teal);
-  font-size: 24px;
-  font-family: "Fontdiner Swanky", sans-serif;
-  text-align: center;
-  margin-bottom: 0px;
-  border-bottom: 4px solid var(--darkcoral);
-  padding-bottom: 0px;
-}
-
-.detail-header h2 {
-  margin: 0 0 5px 0;
-}
-
-.detail-avatar-container {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.detail-avatar {
-  border-radius: 50%;
-  border: 3px solid #333;
-  object-fit: cover;
-}
-
-.detail-type,
-.detail-hatch,
-.detail-generation,
-.detail-parents {
-  color: var(--dark-text);
+.view-grid-card .card-label {
   font-family: "Quicksand", sans-serif;
-  font-style: bold;
-  margin: 10px 0;
-  padding: 8px;
-  background-color: rgba(255, 166, 115, 0.7);
-  border-radius: 6px;
-  border: 2px solid var(--paleyellow);
-}
-
-.detail-view {
+  font-weight: bold;
+  font-size: 0.95em;
   color: var(--dark-text);
-  font-family: "Quicksand", sans-serif;
-  font-style: bold;
-  text-align: center;
-  padding: 4px;
-  background-color: rgba(255, 166, 115, 0.7);
-  border-radius: 6px;
-  border: 2px solid var(--paleyellow);
+  margin-top: 4px;
 }
 
-.no-selection {
+.view-grid-card .card-sublabel {
+  font-family: "Quicksand", sans-serif;
+  font-size: 0.8em;
+  color: var(--mid-text);
+}
+
+.view-grid-empty {
+  grid-column: 1 / -1;
   text-align: center;
-  padding: 50px 20px;
+  padding: 40px 20px;
   color: #999;
   font-style: italic;
+  font-family: "Quicksand", sans-serif;
+}
+
+.egg-placeholder {
+    position: absolute;
+    top: -80px;
 }
 
 
@@ -6061,9 +5988,11 @@ setup.processTensionAction = function(action, tensionData, fishBehavior) {
   };
 };
 
+
+
 // geolocation stuff
 
-// Haversine formula — returns distance in meters between two lat/lng points
+// Haversine formula
 setup.getDistance = function(lat1, lon1, lat2, lon2) {
     var R = 6371000; // Earth's radius in meters
     var φ1 = lat1 * Math.PI / 180;
@@ -6079,7 +6008,7 @@ setup.getDistance = function(lat1, lon1, lat2, lon2) {
 };
 
 // How many meters = 1 "step"
-setup.STEP_DISTANCE = 15;
+setup.STEP_DISTANCE = 20;
 
 // Start watching the player's position
 setup.startTracking = function() {
@@ -6169,6 +6098,111 @@ setup.HATCH_STEPS = {
     "Legendary": 350
 };
 
+// ── TUTORIAL HIGHLIGHT SYSTEM ──
+
+window.trackQuest = function(questId) {
+  var tq = State.variables.tutorialQuests;
+  if (!tq) return;
+  tq.tracked = (tq.tracked === questId) ? null : questId;
+  Engine.play('Home');
+};
+
+window.applyTutorialHighlight = function() {
+  // Clear all existing highlights first
+  $('.tutorial-highlight').removeClass('tutorial-highlight');
+
+  var tq = State.variables.tutorialQuests;
+  if (!tq || !tq.tracked) return;
+
+  var questId  = tq.tracked;
+  var quest    = tq.quests[questId];
+  var passage  = State.passage;
+
+  // Stop tracking if quest is complete
+  if (!quest || quest.complete) {
+    tq.tracked = null;
+    return;
+  }
+
+  // ── feedCreature & careCreature: highlight Quick Care on Home ──
+  if (questId === 'feedCreature' || questId === 'careCreature') {
+    if (passage === 'Home') {
+      $('#quick-care-section').addClass('tutorial-highlight');
+    } else {
+      $('#btn-locations').addClass('tutorial-highlight');
+    }
+    return;
+  }
+
+  // ── buyFood: multi-step ──
+  if (questId === 'buyFood') {
+    if (passage === 'Home' || passage === 'Locations' && !$('#loc-critter-center').length) {
+      $('#btn-locations').addClass('tutorial-highlight');
+    } else if (passage === 'Locations') {
+      $('#loc-critter-center').addClass('tutorial-highlight');
+    } else if (passage === 'Shop') {
+      // If not on Consumables tab, highlight the tab pill
+      if ($('.shop-list-card .shop-list-name').filter(function() {
+        return $(this).text().trim() === 'Creature Chow';
+      }).length === 0) {
+        $('#shop-tab-consumables').addClass('tutorial-highlight');
+      } else {
+        // Creature Chow is visible — highlight its card
+        var chowCard = $('.shop-list-card').filter(function() {
+          return $(this).find('.shop-list-name').text().trim() === 'Creature Chow';
+        });
+        chowCard.addClass('tutorial-highlight');
+      }
+    } else {
+      $('#btn-locations').addClass('tutorial-highlight');
+    }
+    return;
+  }
+
+  // ── breeding: map → Breeding Barn ──
+  if (questId === 'breeding') {
+    if (passage === 'Locations') {
+      $('#loc-breeding-barn').addClass('tutorial-highlight');
+    } else {
+      $('#btn-locations').addClass('tutorial-highlight');
+    }
+    return;
+  }
+
+  // ── fulfillRequest: map → Request Board ──
+  if (questId === 'fulfillRequest') {
+    if (passage === 'Locations') {
+      $('#loc-request-board').addClass('tutorial-highlight');
+    } else {
+      $('#btn-locations').addClass('tutorial-highlight');
+    }
+    return;
+  }
+};
+
+window.dismissTutorial = function() {
+  var tq = State.variables.tutorialQuests;
+  if (!tq) return;
+
+  var totalMoney = 0;
+  var totalXP = 0;
+
+  Object.values(tq.quests).forEach(function(q) {
+    console.log(q.label, 'complete:', q.complete, 'money:', q.money);
+    if (!q.complete) {
+      totalMoney += q.money;
+      totalXP += q.xp;
+    }
+  });
+
+  console.log('Total money to award:', totalMoney, '| Current $money:', State.variables.money);
+
+  State.variables.money += totalMoney;
+  State.variables.dismissXP = totalXP;
+  tq.dismissed = true;
+  tq.tracked = null;
+};
+
 // --- Tutorial: End Your First Day ---
 $(document).on(':passageend', function() {
     var tq = State.variables.tutorialQuests;
@@ -6183,69 +6217,13 @@ $(document).on(':passageend', function() {
             setup.showNextFarmDialog();
         }
     }
+      window.applyTutorialHighlight();
 });
+
+setup.DEBUG_GROWTH_SPEED = 3600000 / 86400000;
 
 /* ── Farm real-time notification poller ── */
 setup._farmPollInterval = null;
-
-setup.startFarmPoller = function () {
-    if (setup._farmPollInterval) return; // don't double-start
-    setup._farmPollInterval = setInterval(function () {
-        var plots = State.variables.farmPlots;
-        var season = State.variables.currentSeason;
-        if (!plots) return;
-
-        var now = Date.now();
-        var MS = 86400000;
-        var droughtLimit = (season === "Summer") ? MS : MS * 2;
-
-        plots.forEach(function (plot, i) {
-            if (plot.crop === null) return;
-
-            var msSinceWatered = now - plot.lastWatered;
-            var msGrowing      = now - plot.plantedDay;
-            var cropData       = setup.crops[plot.crop];
-
-            // --- Dying notification (within last 10% of drought window) ---
-            var dyingThreshold = droughtLimit * 0.9;
-            if (msSinceWatered >= dyingThreshold && !plot._dyingNotified) {
-                plot._dyingNotified = true;
-                setup._hatchQueue.push({
-                    _type: "farmDying",
-                    name: cropData.name + " (Plot " + (i + 1) + ")",
-                    message: "is dying of thirst! Water it soon or it will be lost."
-                });
-                setup.showNextFarmDialog();
-            }
-
-            // --- Reset dying flag if watered ---
-            if (msSinceWatered < dyingThreshold) {
-                plot._dyingNotified = false;
-            }
-
-            // --- Harvest-ready notification ---
-            var winterMod = (season === "Winter") ? 1.5 : 1;
-            var growthDurationMs = Math.ceil(cropData.growthDays * winterMod * MS);
-            var isReady = msGrowing >= growthDurationMs;
-
-            if (isReady && !plot._harvestNotified) {
-                plot._harvestNotified = true;
-                setup._hatchQueue.push({
-                    _type: "farmHarvest",
-                    name: cropData.name + " (Plot " + (i + 1) + ")",
-                    message: "is ready to harvest!"
-                });
-                setup.showNextFarmDialog();
-            }
-
-            // Reset harvest flag when plot is cleared
-            if (plot.crop === null) {
-                plot._harvestNotified = false;
-                plot._dyingNotified   = false;
-            }
-        });
-    }, 60000); // check every 60 seconds
-};
 
 /* Separate dialog shower for farm (mirrors your hatch pattern) */
 setup._farmDialogQueue = [];
@@ -6301,7 +6279,7 @@ setup.startFarmPoller = function () {
             }
 
             var winterMod        = (season === "Winter") ? 1.5 : 1;
-            var growthDurationMs = Math.ceil(cropData.growthDays * winterMod * MS);
+            var growthDurationMs = Math.ceil(cropData.growthDays * winterMod * MS * setup.DEBUG_GROWTH_SPEED);
             var isReady          = (now - plot.plantedDay) >= growthDurationMs;
 
             if (isReady && !plot._harvestNotified) {
@@ -6380,7 +6358,7 @@ setup.checkStepEvents = function() {
 
 $(document).ready(function() {
   $(document).on('click', '#btn-back', function() {
-    Engine.backward();
+    Engine.play(previous());
   });
 
   $(document).on('click', '#btn-save', function() {
@@ -6414,14 +6392,45 @@ window.goFreelancing = function() {
   }
 };
 
-// Interval constants in milliseconds
-setup.DRAIN_INTERVAL = 2 * 60 * 60 * 1000;
-setup.AGE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+// Interval constants
+setup.BABY_DURATION     = 4 * 60 * 60 * 1000;        // 4 hours
+setup.ADULT_DURATION    = { "Common": 5 * 24 * 60 * 60 * 1000, "Uncommon": 7 * 24 * 60 * 60 * 1000, "Rare": 9 * 24 * 60 * 60 * 1000 };
+setup.ELDER_GRACE       = { "Common": 3 * 24 * 60 * 60 * 1000, "Uncommon": 5 * 24 * 60 * 60 * 1000, "Rare": 7 * 24 * 60 * 60 * 1000 };
+setup.ELDER_RAMP        = 7 * 24 * 60 * 60 * 1000;   // 7 days ramp window
+setup.AGE_INTERVAL      = 24 * 60 * 60 * 1000;        // keep for any other references
+setup.DRAIN_INTERVAL    = 2 * 60 * 60 * 1000;
 setup.AFFECTION_INTERVAL = 300000;
 setup.REGEN_INTERVALS   = {
-    "Common":   2 * 60 * 60 * 1000, // 2 hours
-    "Uncommon": 4 * 60 * 60 * 1000, // 4 hours
-    "Rare":     8 * 60 * 60 * 1000  // 8 hours
+    "Common":   2 * 60 * 60 * 1000,
+    "Uncommon": 4 * 60 * 60 * 1000,
+    "Rare":     8 * 60 * 60 * 1000
+};
+
+// Returns a display string for a creature's age
+setup.getAgeDisplay = function(c) {
+    if (!c.bornAt) return "Unknown";
+    var elapsed = Date.now() - c.bornAt;
+    if (c.stage === "baby") {
+        var hours = Math.floor(elapsed / (60 * 60 * 1000));
+        return hours + (hours === 1 ? " hour" : " hours");
+    } else {
+        var days = Math.floor(elapsed / (24 * 60 * 60 * 1000));
+        return days + (days === 1 ? " day" : " days");
+    }
+};
+
+// Returns true if the elder creature should die this tick
+setup.checkCreatureDeath = function(c, rarity) {
+    if (!c.elderAt) return false;
+    var now = Date.now();
+    var grace = setup.ELDER_GRACE[rarity] || setup.ELDER_GRACE["Common"];
+    var timeSinceElder = now - c.elderAt;
+    if (timeSinceElder < grace) return false;  // still in grace period
+    var timeIntoRamp = timeSinceElder - grace;
+    if (timeIntoRamp >= setup.ELDER_RAMP) return true;  // past ramp, guaranteed death
+    // Linear ramp: 10% at start, 100% at end
+    var chance = 0.10 + 0.90 * (timeIntoRamp / setup.ELDER_RAMP);
+    return Math.random() < chance;
 };
 
 // run away check
@@ -6432,6 +6441,15 @@ window.checkCreatureEscape = function(creature) {
    
    
    return Math.random() < 0.05;
+};
+
+// collection menu record combo function
+
+setup.recordCombo = function(c) {
+    var key = c.name + "_" + c.displayTraits.color + "_" + c.displayTraits.pattern + "_" + c.displayTraits.size + "_" + c.gender;
+    if (!State.variables.discoveredCombos.includes(key)) {
+        State.variables.discoveredCombos.push(key);
+    }
 };
 
 setup.applyRealTimeTick = function() {
@@ -6447,11 +6465,11 @@ setup.applyRealTimeTick = function() {
 
         if (c.stage === "egg") continue;
 
-        // --- Hunger drain ---
+        // Hunger drain
         if (!c.lastHungerDrain) c.lastHungerDrain = now;
         var hungerIntervals = Math.floor((now - c.lastHungerDrain) / setup.DRAIN_INTERVAL);
         if (hungerIntervals > 0) {
-            var hungerDrain = rarity === "Common" ? 6 : rarity === "Uncommon" ? 5 : rarity === "Rare" ? 4 : 4; // CHANGED
+            var hungerDrain = rarity === "Common" ? 6 : rarity === "Uncommon" ? 5 : rarity === "Rare" ? 4 : 4;
             c.hungerCur = Math.max(-20, c.hungerCur - (hungerDrain * hungerIntervals));
             c.lastHungerDrain = now;
 
@@ -6514,30 +6532,34 @@ setup.applyRealTimeTick = function() {
             c.lastStaminaRegen = now;
         }
       
-      // --- Aging ---
+// --- Aging ---
 if (!c.immortal) {
-    if (!c.lastAgeDay) c.lastAgeDay = now;
-var ageIntervals = Math.floor((now - c.lastAgeDay) / setup.AGE_INTERVAL);
-if (ageIntervals > 0) {
-    c.age += ageIntervals;
-    c.lastAgeDay = now;
 
-    // Promote baby to adult at age 3
-    if (c.stage === "baby" && c.age >= 3) {
-        c.stage = "adult";
-        State.variables.notificationQueue.push({
-            icon: "🌟",
-            title: "Grew Up!",
-            message: name + " has grown into an adult!"
-        });
+    var now = Date.now();
+    var rarity = c.rarity || "Common";
+
+    // Ensure bornAt is set (should be set at hatch, this is a safety fallback)
+    if (!c.bornAt) c.bornAt = now;
+
+    // --- Baby -> Adult ---
+    if (c.stage === "baby") {
+        if ((now - c.bornAt) >= setup.BABY_DURATION) {
+            c.stage = "adult";
+            setup.recordCombo(c);
+            State.variables.notificationQueue.push({
+                icon: "🌟",
+                title: "Grew Up!",
+                message: name + " has grown into an adult!"
+            });
+        }
     }
 
-
-    // Promote adult to elder at max age
+    // --- Adult -> Elder ---
     if (c.stage === "adult") {
-        var elderAge = getMaxAge(rarity);
-        if (c.age >= elderAge) {
+        var adultDuration = setup.ADULT_DURATION[rarity] || setup.ADULT_DURATION["Common"];
+        if ((now - c.bornAt) >= adultDuration) {
             c.stage = "elder";
+            c.elderAt = now;
             State.variables.notificationQueue.push({
                 icon: "🌿",
                 title: "Became an Elder!",
@@ -6546,22 +6568,24 @@ if (ageIntervals > 0) {
         }
     }
 
-    // Check for death if elder
-    if (c.stage === "elder" && checkCreatureDeath(c)) {
-        var deadCreature = clone(c);
-        deadCreature.deathDay   = State.variables.currentDay;
-        deadCreature.deathCause = "old age";
-        State.variables.deadCreatures.push(deadCreature);
-        creatures.splice(i, 1);
-        i--;
-        State.variables.notificationQueue.push({
-            icon: "🕯️",
-            title: "A Creature Has Passed",
-            message: name + " has passed away peacefully at age " + deadCreature.age + ". They will be remembered."
-        });
-        continue;
+    // --- Elder death check ---
+    if (c.stage === "elder") {
+        if (!c.elderAt) c.elderAt = now; // safety fallback
+        if (setup.checkCreatureDeath(c, rarity)) {
+            var deadCreature = clone(c);
+            deadCreature.deathDay   = State.variables.currentDay;
+            deadCreature.deathCause = "old age";
+            State.variables.deadCreatures.push(deadCreature);
+            creatures.splice(i, 1);
+            i--;
+            State.variables.notificationQueue.push({
+                icon: "🕯️",
+                title: "A Creature Has Passed",
+                message: name + " has passed away peacefully. They will be remembered."
+            });
+            continue;
+        }
     }
-}
 }
 // --- Affection bonus ---
 if (c.hungerCur >= c.hungerMax && c.careCur >= c.careMax) {
@@ -6624,12 +6648,12 @@ setup.checkRankUp = function() {
 
     var ranks = [
         {
-            id: "rankOne", threshold: 200, next: "rankTwo",
+            id: "rankOne", threshold: 100, next: "rankTwo",
             unlocks: function() { v.maxFreelancingAttempts++; },
             unlocksText: "//+1 Freelancing Attempt a day//"
         },
         {
-            id: "rankTwo", threshold: 500, next: "rankThree",
+            id: "rankTwo", threshold: 200, next: "rankThree",
             unlocks: function() {
                 v.fishingrodUnlocked = true;
                 v.wormbaitUnlocked = true;
@@ -6638,7 +6662,7 @@ setup.checkRankUp = function() {
             unlocksText: "//Buy Fishing Rod, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankThree", threshold: 1000, next: "rankFour",
+            id: "rankThree", threshold: 350, next: "rankFour",
             unlocks: function() {
                 v.kitchenUnlocked = true;
                 v.lanternUnlocked = true;
@@ -6647,7 +6671,7 @@ setup.checkRankUp = function() {
             unlocksText: "//Purchase the Kitchen renovation from Real Estate, Buy the Lantern, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankFour", threshold: 1750, next: "rankFive",
+            id: "rankFour", threshold: 500, next: "rankFive",
             unlocks: function() {
                 v.farmUnlocked = true;
                 v.maxFreelancingAttempts++;
@@ -6847,6 +6871,7 @@ setup.claimLoginReward = function() {
             creature.lastStaminaRegen = Date.now();
             creature.lastAgeDay = Date.now();
             creature.wasHappy = false;
+            creature.lastAffectionBonus = Date.now();
             creature.genes = {
                 color: [possibleColors[Math.floor(Math.random() * possibleColors.length)], possibleColors[Math.floor(Math.random() * possibleColors.length)]],
                 pattern: [template.possiblePatterns[Math.floor(Math.random() * template.possiblePatterns.length)], template.possiblePatterns[Math.floor(Math.random() * template.possiblePatterns.length)]],
@@ -6930,7 +6955,10 @@ setup.showLoginRewardDialog = function() {
         &lt;div class=&quot;tutorial-teaser-buttons&quot;&gt;
           &lt;&lt;link &quot;View Quests&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.open = true&gt;&gt;&lt;&lt;/link&gt;&gt;
           &lt;span class=&quot;tutorial-divider&quot;&gt;|&lt;/span&gt;
-          &lt;&lt;link &quot;Dismiss&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.dismissed = true&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Dismiss&quot; &quot;Home&quot;&gt;&gt;
+  &lt;&lt;run window.dismissTutorial()&gt;&gt;
+  &lt;&lt;addXP $dismissXP&gt;&gt;
+&lt;&lt;/link&gt;&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;&lt;else&gt;&gt;
@@ -6939,7 +6967,10 @@ setup.showLoginRewardDialog = function() {
         &lt;div class=&quot;tutorial-header-buttons&quot;&gt;
           &lt;&lt;link &quot;Collapse&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.open = false&gt;&gt;&lt;&lt;/link&gt;&gt;
           &lt;span class=&quot;tutorial-divider&quot;&gt;|&lt;/span&gt;
-          &lt;&lt;link &quot;Dismiss Tutorial&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.dismissed = true&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Dismiss&quot; &quot;Home&quot;&gt;&gt;
+  &lt;&lt;run window.dismissTutorial()&gt;&gt;
+  &lt;&lt;addXP $dismissXP&gt;&gt;
+&lt;&lt;/link&gt;&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class=&quot;tutorial-quest-list&quot;&gt;
@@ -6965,7 +6996,14 @@ setup.showLoginRewardDialog = function() {
               &lt;&lt;if _quest.complete&gt;&gt;
                 &lt;div class=&quot;quest-claimed&quot;&gt;Complete!&lt;/div&gt;
               &lt;&lt;elseif _quest.accepted&gt;&gt;
-                &lt;div class=&quot;quest-in-progress&quot;&gt;&lt;i&gt;In progress...&lt;/i&gt;&lt;/div&gt;
+  &lt;div class=&quot;quest-track-row&quot;&gt;
+    &lt;i&gt;In progress...&lt;/i&gt;
+    &lt;&lt;if $tutorialQuests.tracked == _questId&gt;&gt;
+      &lt;&lt;link &quot;📍 Tracking&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.tracked = null&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;link &quot;🎯 Track&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.tracked = _questId&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;/div&gt;
               &lt;&lt;else&gt;&gt;
                 &lt;&lt;link &quot;Accept&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;set $tutorialQuests.quests[_questId].accepted = true&gt;&gt;&lt;&lt;/link&gt;&gt;
               &lt;&lt;/if&gt;&gt;
@@ -7022,7 +7060,7 @@ setup.showLoginRewardDialog = function() {
 &lt;&lt;/if&gt;&gt;
 
 /* ── QUICK CARE ── */
-&lt;div class=&quot;home-section&quot;&gt;
+&lt;div class=&quot;home-section&quot; id=&quot;quick-care-section&quot;&gt;
   &lt;p2&gt;&lt;strong&gt;Quick Care&lt;/strong&gt;&lt;/p2&gt;
 
   &lt;div class=&quot;care-container&quot;&gt;
@@ -7236,14 +7274,14 @@ setup.showLoginRewardDialog = function() {
 &lt;&lt;if _parent1Fertile &amp;&amp; _parent2Fertile&gt;&gt;
    /* Both fertile - best outcome */
    &lt;&lt;set _breedingSuccess to true&gt;&gt;
-   &lt;&lt;set _numEggs to random(1, 4)&gt;&gt;
+   &lt;&lt;set _numEggs to random(2, 4)&gt;&gt;
 &lt;&lt;elseif _parent1Fertile || _parent2Fertile&gt;&gt;
    /* One fertile - medium outcome */
-   &lt;&lt;set _breedingSuccess to random(1, 100) &lt;= 50&gt;&gt;
+   &lt;&lt;set _breedingSuccess to random(1, 100) &lt;= 25&gt;&gt;
    &lt;&lt;set _numEggs to _breedingSuccess ? random(1, 3) : 0&gt;&gt;
 &lt;&lt;else&gt;&gt;
    /* Neither fertile - worst outcome */
-   &lt;&lt;set _breedingSuccess to random(1, 100) &lt;= 60&gt;&gt;
+   &lt;&lt;set _breedingSuccess to random(1, 100) &lt;= 50&gt;&gt;
    &lt;&lt;set _numEggs to _breedingSuccess ? random(1, 2) : 0&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
@@ -7424,7 +7462,7 @@ setup.showLoginRewardDialog = function() {
         &lt;&lt;set _gender to _creature.gender.toLowerCase()&gt;&gt;
 
         &lt;&lt;if _creature.stage === &quot;egg&quot;&gt;&gt;
-          &lt;div class=&quot;egg-placeholder&quot; @style=&quot;&#39;font-size: &#39; + (_size === &#39;large&#39; ? &#39;180px&#39; : _size === &#39;medium&#39; ? &#39;120px&#39; : &#39;80px&#39;)&quot;&gt;🥚&lt;/div&gt;
+          &lt;div class=&quot;egg-placeholder&quot; @style=&quot;&#39;font-size: &#39; + (_size === &#39;large&#39; ? &#39;120px&#39; : _size === &#39;medium&#39; ? &#39;80px&#39; : &#39;60px&#39;)&quot;&gt;🥚&lt;/div&gt;
 
         &lt;&lt;elseif _creature.stage === &quot;baby&quot;&gt;&gt;
           &lt;&lt;set _template to setup.creatureTemplates[_creature.speciesName]&gt;&gt;
@@ -7489,7 +7527,7 @@ setup.showLoginRewardDialog = function() {
     &lt;&lt;/if&gt;&gt;
 
     &lt;div class=&quot;profile-badge profile-badge--age&quot;&gt;
-      _creature.age &lt;&lt;if _creature.age is 1&gt;&gt;day old&lt;&lt;else&gt;&gt;days old&lt;&lt;/if&gt;&gt; &lt;&lt;if _creature.immortal&gt;&gt;IMMORTAL&lt;&lt;/if&gt;&gt;
+      &lt;&lt;= setup.getAgeDisplay(_creature)&gt;&gt; &lt;&lt;if _creature.immortal&gt;&gt;IMMORTAL&lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
     
       &lt;/div&gt;
@@ -8056,90 +8094,42 @@ setup.showLoginRewardDialog = function() {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="ViewEggs" tags="" position="1000,0" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;&lt;if $teamSelectedIndex === undefined&gt;&gt;&lt;&lt;set $teamSelectedIndex = 0&gt;&gt;&lt;&lt;/if&gt;&gt;
-
-&lt;!-- Filter to get only eggs --&gt;
-&lt;&lt;set _eggs to $playerCreatures.filter(function(c) { 
-   return c.stage === &quot;egg&quot;; 
+&lt;&lt;set _eggs to $playerCreatures.filter(function(c) {
+  return c.stage === &quot;egg&quot;;
 })&gt;&gt;
 
-&lt;!-- Middle Panel: All Eggs Grid --&gt;
-&lt;div class=&quot;all-eggs-panel&quot;&gt;
+&lt;div class=&quot;view-grid-panel&quot;&gt;
   &lt;h2&gt;Eggs &lt;&lt;= setup.countEggs()&gt;&gt; / $maxEggSlots&lt;/h2&gt;
-  
-  &lt;div class=&quot;eggs-grid&quot;&gt;
-    &lt;&lt;for _i = 0; _i &lt; _eggs.length; _i++&gt;&gt;
-      &lt;&lt;capture _i&gt;&gt;
-        &lt;&lt;set _egg = _eggs[_i]&gt;&gt;
-        &lt;div class=&quot;grid-egg-card&quot;&gt;&lt;&lt;if $teamSelectedIndex === _i&gt;&gt;selected&lt;&lt;/if&gt;&gt;
-          &lt;div style=&quot;position: relative;&quot;&gt;
-            &lt;!-- Placeholder egg image until you have one --&gt;
-            &lt;&lt;link &quot;🥚&quot;&gt;&gt;
-              &lt;&lt;set $teamSelectedIndex = _i&gt;&gt;
-              &lt;&lt;goto &quot;ViewEggs&quot;&gt;&gt;
-            &lt;&lt;/link&gt;&gt;
+  &lt;div class=&quot;view-grid&quot;&gt;
+    &lt;&lt;if _eggs.length === 0&gt;&gt;
+      &lt;div class=&quot;view-grid-empty&quot;&gt;No eggs yet!&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;for _i = 0; _i &lt; _eggs.length; _i++&gt;&gt;
+        &lt;&lt;capture _i&gt;&gt;
+          &lt;&lt;set _egg = _eggs[_i]&gt;&gt;
+
+          &lt;div class=&quot;view-grid-card&quot;&gt;
+            &lt;&lt;capture _egg&gt;&gt;
+              &lt;&lt;link [[ViewCreature]]&gt;&gt;
+                &lt;&lt;set $currentCreature = $playerCreatures.indexOf(_egg)&gt;&gt;
+              &lt;&lt;/link&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+            &lt;div style=&quot;font-size: 3em; line-height: 1;&quot;&gt;🥚&lt;/div&gt;
+            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _egg.speciesName&gt;&gt; Egg&lt;/div&gt;
+            &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= Math.max(0, _egg.hatchSteps - $steps)&gt;&gt; steps left&lt;/div&gt;
           &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;&lt;/capture&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;/for&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;!-- Right Panel: Egg Details --&gt;
-&lt;div class=&quot;eggs-details-panel&quot; id=&quot;eggs-details&quot;&gt;
-  &lt;&lt;if $teamSelectedIndex &gt;= 0 &amp;&amp; _eggs[$teamSelectedIndex]&gt;&gt;
-    &lt;&lt;set _selectedEgg = _eggs[$teamSelectedIndex]&gt;&gt;
-    &lt;div class=&quot;detail-header&quot;&gt;
-      &lt;h2&gt;_selectedEgg.speciesName Egg&lt;/h2&gt;
-      &lt;div class=&quot;detail-level&quot;&gt;Sex: _selectedEgg.gender&lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-avatar-container&quot;&gt;
-      &lt;!-- Egg image placeholder --&gt;
-      &lt;p&gt;🥚&lt;/p&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Type:&lt;/strong&gt; _selectedEgg.type
-    &lt;/div&gt;
-    
-&lt;div class=&quot;detail-hatch&quot;&gt;
-  &lt;strong&gt;Hatches in:&lt;/strong&gt; &lt;&lt;print Math.max(0, _selectedEgg.hatchSteps - $steps)&gt;&gt; steps
-&lt;/div&gt;
-    
-    &lt;div class=&quot;detail-generation&quot;&gt;
-      &lt;strong&gt;Generation:&lt;/strong&gt; _selectedEgg.generation
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-parents&quot;&gt;
-&lt;&lt;set _mother to $playerCreatures.find(c =&gt; c.id === _selectedEgg.parents.motherId)&gt;&gt;
-      &lt;&lt;if !_mother&gt;&gt;
-        &lt;&lt;set _mother to $deadCreatures.find(c =&gt; c.id === _selectedEgg.parents.motherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _father to $playerCreatures.find(c =&gt; c.id === _selectedEgg.parents.fatherId)&gt;&gt;
-      &lt;&lt;if !_father&gt;&gt;
-        &lt;&lt;set _father to $deadCreatures.find(c =&gt; c.id === _selectedEgg.parents.fatherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _motherDisplay to _mother ? (_mother.petName || _mother.name) : _selectedEgg.parents.motherName&gt;&gt;
-      &lt;&lt;set _fatherDisplay to _father ? (_father.petName || _father.name) : _selectedEgg.parents.fatherName&gt;&gt;
-      &lt;strong&gt;Parents:&lt;/strong&gt; &lt;&lt;= _motherDisplay&gt;&gt; × &lt;&lt;= _fatherDisplay&gt;&gt;
-&lt;/div&gt;
-  &lt;&lt;else&gt;&gt;
-    &lt;div class=&quot;no-selection&quot;&gt;
-      &lt;p&gt;Click on an egg to view details&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
-
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
-&lt;div class=&quot;back-button&quot;&gt;
-&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
+  &lt;div class=&quot;back-button&quot;&gt;
+    &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
   &lt;div class=&quot;forth-button&quot;&gt;
-  &lt;&lt;link &quot;Buy Slots&quot; &quot;ShopEggSlots&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;link &quot;Buy Slots&quot; &quot;RealEstate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Shop" tags="" position="150,600" size="100,100">&lt;&lt;nobr&gt;&gt;
@@ -8161,7 +8151,7 @@ setup.showLoginRewardDialog = function() {
 &lt;div class=&quot;shop-categories-scroll&quot;&gt;
   &lt;&lt;link &quot;All&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;All&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;&lt;link &quot;Creatures&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Consumables&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Consumables&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;span id=&quot;shop-tab-consumables&quot;&gt;&lt;&lt;link &quot;Consumables&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Consumables&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
   &lt;&lt;link &quot;Ingredients&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Ingredients&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;&lt;link &quot;Seeds&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Seeds&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;&lt;link &quot;Items&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Items&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
@@ -8442,7 +8432,8 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set _purchasedCreature.geneticTestingDone to false&gt;&gt;
 &lt;&lt;set _purchasedCreature.stage to &quot;adult&quot;&gt;&gt;
-&lt;&lt;set _purchasedCreature.age to random(5, 20)&gt;&gt;
+&lt;&lt;run _purchasedCreature.bornAt = Date.now() - (random(1, 3) * 24 * 60 * 60 * 1000)&gt;&gt;
+&lt;&lt;set _purchasedCreature.elderAt to null&gt;&gt;
 &lt;&lt;set _purchasedCreature.hadSurgery to false&gt;&gt;
 &lt;&lt;set _purchasedCreature.generation to 1&gt;&gt;
 &lt;&lt;set _purchasedCreature.fedCount to 0&gt;&gt;
@@ -8453,9 +8444,9 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;run _purchasedCreature.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastStaminaRegen = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.wasHappy = false&gt;&gt;
-&lt;&lt;run _purchasedCreature.lastAgeDay = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.immortal = false&gt;&gt;
 &lt;&lt;run $playerCreatures.push(_purchasedCreature)&gt;&gt;
+&lt;&lt;run setup.recordCombo(_purchasedCreature)&gt;&gt;
             &lt;&lt;set $purchaseSuccess = $selectedItem.name + &quot; has joined your corral!&quot;&gt;&gt;
             
             &lt;&lt;if $playerCreatures.length &gt;= 5&gt;&gt;&lt;&lt;run unlockAchievement(&quot;fiveCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
@@ -8956,335 +8947,122 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="15" name="ViewBabies" tags="" position="1100,0" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;&lt;if $babySelectedIndex === undefined&gt;&gt;&lt;&lt;set $babySelectedIndex = 0&gt;&gt;&lt;&lt;/if&gt;&gt;
-
-&lt;!-- Filter to get only babies --&gt;
-&lt;&lt;set _babies to $playerCreatures.filter(function(c) { 
-   return c.stage === &quot;baby&quot;; 
+&lt;&lt;set _babies to $playerCreatures.filter(function(c) {
+  return c.stage === &quot;baby&quot;;
 })&gt;&gt;
 
-&lt;!-- Middle Panel: All Babies Grid --&gt;
-&lt;div class=&quot;all-eggs-panel&quot;&gt;
+&lt;div class=&quot;view-grid-panel&quot;&gt;
   &lt;h2&gt;Babies&lt;/h2&gt;
-  &lt;div class=&quot;eggs-grid&quot;&gt;
-    &lt;&lt;for _i = 0; _i &lt; _babies.length; _i++&gt;&gt;
-      &lt;&lt;capture _i&gt;&gt;
-        &lt;&lt;set _baby = _babies[_i]&gt;&gt;
-        &lt;&lt;set _template to setup.creatureTemplates[_baby.name]&gt;&gt;
-        &lt;&lt;set _gender to _baby.gender.toLowerCase()&gt;&gt;
-        
-        &lt;div class=&quot;grid-egg-card&quot;&gt;&lt;&lt;if $babySelectedIndex === _i&gt;&gt; selected&lt;&lt;/if&gt;&gt;
-          &lt;div style=&quot;position: relative;&quot;&gt;
-            &lt;!-- Baby sprite display --&gt;
-&lt;&lt;set _template to setup.creatureTemplates[_baby.speciesName]&gt;&gt;
-      &lt;&lt;set _gender to _baby.gender.toLowerCase()&gt;&gt;
-      &lt;&lt;set _size to _baby.displayTraits.size&gt;&gt;
-      &lt;&lt;set _color to _baby.displayTraits.color&gt;&gt;
-      &lt;&lt;if _template.babySpriteColumns[_color] !== undefined&gt;&gt;
-  &lt;&lt;set _col to _template.babySpriteColumns[_color]&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  &lt;!-- Use the first color in colorDominance as default --&gt;
-  &lt;&lt;set _defaultColor to _template.colorDominance[0]&gt;&gt;
-  &lt;&lt;set _col to _template.babySpriteColumns[_defaultColor]&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _babySpriteSheet to _template.avatars[_gender].babySpriteSheets[_size]&gt;&gt;
-      
-      &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-        &lt;&lt;set _xPos to _col * -180&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;180px&quot;&gt;&gt;
-      &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-        &lt;&lt;set _xPos to _col * -120&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;120px&quot;&gt;&gt;
-      &lt;&lt;else&gt;&gt;
-        &lt;&lt;set _xPos to _col * -60&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;60px&quot;&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-        &lt;div class=&quot;creature-sprite-pattern&quot; 
-             @style=&quot;&#39;background-image: url(&#39; + _babySpriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-              &lt;div class=&quot;center-link&quot;&gt;&lt;&lt;link &quot;View Baby&quot;&gt;&gt;
-              &lt;&lt;set $babySelectedIndex = _i&gt;&gt;
-              &lt;&lt;goto &quot;ViewBabies&quot;&gt;&gt;
-           &lt;&lt;/link&gt;&gt;
-           &lt;/div&gt;
+  &lt;div class=&quot;view-grid&quot;&gt;
+    &lt;&lt;if _babies.length === 0&gt;&gt;
+      &lt;div class=&quot;view-grid-empty&quot;&gt;No babies yet!&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;for _i = 0; _i &lt; _babies.length; _i++&gt;&gt;
+        &lt;&lt;capture _i&gt;&gt;
+          &lt;&lt;set _baby = _babies[_i]&gt;&gt;
+          &lt;&lt;set _template to setup.creatureTemplates[_baby.speciesName]&gt;&gt;
+          &lt;&lt;set _gender to _baby.gender.toLowerCase()&gt;&gt;
+          &lt;&lt;set _size to _baby.displayTraits.size&gt;&gt;
+          &lt;&lt;set _color to _baby.displayTraits.color&gt;&gt;
+
+          &lt;&lt;if _template.babySpriteColumns[_color] !== undefined&gt;&gt;
+            &lt;&lt;set _col to _template.babySpriteColumns[_color]&gt;&gt;
+          &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _col to _template.babySpriteColumns[_template.colorDominance[0]]&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+
+          &lt;&lt;set _babySpriteSheet to _template.avatars[_gender].babySpriteSheets[_size]&gt;&gt;
+
+          &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+            &lt;&lt;set _xPos to _col * -180&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;180px&quot;&gt;&gt;
+          &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+            &lt;&lt;set _xPos to _col * -120&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;120px&quot;&gt;&gt;
+          &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _xPos to _col * -60&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;60px&quot;&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+
+          &lt;div class=&quot;view-grid-card&quot;&gt;
+            &lt;&lt;capture _baby&gt;&gt;
+              &lt;&lt;link [[ViewCreature]]&gt;&gt;
+                &lt;&lt;set $currentCreature = $playerCreatures.indexOf(_baby)&gt;&gt;
+              &lt;&lt;/link&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+            &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
+              &lt;div class=&quot;creature-sprite-pattern&quot;
+                   @style=&quot;&#39;background-image: url(&#39; + _babySpriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _baby.speciesName&gt;&gt;&lt;&lt;if _baby.gender === &quot;Male&quot;&gt;&gt; ♂&lt;&lt;else&gt;&gt; ♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
+            &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= _baby.displayTraits.color&gt;&gt; · &lt;&lt;= _baby.displayTraits.size&gt;&gt;&lt;/div&gt;
           &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;&lt;/capture&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;/for&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;!-- Right Panel: Baby Details --&gt;
-&lt;div class=&quot;eggs-details-panel&quot; id=&quot;eggs-details&quot;&gt;
-  &lt;&lt;if $babySelectedIndex &gt;= 0 &amp;&amp; _babies[$babySelectedIndex]&gt;&gt;
-    &lt;&lt;set _selectedBaby = _babies[$babySelectedIndex]&gt;&gt;
-    &lt;div class=&quot;detail-header&quot;&gt;
-      &lt;h2&gt;_selectedBaby.speciesName&lt;/h2&gt;
-      &lt;div class=&quot;detail-level&quot;&gt;&lt;&lt;if _selectedBaby.gender === &quot;Male&quot;&gt;&gt;♂&lt;&lt;else&gt;&gt;♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-avatar-container&quot;&gt;
-      &lt;!-- Baby sprite display --&gt;
-      &lt;&lt;set _template to setup.creatureTemplates[_selectedBaby.speciesName]&gt;&gt;
-      &lt;&lt;set _gender to _baby.gender.toLowerCase()&gt;&gt;
-      &lt;&lt;set _size to _selectedBaby.displayTraits.size&gt;&gt;
-      &lt;&lt;set _color to _selectedBaby.displayTraits.color&gt;&gt;
-      &lt;&lt;if _template.babySpriteColumns[_color] !== undefined&gt;&gt;
-  &lt;&lt;set _col to _template.babySpriteColumns[_color]&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  &lt;!-- Use the first color in colorDominance as default --&gt;
-  &lt;&lt;set _defaultColor to _template.colorDominance[0]&gt;&gt;
-  &lt;&lt;set _col to _template.babySpriteColumns[_defaultColor]&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _babySpriteSheet to _template.avatars[_gender].babySpriteSheets[_size]&gt;&gt;
-      
-      &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-        &lt;&lt;set _xPos to _col * -180&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;180px&quot;&gt;&gt;
-      &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-        &lt;&lt;set _xPos to _col * -120&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;120px&quot;&gt;&gt;
-      &lt;&lt;else&gt;&gt;
-        &lt;&lt;set _xPos to _col * -60&gt;&gt;
-        &lt;&lt;set _dimensions to &quot;60px&quot;&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-        &lt;div class=&quot;creature-sprite-pattern&quot; 
-             @style=&quot;&#39;background-image: url(&#39; + _babySpriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Type:&lt;/strong&gt; _selectedBaby.type
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Age:&lt;/strong&gt; _selectedBaby.age days old
-    &lt;/div&gt;
-    
-&lt;div class=&quot;detail-type&quot;&gt;
-  &lt;strong&gt;Becomes Adult in:&lt;/strong&gt;
-  &lt;&lt;set _msUntilAdult to ((5 - _selectedBaby.age) * 24 * 60 * 60 * 1000) - (Date.now() - _selectedBaby.lastAgeDay)&gt;&gt;
-  &lt;&lt;set _msUntilAdult to Math.max(0, _msUntilAdult)&gt;&gt;
-  &lt;&lt;set _daysLeft to Math.floor(_msUntilAdult / (1000 * 60 * 60 * 24))&gt;&gt;
-  &lt;&lt;set _hoursLeft to Math.floor((_msUntilAdult % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))&gt;&gt;
-  &lt;&lt;set _minutesLeft to Math.floor((_msUntilAdult % (1000 * 60 * 60)) / (1000 * 60))&gt;&gt;
-  &lt;&lt;if _daysLeft &gt; 0&gt;&gt;
-    _daysLeft days, _hoursLeft hours
-  &lt;&lt;else&gt;&gt;
-    _hoursLeft hours, _minutesLeft minutes
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
-    
-    &lt;div class=&quot;detail-generation&quot;&gt;
-      &lt;strong&gt;Generation:&lt;/strong&gt; _selectedBaby.generation
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-&lt;&lt;set _mother to $playerCreatures.find(c =&gt; c.id === _selectedBaby.parents.motherId)&gt;&gt;
-      &lt;&lt;if !_mother&gt;&gt;
-        &lt;&lt;set _mother to $deadCreatures.find(c =&gt; c.id === _selectedBaby.parents.motherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _father to $playerCreatures.find(c =&gt; c.id === _selectedBaby.parents.fatherId)&gt;&gt;
-      &lt;&lt;if !_father&gt;&gt;
-        &lt;&lt;set _father to $deadCreatures.find(c =&gt; c.id === _selectedBaby.parents.fatherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _motherDisplay to _mother ? (_mother.petName || _mother.name) : _selectedBaby.parents.motherName&gt;&gt;
-      &lt;&lt;set _fatherDisplay to _father ? (_father.petName || _father.name) : _selectedBaby.parents.fatherName&gt;&gt;
-      &lt;strong&gt;Parents:&lt;/strong&gt; &lt;&lt;= _motherDisplay&gt;&gt; × &lt;&lt;= _fatherDisplay&gt;&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Traits:&lt;/strong&gt;&lt;br&gt;
-      Color: _selectedBaby.displayTraits.color&lt;br&gt;
-      Pattern: _selectedBaby.displayTraits.pattern&lt;br&gt;
-      Size: _selectedBaby.displayTraits.size
-    &lt;/div&gt;
-  &lt;&lt;else&gt;&gt;
-    &lt;div class=&quot;no-selection&quot;&gt;
-      &lt;p&gt;Click on a baby to view details&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
-
-&lt;div style=&quot;margin-top: 30px;&quot;&gt;
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
-&lt;div class=&quot;back-button&quot;&gt;
-&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;div class=&quot;forth-button&quot;&gt;
-  &lt;&lt;link &quot;View Profile&quot; &quot;ViewCreature&quot;&gt;&gt;
-  &lt;&lt;set $currentCreature = $playerCreatures.indexOf(_selectedBaby)&gt;&gt;
-  &lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;
+  &lt;div class=&quot;back-button&quot;&gt;
+    &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="16" name="ViewAdults" tags="" position="1200,0" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;&lt;if $adultSelectedIndex === undefined&gt;&gt;&lt;&lt;set $adultSelectedIndex = 0&gt;&gt;&lt;&lt;/if&gt;&gt;
-
-&lt;!-- Filter to get only adults --&gt;
-&lt;&lt;set _adults to $playerCreatures.filter(function(c) { 
-   return c.stage === &quot;adult&quot;; 
+&lt;&lt;set _adults to $playerCreatures.filter(function(c) {
+  return c.stage === &quot;adult&quot;;
 })&gt;&gt;
-
-&lt;!-- Middle Panel: All Adults Grid --&gt;
-&lt;div class=&quot;all-eggs-panel&quot;&gt;
+&lt;div class=&quot;view-grid-panel&quot;&gt;
   &lt;h2&gt;Adults&lt;/h2&gt;
-  &lt;div class=&quot;adults-grid&quot;&gt;
-    &lt;&lt;for _i = 0; _i &lt; _adults.length; _i++&gt;&gt;
-      &lt;&lt;capture _i&gt;&gt;
-        &lt;&lt;set _adult = _adults[_i]&gt;&gt;
-        &lt;&lt;set _template to setup.creatureTemplates[_adult.name]&gt;&gt;
-        &lt;&lt;set _gender to _adult.gender.toLowerCase()&gt;&gt;
-        
-        &lt;div class=&quot;grid-egg-card&quot;&gt;&lt;&lt;if $adultSelectedIndex === _i&gt;&gt;&lt;span style=&quot;font-size: 1.4em; text-align: left;&quot;&gt; 📌&lt;/span&gt;&lt;&lt;else&gt;&gt;&lt;span style=&quot;font-size: 1.4em;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;&lt;/if&gt;&gt;
-          &lt;div style=&quot;position: relative;&quot;&gt;
-            &lt;!-- Adult sprite display --&gt;
-            &lt;&lt;set _size to _adult.displayTraits.size&gt;&gt;
-    &lt;&lt;set _color to _adult.displayTraits.color&gt;&gt;
-             &lt;&lt;set _pattern to _adult.displayTraits.pattern&gt;&gt;
-    &lt;&lt;set _spriteSheet to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
-    &lt;&lt;set _colorPattern to _color + &quot;_&quot; + _pattern&gt;&gt;
-    &lt;&lt;set _col to _template.spriteColumns[_colorPattern]&gt;&gt;
-    
-    &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-      &lt;&lt;set _xPos to _col * -240&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;240px&quot;&gt;&gt;
-    &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-      &lt;&lt;set _xPos to _col * -160&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;160px&quot;&gt;&gt;
+  &lt;div class=&quot;view-grid&quot;&gt;
+    &lt;&lt;if _adults.length === 0&gt;&gt;
+      &lt;div class=&quot;view-grid-empty&quot;&gt;No adults yet!&lt;/div&gt;
     &lt;&lt;else&gt;&gt;
-      &lt;&lt;set _xPos to _col * -80&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;80px&quot;&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    
-    &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-      &lt;div class=&quot;creature-sprite-pattern&quot; 
-           @style=&quot;&#39;background-image: url(&#39; + _spriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-   &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-   &lt;br&gt;&lt;br&gt;
-   &lt;&lt;else&gt;&gt;
-   &lt;br&gt;
-   &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
-   &lt;&lt;/if&gt;&gt;
-              &lt;&lt;link &quot;View Info&quot;&gt;&gt;
-              &lt;&lt;set $adultSelectedIndex = _i&gt;&gt;
-              &lt;&lt;goto &quot;ViewAdults&quot;&gt;&gt;
-           &lt;&lt;/link&gt;&gt;
+      &lt;&lt;for _i = 0; _i &lt; _adults.length; _i++&gt;&gt;
+        &lt;&lt;capture _i&gt;&gt;
+          &lt;&lt;set _adult = _adults[_i]&gt;&gt;
+          &lt;&lt;set _template to setup.creatureTemplates[_adult.name]&gt;&gt;
+          &lt;&lt;set _gender to _adult.gender.toLowerCase()&gt;&gt;
+          &lt;&lt;set _size to _adult.displayTraits.size&gt;&gt;
+          &lt;&lt;set _color to _adult.displayTraits.color&gt;&gt;
+          &lt;&lt;set _pattern to _adult.displayTraits.pattern&gt;&gt;
+          &lt;&lt;set _spriteSheet to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
+          &lt;&lt;set _colorPattern to _color + &quot;_&quot; + _pattern&gt;&gt;
+          &lt;&lt;set _col to _template.spriteColumns[_colorPattern]&gt;&gt;
+          &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+            &lt;&lt;set _xPos to _col * -240&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;240px&quot;&gt;&gt;
+          &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+            &lt;&lt;set _xPos to _col * -160&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;160px&quot;&gt;&gt;
+          &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _xPos to _col * -80&gt;&gt;
+            &lt;&lt;set _dimensions to &quot;80px&quot;&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+          &lt;div class=&quot;view-grid-card&quot;&gt;
+            &lt;&lt;capture _adult&gt;&gt;
+              &lt;&lt;link [[ViewCreature]]&gt;&gt;
+                &lt;&lt;set $currentCreature = $playerCreatures.indexOf(_adult)&gt;&gt;
+              &lt;&lt;/link&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+            &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
+              &lt;div class=&quot;creature-sprite-pattern&quot;
+                   @style=&quot;&#39;background-image: url(&#39; + _spriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;creatureName _adult&gt;&gt;&lt;&lt;if _adult.gender === &quot;Male&quot;&gt;&gt; ♂&lt;&lt;else&gt;&gt; ♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
+            &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= _adult.displayTraits.color&gt;&gt; · &lt;&lt;= _adult.displayTraits.size&gt;&gt;&lt;/div&gt;
           &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;&lt;/capture&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;/for&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-
-&lt;!-- Right Panel: Adult Details --&gt;
-&lt;div class=&quot;eggs-details-panel&quot;&gt;
-  &lt;&lt;if $adultSelectedIndex &gt;= 0 &amp;&amp; _adults[$adultSelectedIndex]&gt;&gt;
-    &lt;&lt;set _selectedAdult = _adults[$adultSelectedIndex]&gt;&gt;
-    &lt;div class=&quot;detail-header&quot;&gt;
-      &lt;h2&gt;&lt;&lt;creatureName _selectedAdult&gt;&gt;&lt;&lt;if _selectedAdult.gender === &quot;Male&quot;&gt;&gt;♂&lt;&lt;else&gt;&gt;♀&lt;&lt;/if&gt;&gt;&lt;/h2&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-avatar-container&quot;&gt;
-      &lt;!-- Adult sprite display --&gt;
-      &lt;&lt;set _selectedAdult = _adults[$adultSelectedIndex]&gt;&gt;
-&lt;&lt;set _template to setup.creatureTemplates[_selectedAdult.name]&gt;&gt;
-&lt;&lt;set _gender to _selectedAdult.gender.toLowerCase()&gt;&gt;
-&lt;&lt;set _size to _selectedAdult.displayTraits.size&gt;&gt;
-&lt;&lt;set _color to _selectedAdult.displayTraits.color&gt;&gt;
-      &lt;&lt;set _pattern to _selectedAdult.displayTraits.pattern&gt;&gt;
-    &lt;&lt;set _spriteSheet to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
-    &lt;&lt;set _colorPattern to _color + &quot;_&quot; + _pattern&gt;&gt;
-    &lt;&lt;set _col to _template.spriteColumns[_colorPattern]&gt;&gt;
-    
-    &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-      &lt;&lt;set _xPos to _col * -240&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;240px&quot;&gt;&gt;
-    &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-      &lt;&lt;set _xPos to _col * -160&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;160px&quot;&gt;&gt;
-    &lt;&lt;else&gt;&gt;
-      &lt;&lt;set _xPos to _col * -80&gt;&gt;
-      &lt;&lt;set _dimensions to &quot;80px&quot;&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    
-    &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-      &lt;div class=&quot;creature-sprite-pattern&quot; 
-           @style=&quot;&#39;background-image: url(&#39; + _spriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Type:&lt;/strong&gt; _selectedAdult.type
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Age:&lt;/strong&gt; _selectedAdult.age days old
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Generation:&lt;/strong&gt; _selectedAdult.generation
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-    &lt;&lt;if _selectedAdult.parents !== undefined&gt;&gt;
-      &lt;&lt;set _mother to $playerCreatures.find(c =&gt; c.id === _selectedAdult.parents.motherId)&gt;&gt;
-      &lt;&lt;if !_mother&gt;&gt;
-        &lt;&lt;set _mother to $deadCreatures.find(c =&gt; c.id === _selectedAdult.parents.motherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _father to $playerCreatures.find(c =&gt; c.id === _selectedAdult.parents.fatherId)&gt;&gt;
-      &lt;&lt;if !_father&gt;&gt;
-        &lt;&lt;set _father to $deadCreatures.find(c =&gt; c.id === _selectedAdult.parents.fatherId)&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-      
-      &lt;&lt;set _motherDisplay to _mother ? (_mother.petName || _mother.name) : _selectedAdult.parents.motherName&gt;&gt;
-      &lt;&lt;set _fatherDisplay to _father ? (_father.petName || _father.name) : _selectedAdult.parents.fatherName&gt;&gt;
-      &lt;strong&gt;Parents:&lt;/strong&gt; &lt;&lt;= _motherDisplay&gt;&gt; × &lt;&lt;= _fatherDisplay&gt;&gt;
-&lt;&lt;else&gt;&gt;
-      No known parents.
-&lt;&lt;/if&gt;&gt;
-    &lt;/div&gt;
-    
-    &lt;div class=&quot;detail-type&quot;&gt;
-      &lt;strong&gt;Traits:&lt;/strong&gt;&lt;br&gt;
-      Color: _selectedAdult.displayTraits.color&lt;br&gt;
-      Pattern: _selectedAdult.displayTraits.pattern&lt;br&gt;
-      Size: _selectedAdult.displayTraits.size
-    &lt;/div&gt;
-    
-  &lt;&lt;else&gt;&gt;
-    &lt;div class=&quot;no-selection&quot;&gt;
-      &lt;p&gt;Click on a creature to view details&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
-
-&lt;br&gt;
-
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
-&lt;div class=&quot;back-button&quot;&gt;
-&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;div class=&quot;forth-button&quot;&gt;
-&lt;&lt;link &quot;View Profile&quot; &quot;ViewCreature&quot;&gt;&gt;&lt;&lt;set $currentCreature = $playerCreatures.indexOf(_selectedAdult)&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
+  &lt;div class=&quot;back-button&quot;&gt;
+    &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="17" name="SellCreatures" tags="" position="300,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Sell Creatures&lt;/h2&gt;
@@ -9304,7 +9082,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;else&gt;&gt;
   &lt;div class=&quot;creature-selection&quot;&gt;
     &lt;&lt;for _i to 0; _i &lt; _sellableCreatures.length; _i++&gt;&gt;
-      &lt;&lt;capture _i&gt;&gt;
+      &lt;&lt;capture _i, _c, _sellPrice&gt;&gt;
         &lt;&lt;set _c to _sellableCreatures[_i]&gt;&gt;
         &lt;&lt;set _template to setup.creatureTemplates[_c.name]&gt;&gt;
         &lt;&lt;set _sellPrice to calculateSellPrice(_c, $currentDay)&gt;&gt;
@@ -12094,6 +11872,7 @@ affectionMax: 100,
 
 &lt;&lt;set $playerCreatures to []&gt;&gt;
 &lt;&lt;set $deadCreatures to []&gt;&gt;
+&lt;&lt;set $discoveredCombos to []&gt;&gt;
 
 &lt;&lt;set $vetServiceComplete = &quot;&quot;&gt;&gt;
 &lt;&lt;set $money = 300&gt;&gt;
@@ -12137,7 +11916,8 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;set $creature1.hungerMax to 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set $creature1.stage to &quot;adult&quot;&gt;&gt;
-&lt;&lt;set $creature1.age to random(5, 20)&gt;&gt;
+&lt;&lt;run $creature1.bornAt = Date.now() - (random(1, 3) * 24 * 60 * 60 * 1000)&gt;&gt;
+&lt;&lt;set $creature1.elderAt to null&gt;&gt;
 &lt;&lt;set $creature1.hadSurgery = false&gt;&gt;
 &lt;&lt;set $creature1.geneticTestingDone = false&gt;&gt;
 &lt;&lt;set $creature1.generation to 1&gt;&gt;
@@ -12149,9 +11929,9 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;run $creature1.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastStaminaRegen = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.wasHappy = false&gt;&gt;
-&lt;&lt;run $creature1.lastAgeDay = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.immortal = false&gt;&gt;
 &lt;&lt;run $playerCreatures.push($creature1)&gt;&gt;
+&lt;&lt;run setup.recordCombo($creature1)&gt;&gt;
 
 &lt;&lt;set _randomCreature2 to Object.values(setup.creatureTemplates).filter(function(c) { return c.rarity === &quot;Common&quot; &amp;&amp; c.name !== _randomCreature1.name; }).random()&gt;&gt;
 &lt;&lt;set $creature2 to clone(_randomCreature2)&gt;&gt;
@@ -12180,7 +11960,8 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;set $creature2.hungerMax to 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set $creature2.stage to &quot;adult&quot;&gt;&gt;
-&lt;&lt;set $creature2.age to random(5, 20)&gt;&gt;
+&lt;&lt;run $creature2.bornAt = Date.now() - (random(1, 3) * 24 * 60 * 60 * 1000)&gt;&gt;
+&lt;&lt;set $creature2.elderAt to null&gt;&gt;
 &lt;&lt;set $creature2.hadSurgery to false&gt;&gt;
 &lt;&lt;set $creature2.geneticTestingDone to false&gt;&gt;
 &lt;&lt;set $creature2.generation to 1&gt;&gt;
@@ -12192,9 +11973,9 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;run $creature2.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastStaminaRegen = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.wasHappy = false&gt;&gt;
-&lt;&lt;run $creature2.lastAgeDay = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.immortal = false&gt;&gt;
 &lt;&lt;run $playerCreatures.push($creature2)&gt;&gt;
+&lt;&lt;run setup.recordCombo($creature2)&gt;&gt;
 
 &lt;&lt;set setup.typeBackgrounds = {
   &quot;Forest&quot;: &quot;https://i.imgur.com/l71nP47.png&quot;,
@@ -12216,11 +11997,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
   &quot;Aether&quot;: &quot;✨&quot;
 }&gt;&gt;
 
-&lt;&lt;set $q1Incorrect to &quot;&quot;&gt;&gt;
-&lt;&lt;set $q2Incorrect to &quot;&quot;&gt;&gt;
-&lt;&lt;set $q3Incorrect to &quot;&quot;&gt;&gt;
-
-&lt;&lt;set $lastTickTime to Date.now()&gt;&gt;</tw-passagedata><tw-passagedata pid="42" name="InitShopInventory" tags="" position="100,0" size="100,100">&lt;&lt;set $shopCategory = &quot;All&quot;&gt;&gt;
+&lt;&lt;set $lastTickTime to Date.now()&gt;&gt;</tw-passagedata><tw-passagedata pid="42" name="InitShopInventory" tags="" position="100,0" size="100,100">&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;
 &lt;&lt;set $shopCart = []&gt;&gt;
 &lt;&lt;set $purchaseSummary = []&gt;&gt;
 
@@ -15842,16 +15619,16 @@ Please select your birth season:
 &lt;&lt;/listbox&gt;&gt;
 
 &lt;br&gt;
-Please enter your birth date (1-30):
+Please enter your birth date (1-31):
 &lt;&lt;textbox &quot;$playerBirthDay&quot; &quot;1&quot;&gt;&gt;
-&lt;&lt;if $playerBirthDay &gt;=1 and $playerBirthday &lt;= 30&gt;&gt;
+&lt;&lt;if $playerBirthDay &gt;=1 and $playerBirthday &lt;= 31&gt;&gt;
 &lt;br&gt;
 &lt;&lt;button &quot;Submit Birthday&quot;&gt;&gt;
 &lt;&lt;set $playerBirthday = $playerBirthSeason + &quot; &quot; + $playerBirthDay&gt;&gt;
 &lt;&lt;goto `passage()`&gt;&gt;
 &lt;&lt;/button&gt;&gt;
 &lt;&lt;else&gt;&gt;
-Please enter a date between 1 and 30.
+Please enter a date between 1 and 31.
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/replace&gt;&gt;
 &lt;&lt;/link&gt;&gt;
@@ -15955,35 +15732,35 @@ ERROR: Please finish filling out your personal info before continuing.
    &quot;rankOne&quot;: {
       id: &quot;rankOne&quot;,
       name: &quot;Novice Nester&quot;,
-      xpRequired: 200,
+      xpRequired: 100,
       description: &quot;Congratulations on receiving your breeding license! Explore and complete activities to rank up.&quot;,
       },
       &quot;rankTwo&quot;: {
       id: &quot;rankTwo&quot;,
       name: &quot;Up-and-Coming Apprentice&quot;,
-      xp: 200,
-      xpRequired: 500,
+      xp: 100,
+      xpRequired: 200,
       description: &quot;Welcome to Rank Two.&quot;,
       },
       &quot;rankThree&quot;: {
       id: &quot;rankThree&quot;,
       name: &quot;Certified Caretaker&quot;,
-      xp: 500,
-      xpRequired: 1000,
+      xp: 200,
+      xpRequired: 350,
       description: &quot;Welcome to Rank Three.&quot;,
       },
       &quot;rankFour&quot;: {
       id: &quot;rankFour&quot;,
       name: &quot;Tactful Technician&quot;,
-      xp: 1000,
-      xpRequired: 1750,
+      xp: 350,
+      xpRequired: 500,
       description: &quot;Welcome to Rank Four.&quot;,
       },
       &quot;rankFive&quot;: {
       id: &quot;rankFive&quot;,
       name: &quot;Bountiful Breeder&quot;,
-      xp: 1750,
-      xpRequired: 2500,
+      xp: 500,
+      xpRequired: 750,
       description: &quot;Welcome to Rank Five.&quot;,
       }
 }&gt;&gt;
@@ -15995,6 +15772,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;&lt;set $tutorialQuests = {
   dismissed: false,
   open: false,
+  tracked: null, 
   startTime: Date.now(),
   quests: {
     feedCreature:   { label: &quot;Feed a Creature&quot;,        desc: &quot;Your critters need food to avoid starvation and neglect, which can lead to running away. Feed all creatures in Home or feed one in its Profile.&quot;,         accepted: false, complete: false, xp: 20,  money: 50  },
@@ -16052,7 +15830,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;div class=&quot;locations-grid&quot;&gt;
 
-  &lt;div class=&quot;loc-card&quot;&gt;
+&lt;div class=&quot;loc-card&quot; id=&quot;loc-critter-center&quot;&gt;
     &lt;img src=&quot;https://i.imgur.com/rJwhAt0.png&quot; class=&quot;loc-img&quot;&gt;
     &lt;div class=&quot;loc-body&quot;&gt;
       &lt;div class=&quot;loc-title&quot;&gt;Critter Center&lt;/div&gt;
@@ -16070,7 +15848,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;/div&gt;
   &lt;/div&gt;
 
-  &lt;div class=&quot;loc-card&quot;&gt;
+&lt;div class=&quot;loc-card&quot; id=&quot;loc-request-board&quot;&gt;
     &lt;img src=&quot;https://i.imgur.com/rqvSHBV.png&quot; class=&quot;loc-img&quot;&gt;
     &lt;div class=&quot;loc-body&quot;&gt;
       &lt;div class=&quot;loc-title&quot;&gt;Request Board&lt;/div&gt;
@@ -16189,7 +15967,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;/div&gt;
   &lt;/div&gt;
 
-  &lt;div class=&quot;loc-card&quot;&gt;
+&lt;div class=&quot;loc-card&quot; id=&quot;loc-breeding-barn&quot;&gt;
     &lt;img src=&quot;https://i.imgur.com/eijnFKw.png&quot; class=&quot;loc-img&quot;&gt;
     &lt;div class=&quot;loc-body&quot;&gt;
       &lt;div class=&quot;loc-title&quot;&gt;Breeding Barn&lt;/div&gt;
@@ -16209,127 +15987,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="SelectCritters" tags="" position="800,0" size="100,100">&lt;&lt;nobr&gt;&gt;
-
-&lt;div class=&quot;plaza-banner&quot;&gt;
-&lt;center&gt;&lt;h5&gt;&lt;strong&gt;Critter Zone&lt;/strong&gt;&lt;/h5&gt;&lt;/center&gt;
-&lt;/div&gt;
-
-&lt;br&gt;
-
-&lt;div class=&quot;grid-marketplaza&quot;&gt;
-
-&lt;div class=&quot;marketplaza-item&quot;&gt;
-
-&lt;div class=&quot;plaza-card&quot;&gt;
-
-&lt;div class=&quot;plaza-img&quot;&gt;
-
-&lt;img src=&quot;https://i.imgur.com/ehdX3Yl.png&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-title&quot;&gt;
-
-Hatchery
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-desc&quot;&gt;
-
-Eggs do not need to be fed or cared for until hatched.
-
-&lt;/div&gt;
-
-&lt;&lt;link &quot;Eggs&quot; &quot;ViewEggs&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;marketplaza-item&quot;&gt;
-
-&lt;div class=&quot;plaza-card&quot;&gt;
-
-&lt;div class=&quot;plaza-img&quot;&gt;
-
-&lt;img src=&quot;https://i.imgur.com/fpJrvdm.png&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-title&quot;&gt;
-
-Nursery
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-desc&quot;&gt;
-
-Babies require much more attention than an egg!
-
-&lt;/div&gt;
-
-&lt;&lt;link &quot;Babies&quot; &quot;ViewBabies&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;marketplaza-item&quot;&gt;
-
-&lt;div class=&quot;plaza-card&quot;&gt;
-
-&lt;div class=&quot;plaza-img&quot;&gt;
-
-&lt;img src=&quot;https://i.imgur.com/yTPO88Y.png&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-title&quot;&gt;
-
-The Corral
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-desc&quot;&gt;
-
-Customize your critters&#39; name via the profile link.
-
-&lt;/div&gt;
-
-&lt;&lt;link &quot;Adults&quot; &quot;ViewAdults&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;marketplaza-item&quot;&gt;
-
-&lt;div class=&quot;plaza-card&quot;&gt;
-
-&lt;div class=&quot;plaza-img&quot;&gt;
-
-&lt;img src=&quot;https://i.imgur.com/eijnFKw.png&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-title&quot;&gt;
-
-Breeding Barn
-
-&lt;/div&gt;
-
-&lt;div class=&quot;plaza-desc&quot;&gt;
-
-Critters have a higher chance of more offspring when fertile.
-
-&lt;/div&gt;
-
-&lt;&lt;link &quot;Breed&quot; &quot;Breeding&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="CartCheckoutComplete" tags="" position="25,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="CartCheckoutComplete" tags="" position="25,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
 
@@ -16354,7 +16012,7 @@ Critters have a higher chance of more offspring when fertile.
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="66" name="PawnShop" tags="" position="25,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="PawnShop" tags="" position="25,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $pawnCategory == undefined&gt;&gt;&lt;&lt;set $pawnCategory = &quot;All&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;&lt;if !$shopCart&gt;&gt;&lt;&lt;set $shopCart = []&gt;&gt;&lt;&lt;/if&gt;&gt;
 
@@ -16530,27 +16188,22 @@ Critters have a higher chance of more offspring when fertile.
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="67" name="CollectionsWidgets" tags="widget" position="300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="66" name="CollectionsWidgets" tags="widget" position="300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;comboKey&quot;&gt;&gt;
     &lt;&lt;set _key = _args[0] + &quot;_&quot; + _args[1]&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;hasCombo&quot;&gt;&gt;
-    &lt;&lt;set _owned = false&gt;&gt;
-    &lt;&lt;for _c range $playerCreatures&gt;&gt;
-        &lt;&lt;if _c.name === _args[0] &amp;&amp;
-            _c.displayTraits.color === _args[1] &amp;&amp;
-            _c.displayTraits.pattern === _args[2] &amp;&amp;
-            _c.displayTraits.size === _args[3] &amp;&amp;
-            _c.gender === _args[4] &amp;&amp;
-            _c.stage === &quot;adult&quot;&gt;&gt;
-            &lt;&lt;set _owned = true&gt;&gt;
-        &lt;&lt;/if&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
+    &lt;&lt;set _key = _args[0] + &quot;_&quot; + _args[1] + &quot;_&quot; + _args[2] + &quot;_&quot; + _args[3] + &quot;_&quot; + _args[4]&gt;&gt;
+    &lt;&lt;set _owned = $discoveredCombos.includes(_key)&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="68" name="CollectionMenu" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;widget &quot;recordCombo&quot;&gt;&gt;
+    &lt;&lt;run setup.recordCombo(_args[0])&gt;&gt;
+&lt;&lt;/widget&gt;&gt;
+
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="67" name="CollectionMenu" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
     &lt;&lt;for _species, _data range setup.creatureTemplates&gt;&gt;
         &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
@@ -16646,7 +16299,7 @@ Critters have a higher chance of more offspring when fertile.
     &lt;&lt;/for&gt;&gt;
 
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SMGig" tags="" position="700,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="68" name="SMGig" tags="" position="700,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;gig-wrap&quot;&gt;
 
   &lt;div class=&quot;sm-tutorial-box&quot;&gt;
@@ -16755,7 +16408,7 @@ Critters have a higher chance of more offspring when fertile.
   &lt;&lt;/if&gt;&gt;
 
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="70" name="SMResults" tags="" position="800,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SMResults" tags="" position="800,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;gig-wrap&quot;&gt;
   &lt;div class=&quot;gig-results-box&quot;&gt;
     &lt;h2 class=&quot;gig-title&quot;&gt;📊 Gig Complete!&lt;/h2&gt;
@@ -16783,7 +16436,7 @@ Critters have a higher chance of more offspring when fertile.
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="71" name="FreelanceResume" tags="" position="700,1075" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="70" name="FreelanceResume" tags="" position="700,1075" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;gig-wrap&quot;&gt;
   &lt;div class=&quot;sm-tutorial-box&quot;&gt;
@@ -16812,7 +16465,7 @@ Critters have a higher chance of more offspring when fertile.
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="72" name="SellCheckoutComplete" tags="" position="25,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="71" name="SellCheckoutComplete" tags="" position="25,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Sale Complete!&lt;/h1&gt;
   &lt;p style=&quot;font-size: 1.1em; margin: 20px 0; color: var(--dark-text);&quot;&gt;You sold:&lt;/p&gt;
@@ -16833,7 +16486,7 @@ Critters have a higher chance of more offspring when fertile.
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="73" name="LogoDesign" tags="" position="700,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="72" name="LogoDesign" tags="" position="700,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $logosCompleted gte 3&gt;&gt;
 &lt;p&gt;&lt;strong&gt;Logo Design Session Complete!&lt;/strong&gt;&lt;/p&gt;
                     &lt;p&gt;You&#39;ve finished designing 3 logos today.&lt;/p&gt;
@@ -16869,7 +16522,7 @@ Critters have a higher chance of more offspring when fertile.
                 &lt;/div&gt;
                 &lt;/div&gt;
             &lt;&lt;/if&gt;&gt;
- &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="74" name="LogoShape" tags="" position="800,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+ &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="73" name="LogoShape" tags="" position="800,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctShape to $currentClient.shape.random()&gt;&gt;
 
@@ -16937,7 +16590,7 @@ Critters have a higher chance of more offspring when fertile.
                 
 
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="75" name="LogoColorPalette" tags="" position="900,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="74" name="LogoColorPalette" tags="" position="900,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctColorPalette to $currentClient.colorPalette.random()&gt;&gt;
 
@@ -16999,7 +16652,7 @@ Critters have a higher chance of more offspring when fertile.
 &lt;&lt;/for&gt;&gt;
 &lt;/p&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="LogoFontStyle" tags="" position="1000,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="75" name="LogoFontStyle" tags="" position="1000,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctFontStyle to $currentClient.fontStyle.random()&gt;&gt;
 
@@ -17061,7 +16714,7 @@ Critters have a higher chance of more offspring when fertile.
 &lt;&lt;/for&gt;&gt;
 &lt;/p&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="77" name="LogoComplete" tags="" position="1100,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="LogoComplete" tags="" position="1100,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;p style=&quot;display: block; text-align: center; font-size: 20px;&quot;&gt;&lt;strong&gt;Logo Design Complete&lt;/strong&gt;
 &lt;/p&gt;
@@ -17104,7 +16757,7 @@ Critters have a higher chance of more offspring when fertile.
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="78" name="InitLocation" tags="" position="0,500" size="100,100">&lt;&lt;set $latitude     to 0&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="77" name="InitLocation" tags="" position="0,500" size="100,100">&lt;&lt;set $latitude     to 0&gt;&gt;
 &lt;&lt;set $longitude    to 0&gt;&gt;
 &lt;&lt;set $steps        to 0&gt;&gt;
 &lt;&lt;set $eggPending   to false&gt;&gt;
@@ -17113,7 +16766,7 @@ Critters have a higher chance of more offspring when fertile.
 
 &lt;&lt;set $hatchQueue to []&gt;&gt;
 
-&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="79" name="NotificationsWidget" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="78" name="NotificationsWidget" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;showHatchedEggs&quot;&gt;&gt;
 &lt;span id=&quot;hatch-wrapper&quot;&gt;
@@ -17152,7 +16805,7 @@ Critters have a higher chance of more offspring when fertile.
 &lt;/span&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="80" name="PassageFooter" tags="" position="0,1500" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="79" name="PassageFooter" tags="" position="0,1500" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;run setup.applyRealTimeTick()&gt;&gt;
 
@@ -17172,7 +16825,7 @@ Critters have a higher chance of more offspring when fertile.
     &lt;&lt;set $weatherRendered to false&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="81" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="80" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
   &lt;div id=&quot;passage-container&quot;&gt;
     &lt;div id=&quot;passages&quot;&gt;
       &lt;div data-passage&gt;&lt;/div&gt;
