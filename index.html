@@ -5238,13 +5238,20 @@ font-family: 'Hachi Maru Pop', cursive;
   border: 2px solid var(--coral);
   border-radius: 10px;
   color: var(--mid-text);
-}</style><script role="script" id="twine-user-script" type="text/twine-javascript">// Config.history.controls = false;
-
-$(document).on(':passageend', function() {
-    Save.autosave.save();
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript">$(document).one(':storyready', function() {
+    Config.saves.maxAutoSaves = 1;
+    Config.saves.isAllowed = function() { return true; };
 });
 
-Config.ui.stowBarInitially = false;
+$(document).on(':passageend', function() {
+    if (passage() !== 'Introduction') {
+        Save.browser.auto.save(0);
+    }
+});
+
+$(document).on('click', '#btn-continue', function() {
+    Save.browser.auto.load(0);
+});
 
 // Genetics
 window.getDisplayedTrait = function(allele1, allele2, dominanceList) {
@@ -6162,18 +6169,20 @@ setup.HATCH_STEPS = {
 };
 
 // --- Tutorial: End Your First Day ---
-var tq = State.variables.tutorialQuests;
-if (tq && !tq.quests.endDay.complete && tq.quests.endDay.accepted) {
-    if (Date.now() - tq.startTime >= setup.MS_PER_DAY) {
-        tq.quests.endDay.complete = true;
-        setup._farmDialogQueue.push({
-            _type: "tutorialComplete",
-            name: "End Your First Day",
-            message: "A full day has passed. Quest complete! +30 XP | +$75"
-        });
-        setup.showNextFarmDialog();
+$(document).on(':passageend', function() {
+    var tq = State.variables.tutorialQuests;
+    if (tq && !tq.quests.endDay.complete && tq.quests.endDay.accepted) {
+        if (Date.now() - tq.startTime >= setup.MS_PER_DAY) {
+            tq.quests.endDay.complete = true;
+            setup._farmDialogQueue.push({
+                _type: "tutorialComplete",
+                name: "End Your First Day",
+                message: "A full day has passed. Quest complete! +30 XP | +$75"
+            });
+            setup.showNextFarmDialog();
+        }
     }
-}
+});
 
 /* ── Farm real-time notification poller ── */
 setup._farmPollInterval = null;
@@ -16252,6 +16261,9 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="61" name="Introduction" tags="" position="600,200" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if Save.browser.auto.has(0)&gt;&gt;
+    &lt;button id=&quot;btn-continue&quot;&gt;Continue&lt;/button&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;div class=&quot;interface-container&quot;&gt;
 
 &lt;div class=&quot;interface-header&quot;&gt;
@@ -16264,9 +16276,6 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 Department of Creature Health and Welfare
 &lt;/span&gt;
 &lt;/center&gt;
-&lt;&lt;if Save.autosave.has()&gt;&gt;
-    &lt;button id=&quot;btn-continue&quot; onclick=&quot;Save.autosave.load()&quot;&gt;Continue&lt;/button&gt;
-&lt;&lt;/if&gt;&gt;
 &lt;center&gt;
 &lt;strong&gt;
 &lt;p4&gt;Welcome. Thank you for using our quick and secure online portal — because ethical breeding should be simple, safe, and supported.&lt;/p4&gt;
