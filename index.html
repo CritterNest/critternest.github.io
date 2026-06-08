@@ -5671,7 +5671,6 @@ setup.fetchWeather = function() {
     var lat = State.variables.latitude;
     var lon = State.variables.longitude;
 
-    // If no location yet, default to good weather
     if (!lat || !lon) {
         State.variables.isBadWeather = false;
         State.variables.weatherChecked = true;
@@ -5681,30 +5680,33 @@ setup.fetchWeather = function() {
     var url = "https://api.open-meteo.com/v1/forecast" +
         "?latitude=" + lat +
         "&longitude=" + lon +
-        "&current_weather=true" +
-        "&hourly=precipitation,snowfall,weathercode";
+        "&current_weather=true";
 
     fetch(url)
         .then(function(response) { return response.json(); })
         .then(function(data) {
-    var code = data.current_weather.weathercode;
-    var isBad = (code >= 51 && code <= 67) ||
-                (code >= 71 && code <= 77) ||
-                (code >= 80 && code <= 82) ||
-                (code >= 85 && code <= 86) ||
-                (code >= 95 && code <= 99);
+            var code = data.current_weather.weathercode;
+            var isBad = (code >= 51 && code <= 67) ||
+                        (code >= 71 && code <= 77) ||
+                        (code >= 80 && code <= 82) ||
+                        (code >= 85 && code <= 86) ||
+                        (code >= 95 && code <= 99);
 
-    State.variables.isBadWeather = isBad;
-    State.variables.weatherCode  = code;
-    State.variables.weatherChecked = true;
+            State.variables.isBadWeather = isBad;
+            State.variables.weatherCode  = code;
+            State.variables.weatherChecked = true;
 
-    // Re-render the fishing passage if still on it
-    if (passage() === "Fishing") {
-        $("#passages").wiki(Story.get("Fishing").processText());
-    }
-})
+            // Expire the weather check after 30 minutes
+            setTimeout(function() {
+                State.variables.weatherChecked = false;
+            }, 30 * 60 * 1000);
+
+            if (passage() === "Fishing" && !State.variables._weatherRendered) {
+                State.variables._weatherRendered = true;
+                $("#passages").wiki(Story.get("Fishing").processText());
+            }
+        })
         .catch(function() {
-            // On error, assume good weather
             State.variables.isBadWeather = false;
             State.variables.weatherChecked = true;
         });
@@ -8792,9 +8794,9 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="14" name="TheLake" tags="" position="700,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $selectedBait = null&gt;&gt;
 
-/* Fetch fresh weather every time player visits */
-&lt;&lt;run $weatherChecked = false&gt;&gt;
-&lt;&lt;run setup.fetchWeather()&gt;&gt;
+&lt;&lt;if !$weatherChecked&gt;&gt;
+    &lt;&lt;run setup.fetchWeather()&gt;&gt;
+&lt;&lt;/if&gt;&gt;
 
 &lt;&lt;set _isDay = setup.isDay()&gt;&gt;
 
@@ -17165,6 +17167,10 @@ Critters have a higher chance of more offspring when fertile.
 &lt;&lt;tickRequests&gt;&gt;
 
 &lt;&lt;run setup.checkLoginReward()&gt;&gt;
+
+&lt;&lt;if passage() !== &quot;Fishing&quot;&gt;&gt;
+    &lt;&lt;set $weatherRendered to false&gt;&gt;
+&lt;&lt;/if&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="81" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
   &lt;div id=&quot;passage-container&quot;&gt;
