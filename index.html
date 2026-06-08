@@ -5240,6 +5240,10 @@ font-family: 'Hachi Maru Pop', cursive;
   color: var(--mid-text);
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">// Config.history.controls = false;
 
+$(document).on(':passageend', function() {
+    Save.autosave.save();
+});
+
 Config.ui.stowBarInitially = false;
 
 // Genetics
@@ -7331,18 +7335,18 @@ setup.showLoginRewardDialog = function() {
          rarity: _chosenTemplate.rarity,
       }&gt;&gt;
       &lt;&lt;if _newEgg.displayTraits.size === &quot;large&quot;&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur = 60&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax = 120&gt;&gt;
+&lt;&lt;set _newEgg.hungerCur to 60&gt;&gt;
+&lt;&lt;set _newEgg.hungerMax to 120&gt;&gt;
 &lt;&lt;elseif _newEgg.displayTraits.size === &quot;medium&quot;&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur = 50&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax = 100&gt;&gt;
+&lt;&lt;set _newEgg.hungerCur to 50&gt;&gt;
+&lt;&lt;set _newEgg.hungerMax to 100&gt;&gt;
 &lt;&lt;else&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur = 40&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax = 80&gt;&gt;
+&lt;&lt;set _newEgg.hungerCur to 40&gt;&gt;
+&lt;&lt;set _newEgg.hungerMax to 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;set _newEgg.geneticTestingDone = false&gt;&gt;
+&lt;&lt;set _newEgg.geneticTestingDone to false&gt;&gt;
 &lt;&lt;set _newEgg.flavorText to _chosenTemplate.flavorText&gt;&gt;
-&lt;&lt;set _newEgg.mutations = _mutated&gt;&gt;
+&lt;&lt;set _newEgg.mutations to _mutated&gt;&gt;
 &lt;&lt;run _newEgg.fertilityOffset = Date.now()&gt;&gt;
 &lt;&lt;run _newEgg.lastAgeDay = Date.now()&gt;&gt;
 &lt;&lt;run _newEgg.lastHungerDrain = Date.now()&gt;&gt;
@@ -8014,7 +8018,7 @@ setup.showLoginRewardDialog = function() {
          Species: _egg.speciesName (_egg.rarity)&lt;br&gt;
          Gender: _egg.gender&lt;br&gt;
          Generation: _egg.generation&lt;br&gt;
-         Will hatch in: _egg.hatchSteps steps&lt;br&gt;
+         Will hatch in: &lt;&lt;print Math.max(0, _selectedEgg.hatchSteps - $steps)&gt;&gt; steps&lt;br&gt;
          
          &lt;&lt;if _egg.mutations &amp;&amp; _egg.mutations.length &gt; 0&gt;&gt;
             &lt;span class=&quot;mutation&quot;&gt;✨ Mutation!&lt;/span&gt;
@@ -8402,8 +8406,8 @@ setup.showLoginRewardDialog = function() {
           &lt;&lt;link &quot;Buy Creature&quot;&gt;&gt;
             &lt;&lt;set $money -= _itemPrice&gt;&gt;
             &lt;&lt;set _purchasedCreature = clone(setup.creatureTemplates[$selectedItem.id])&gt;&gt;
-&lt;&lt;set _purchasedCreature.id = random(100000, 999999)&gt;&gt;
-&lt;&lt;set _purchasedCreature.gender = either(&quot;Male&quot;, &quot;Female&quot;)&gt;&gt;
+&lt;&lt;set _purchasedCreature.id to random(100000, 999999)&gt;&gt;
+&lt;&lt;set _purchasedCreature.gender to either(&quot;Male&quot;, &quot;Female&quot;)&gt;&gt;
 &lt;&lt;set _possibleColors = setup.getCreaturePossibleColors(_purchasedCreature.name)&gt;&gt;
 &lt;&lt;set _purchasedCreature.genes = {
 color: [_possibleColors.random(), _possibleColors.random()],
@@ -8417,19 +8421,19 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 }&gt;&gt;
 &lt;&lt;run finalizeDisplayTraits(_purchasedCreature)&gt;&gt;
 &lt;&lt;if _purchasedCreature.displayTraits.size === &quot;large&quot;&gt;&gt;
-&lt;&lt;set _purchasedCreature.hungerCur = 120&gt;&gt;
+&lt;&lt;set _purchasedCreature.hungerCur = 100&gt;&gt;
 &lt;&lt;set _purchasedCreature.hungerMax = 120&gt;&gt;
 &lt;&lt;elseif _purchasedCreature.displayTraits.size === &quot;medium&quot;&gt;&gt;
-&lt;&lt;set _purchasedCreature.hungerCur = 100&gt;&gt;
+&lt;&lt;set _purchasedCreature.hungerCur = 80&gt;&gt;
 &lt;&lt;set _purchasedCreature.hungerMax = 100&gt;&gt;
 &lt;&lt;else&gt;&gt;
-&lt;&lt;set _purchasedCreature.hungerCur = 80&gt;&gt;
+&lt;&lt;set _purchasedCreature.hungerCur = 60&gt;&gt;
 &lt;&lt;set _purchasedCreature.hungerMax = 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;set _purchasedCreature.geneticTestingDone = false&gt;&gt;
+&lt;&lt;set _purchasedCreature.geneticTestingDone to false&gt;&gt;
 &lt;&lt;set _purchasedCreature.stage to &quot;adult&quot;&gt;&gt;
 &lt;&lt;set _purchasedCreature.age to random(5, 20)&gt;&gt;
-&lt;&lt;set _purchasedCreature.hadSurgery = false&gt;&gt;
+&lt;&lt;set _purchasedCreature.hadSurgery to false&gt;&gt;
 &lt;&lt;set _purchasedCreature.generation to 1&gt;&gt;
 &lt;&lt;set _purchasedCreature.fedCount to 0&gt;&gt;
 &lt;&lt;set _purchasedCreature.caredCount to 0&gt;&gt;
@@ -9669,15 +9673,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 
 &lt;div class=&quot;info-box&quot;&gt;
   &lt;strong&gt;Your Money:&lt;/strong&gt; $money dollars&lt;br&gt;
-  &lt;strong&gt;Pending Sales:&lt;/strong&gt; &lt;&lt;if $pendingSales.length &gt; 0&gt;&gt;$pendingSales.length creature(s) - will sell tomorrow&lt;&lt;else&gt;&gt;None&lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
-
-&lt;&lt;if $pendingSales.length &gt; 0&gt;&gt;
-  &lt;div class=&quot;pending-sales&quot;&gt;
-    &lt;h3&gt;Pending Sales (Complete Tomorrow)&lt;/h3&gt;
-    &lt;p&gt;Expected income: &lt;&lt;set _totalPending to 0&gt;&gt;&lt;&lt;for _p to 0; _p &lt; $pendingSales.length; _p++&gt;&gt;&lt;&lt;set _totalPending += $pendingSales[_p].price&gt;&gt;&lt;&lt;/for&gt;&gt;_totalPending coins&lt;/p&gt;
-  &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;
 
 &lt;h3&gt;Select Creature to Sell&lt;/h3&gt;
 
@@ -12607,30 +12603,30 @@ affectionMax: 100,
 &lt;&lt;set $activeSpecies to &quot;&quot;&gt;&gt;
 
 &lt;&lt;set _randomCreature1 to Object.values(setup.creatureTemplates).filter(function(c) { return c.rarity === &quot;Common&quot;; }).random()&gt;&gt;
-&lt;&lt;set $creature1 = clone(_randomCreature1)&gt;&gt;
-&lt;&lt;set $creature1.id = random(100000, 999999)&gt;&gt;
+&lt;&lt;set $creature1 to clone(_randomCreature1)&gt;&gt;
+&lt;&lt;set $creature1.id to random(100000, 999999)&gt;&gt;
 &lt;&lt;set $creature1.gender to &quot;Male&quot;&gt;&gt;
-&lt;&lt;set _possibleColors = setup.getCreaturePossibleColors(_randomCreature1.name)&gt;&gt;
+&lt;&lt;set _possibleColors to setup.getCreaturePossibleColors(_randomCreature1.name)&gt;&gt;
 &lt;&lt;set $creature1.genes = {
 color: [_possibleColors.random(), _possibleColors.random()],
 pattern: [_randomCreature1.possiblePatterns.random(), _randomCreature1.possiblePatterns.random()],
 size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.random()]
 }&gt;&gt;
-&lt;&lt;set $creature1.displayTraits = {
+&lt;&lt;set $creature1.displayTraits to {
    color: getDisplayedTrait($creature1.genes.color[0], $creature1.genes.color[1], _randomCreature1.colorDominance),
    pattern: getDisplayedTrait($creature1.genes.pattern[0], $creature1.genes.pattern[1], _randomCreature1.patternDominance),
    size: getBlendedSize($creature1.genes.size[0], $creature1.genes.size[1], _randomCreature1.possibleSizes)
 }&gt;&gt;
 &lt;&lt;run finalizeDisplayTraits($creature1)&gt;&gt;
 &lt;&lt;if $creature1.displayTraits.size === &quot;large&quot;&gt;&gt;
-&lt;&lt;set $creature1.hungerCur = 100&gt;&gt;
-&lt;&lt;set $creature1.hungerMax = 120&gt;&gt;
+&lt;&lt;set $creature1.hungerCur to 100&gt;&gt;
+&lt;&lt;set $creature1.hungerMax to 120&gt;&gt;
 &lt;&lt;elseif $creature1.displayTraits.size === &quot;medium&quot;&gt;&gt;
-&lt;&lt;set $creature1.hungerCur = 80&gt;&gt;
-&lt;&lt;set $creature1.hungerMax = 100&gt;&gt;
+&lt;&lt;set $creature1.hungerCur to 80&gt;&gt;
+&lt;&lt;set $creature1.hungerMax to 100&gt;&gt;
 &lt;&lt;else&gt;&gt;
-&lt;&lt;set $creature1.hungerCur = 60&gt;&gt;
-&lt;&lt;set $creature1.hungerMax = 80&gt;&gt;
+&lt;&lt;set $creature1.hungerCur to 60&gt;&gt;
+&lt;&lt;set $creature1.hungerMax to 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set $creature1.stage to &quot;adult&quot;&gt;&gt;
 &lt;&lt;set $creature1.age to random(5, 20)&gt;&gt;
@@ -12650,35 +12646,35 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;run $playerCreatures.push($creature1)&gt;&gt;
 
 &lt;&lt;set _randomCreature2 to Object.values(setup.creatureTemplates).filter(function(c) { return c.rarity === &quot;Common&quot; &amp;&amp; c.name !== _randomCreature1.name; }).random()&gt;&gt;
-&lt;&lt;set $creature2 = clone(_randomCreature2)&gt;&gt;
-&lt;&lt;set $creature2.id = random(100000, 999999)&gt;&gt;
+&lt;&lt;set $creature2 to clone(_randomCreature2)&gt;&gt;
+&lt;&lt;set $creature2.id to random(100000, 999999)&gt;&gt;
 &lt;&lt;set $creature2.gender to &quot;Female&quot;&gt;&gt;
-&lt;&lt;set _possibleColors = setup.getCreaturePossibleColors(_randomCreature2.name)&gt;&gt;
-&lt;&lt;set $creature2.genes = {
+&lt;&lt;set _possibleColors to setup.getCreaturePossibleColors(_randomCreature2.name)&gt;&gt;
+&lt;&lt;set $creature2.genes to {
 color: [_possibleColors.random(), _possibleColors.random()],
 pattern: [_randomCreature2.possiblePatterns.random(), _randomCreature2.possiblePatterns.random()],
 size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.random()]
 }&gt;&gt;
-&lt;&lt;set $creature2.displayTraits = {
+&lt;&lt;set $creature2.displayTraits to {
    color: getDisplayedTrait($creature2.genes.color[0], $creature2.genes.color[1], _randomCreature2.colorDominance),
    pattern: getDisplayedTrait($creature2.genes.pattern[0], $creature2.genes.pattern[1], _randomCreature2.patternDominance),
    size: getBlendedSize($creature2.genes.size[0], $creature2.genes.size[1], _randomCreature2.possibleSizes)
 }&gt;&gt;
 &lt;&lt;run finalizeDisplayTraits($creature2)&gt;&gt;
 &lt;&lt;if $creature2.displayTraits.size === &quot;large&quot;&gt;&gt;
-&lt;&lt;set $creature2.hungerCur = 100&gt;&gt;
-&lt;&lt;set $creature2.hungerMax = 120&gt;&gt;
+&lt;&lt;set $creature2.hungerCur to 100&gt;&gt;
+&lt;&lt;set $creature2.hungerMax to 120&gt;&gt;
 &lt;&lt;elseif $creature2.displayTraits.size === &quot;medium&quot;&gt;&gt;
-&lt;&lt;set $creature2.hungerCur = 80&gt;&gt;
-&lt;&lt;set $creature2.hungerMax = 100&gt;&gt;
+&lt;&lt;set $creature2.hungerCur to 80&gt;&gt;
+&lt;&lt;set $creature2.hungerMax to 100&gt;&gt;
 &lt;&lt;else&gt;&gt;
-&lt;&lt;set $creature2.hungerCur = 60&gt;&gt;
-&lt;&lt;set $creature2.hungerMax = 80&gt;&gt;
+&lt;&lt;set $creature2.hungerCur to 60&gt;&gt;
+&lt;&lt;set $creature2.hungerMax to 80&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set $creature2.stage to &quot;adult&quot;&gt;&gt;
 &lt;&lt;set $creature2.age to random(5, 20)&gt;&gt;
-&lt;&lt;set $creature2.hadSurgery = false&gt;&gt;
-&lt;&lt;set $creature2.geneticTestingDone = false&gt;&gt;
+&lt;&lt;set $creature2.hadSurgery to false&gt;&gt;
+&lt;&lt;set $creature2.geneticTestingDone to false&gt;&gt;
 &lt;&lt;set $creature2.generation to 1&gt;&gt;
 &lt;&lt;set $creature2.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature2.caredCount to 0&gt;&gt;
@@ -16265,12 +16261,15 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 &lt;div class=&quot;interface-body&quot;&gt;
 &lt;center&gt;
 &lt;span class=&quot;interface-details&quot;&gt;
-Day One of Spring
+Department of Creature Health and Welfare
 &lt;/span&gt;
 &lt;/center&gt;
+&lt;&lt;if Save.autosave.has()&gt;&gt;
+    &lt;button id=&quot;btn-continue&quot; onclick=&quot;Save.autosave.load()&quot;&gt;Continue&lt;/button&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;center&gt;
 &lt;strong&gt;
-&lt;p4&gt;Welcome to the Department of Creature Health and Welfare. Thank you for using our quick and secure online portal — because ethical breeding should be simple, safe, and supported.&lt;/p4&gt;
+&lt;p4&gt;Welcome. Thank you for using our quick and secure online portal — because ethical breeding should be simple, safe, and supported.&lt;/p4&gt;
 &lt;/strong&gt;
 &lt;/center&gt;
 
