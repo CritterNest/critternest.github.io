@@ -5250,7 +5250,9 @@ $(document).on(':passageend', function() {
 });
 
 $(document).on('click', '#btn-continue', function() {
-    Save.browser.auto.load(0);
+    Save.browser.auto.load(0).then(function() {
+        Engine.show();
+    });
 });
 
 // Genetics
