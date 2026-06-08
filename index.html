@@ -6351,6 +6351,7 @@ setup.checkStepEvents = function() {
             c.lastAgeDay = Date.now();
             c.wasHappy = false;
             c.immortal = false;
+            c.lastAffectionBonus = Date.now()
           
 
             State.variables.hatchQueue.push(c);
@@ -6402,6 +6403,7 @@ window.goFreelancing = function() {
 // Interval constants in milliseconds
 setup.DRAIN_INTERVAL = 2 * 60 * 60 * 1000;
 setup.AGE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+setup.AFFECTION_INTERVAL = 300000;
 setup.REGEN_INTERVALS   = {
     "Common":   2 * 60 * 60 * 1000, // 2 hours
     "Uncommon": 4 * 60 * 60 * 1000, // 4 hours
@@ -6547,23 +6549,30 @@ if (ageIntervals > 0) {
     }
 }
 }
-        // --- Affection bonus ---
-        if (c.hungerCur >= c.hungerMax && c.careCur >= c.careMax) {
-            var oldAff = c.affectionCur;
-            c.affectionCur = Math.min(c.affectionMax, c.affectionCur + 5);
-            if (c.affectionCur > oldAff && !c.wasHappy) {
-                State.variables.notificationQueue.push({
-                    icon: "💖",
-                    title: "Happy Critter!",
-                    message: name + " is well-fed and cared for. Their affection increased!"
-                });
-            }
-            c.wasHappy = true;
-        } else {
-            c.wasHappy = false;
+// --- Affection bonus ---
+if (c.hungerCur >= c.hungerMax && c.careCur >= c.careMax) {
+    var currentDay = Math.floor(now / 86400000); // days since epoch
+
+    if (c.lastAffectionDay !== currentDay) {
+        var oldAff = c.affectionCur;
+
+        c.affectionCur = Math.min(
+            c.affectionMax,
+            c.affectionCur + 5
+        );
+
+        c.lastAffectionDay = currentDay;
+
+        if (c.affectionCur > oldAff) {
+            State.variables.notificationQueue.push({
+                icon: "💖",
+                title: "Happy Critter!",
+                message: name + " is well-fed and cared for. Their affection increased!"
+            });
         }
     }
-
+}
+    }
     // --- Check escaped creatures for return or permanent loss ---
     var escaped = State.variables.escapedCreatures;
     if (escaped && escaped.length > 0) {
@@ -6878,7 +6887,9 @@ setup.showLoginRewardDialog = function() {
         "</div>"
     );
     Dialog.open();
-};</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+};
+
+</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── MAILBOX HEADER ── */
 &lt;div class=&quot;home-header&quot;&gt;
@@ -8423,6 +8434,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _purchasedCreature.fedCount to 0&gt;&gt;
 &lt;&lt;set _purchasedCreature.caredCount to 0&gt;&gt;
 &lt;&lt;run _purchasedCreature.fertilityOffset = Date.now() - random(0, getFertilityCycleLength(_purchasedCreature.rarity) - 1)&gt;&gt;
+&lt;&lt;run _purchasedCreature.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastStaminaRegen = Date.now()&gt;&gt;
@@ -12628,6 +12640,7 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;set $creature1.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature1.caredCount to 0&gt;&gt;
 &lt;&lt;run $creature1.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature1.rarity) - 1)&gt;&gt;
+&lt;&lt;run $creature1.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastStaminaRegen = Date.now()&gt;&gt;
@@ -12670,6 +12683,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;set $creature2.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature2.caredCount to 0&gt;&gt;
 &lt;&lt;run $creature2.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature2.rarity) - 1) - Math.floor(getFertilityCycleLength($creature2.rarity) / 2)&gt;&gt;
+&lt;&lt;run $creature2.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastCareDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastStaminaRegen = Date.now()&gt;&gt;
