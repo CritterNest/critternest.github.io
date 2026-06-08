@@ -7111,7 +7111,8 @@ setup.showLoginRewardDialog = function() {
                 &lt;&lt;link `setup.items[_food].name + &quot; (&quot; + $inventory[_food] + &quot;)&quot;` &quot;Home&quot;&gt;&gt;
                   &lt;&lt;for _i range $eligibleCreaturesToFeed&gt;&gt;
                     &lt;&lt;set $playerCreatures[_i].fedCount += 1&gt;&gt;
-                    &lt;&lt;set $playerCreatures[_i].hungerCur to Math.min($playerCreatures[_i].hungerMax, $playerCreatures[_i].hungerCur += 20)&gt;&gt;
+&lt;&lt;set $playerCreatures[_i].hungerCur += 20&gt;&gt;
+&lt;&lt;set $playerCreatures[_i].hungerCur = Math.min($playerCreatures[_i].hungerCur, $playerCreatures[_i].hungerMax)&gt;&gt;
                     &lt;&lt;if $firstFeeding is false&gt;&gt;&lt;&lt;set $firstFeeding to true&gt;&gt;&lt;&lt;addXP 20&gt;&gt;&lt;&lt;/if&gt;&gt;
                     &lt;&lt;if setup.items[_food].foodBuffs&gt;&gt;
                       &lt;&lt;set _buffs = setup.items[_food].foodBuffs&gt;&gt;
@@ -7168,7 +7169,8 @@ setup.showLoginRewardDialog = function() {
       &lt;div class=&quot;creature-action&quot;&gt;
         &lt;&lt;link &quot;🧼✨ Yes, care for all&quot; &quot;Home&quot;&gt;&gt;
           &lt;&lt;for _i range $eligibleCreaturesToCare&gt;&gt;
-            &lt;&lt;set $playerCreatures[_i].careCur to Math.min($playerCreatures[_i].careMax, $playerCreatures[_i].careCur += 30)&gt;&gt;
+&lt;&lt;set $playerCreatures[_i].careCur += 30&gt;&gt;
+&lt;&lt;set $playerCreatures[_i].careCur = Math.min($playerCreatures[_i].careCur, $playerCreatures[_i].careMax)&gt;&gt;
             &lt;&lt;if $tutorialQuests.quests.careCreature.accepted &amp;&amp; !$tutorialQuests.quests.careCreature.complete&gt;&gt;
               &lt;&lt;set $tutorialQuests.quests.careCreature.complete = true&gt;&gt;&lt;&lt;addXP 20&gt;&gt;&lt;&lt;set $money += 50&gt;&gt;
             &lt;&lt;/if&gt;&gt;
@@ -7710,7 +7712,7 @@ setup.showLoginRewardDialog = function() {
             &lt;&lt;capture _mealId&gt;&gt;
               &lt;div class=&quot;ingredient-select-card&quot;&gt;
                 &lt;&lt;link `$cookbookNames[_mealId] + &quot; (&quot; + $inventory[_mealId] + &quot;)&quot;` &quot;ViewCreature&quot;&gt;&gt;
-                  &lt;&lt;set $playerCreatures[$selectedCreatureToFeed].hungerCur to Math.min($playerCreatures[$selectedCreatureToFeed].hungerMax, $playerCreatures[$selectedCreatureToFeed].hungerCur + 20)&gt;&gt;
+                 &lt;&lt;set $playerCreatures[$selectedCreatureToFeed].hungerCur to Math.min($playerCreatures[$selectedCreatureToFeed].hungerMax, $playerCreatures[$selectedCreatureToFeed].hungerCur += 20)&gt;&gt;
                   &lt;&lt;set $inventory[_mealId] -= 1&gt;&gt;
                   &lt;&lt;if $firstFeeding is false&gt;&gt;&lt;&lt;set $firstFeeding to true&gt;&gt;&lt;&lt;addXP 20&gt;&gt;&lt;&lt;/if&gt;&gt;
                   &lt;&lt;unset $showFoodModal&gt;&gt;&lt;&lt;unset $selectedCreatureToFeed&gt;&gt;
