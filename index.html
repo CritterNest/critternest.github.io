@@ -6506,8 +6506,8 @@ if (ageIntervals > 0) {
     c.age += ageIntervals;
     c.lastAgeDay = now;
 
-    // Promote baby to adult at age 5
-    if (c.stage === "baby" && c.age >= 5) {
+    // Promote baby to adult at age 3
+    if (c.stage === "baby" && c.age >= 3) {
         c.stage = "adult";
         State.variables.notificationQueue.push({
             icon: "🌟",
