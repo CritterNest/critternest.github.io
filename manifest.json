@@ -1,7 +1,7 @@
 {
   "name": "CritterNest",
   "short_name": "CritterNest",
-  "description": "A cozy creature-breeding simulation game.",
+  "description": "A cozy creature-breeding sim.",
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
