@@ -3841,8 +3841,6 @@ max-width: 600px;
 }
 
 .fishing-styles {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
   margin: 30px 0;
   padding: 0 10px;
@@ -3878,7 +3876,7 @@ max-width: 600px;
 }
 
 .style-button button {
-  width: 100%;
+  min-width: 25%;
   padding: 15px 20px;
   font-size: 16px;
   font-family: "Quicksand", serif;
@@ -3890,6 +3888,7 @@ max-width: 600px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
 }
 
 .style-button button:hover {
@@ -3904,11 +3903,12 @@ max-width: 600px;
 }
 
 .style-description {
-  font-size: 12px;
+  font-size: 14px;
   font-family: "Quicksand", serif;
   color: var(--dark-text);
   text-align: center;
   font-style: italic;
+  font-weight: bold;
   line-height: 1.3;
   padding: 0 5px;
 }
@@ -8818,8 +8818,11 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;div class=&quot;weather-msg&quot;&gt;Checking the weather...&lt;/div&gt;
   &lt;div class=&quot;back-forth-buttons&quot;&gt;
     &lt;div class=&quot;back-button&quot;&gt;
-      &lt;&lt;link &quot;Go Back&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;link &quot;Refresh&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
+    &lt;div class=&quot;forth-button&quot;&gt;
+    &lt;&lt;link &quot;Go back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
   &lt;/div&gt;
 
 &lt;&lt;elseif $isBadWeather&gt;&gt;
@@ -8838,7 +8841,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;div class=&quot;weather-msg&quot;&gt;It&#39;s too dark to fish without a lantern.&lt;/div&gt;
   &lt;div class=&quot;back-forth-buttons&quot;&gt;
     &lt;div class=&quot;back-button&quot;&gt;
-      &lt;&lt;link &quot;Go Back&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 
@@ -8906,7 +8909,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
 
   &lt;div class=&quot;back-forth-buttons&quot;&gt;
-    &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Back&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+    &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
   &lt;/div&gt;
 
 &lt;&lt;else&gt;&gt;
@@ -8963,7 +8966,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
 
   &lt;div class=&quot;back-forth-buttons&quot;&gt;
-    &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Back&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+    &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
   &lt;/div&gt;
 
 &lt;&lt;/if&gt;&gt;
