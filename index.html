@@ -1145,7 +1145,7 @@ button:disabled {
 .back-forth-buttons {
     display: flex;
     justify-content: center;
-    gap: 60px;
+    gap: 40px;
   margin: 20px 0;
 }
 
@@ -9936,7 +9936,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 
     &lt;div&gt;
       &lt;strong&gt;&lt;&lt;print _creature.name&gt;&gt; #&lt;&lt;print _creature.id&gt;&gt;&lt;/strong&gt; (&lt;&lt;print _creature.gender&gt;&gt;)&lt;br&gt;
-      Stage: &lt;&lt;print _creature.stage&gt;&gt; | Age: &lt;&lt;print _creature.age&gt;&gt; days&lt;br&gt;
+      Stage: &lt;&lt;print _creature.stage&gt;&gt; | Age: &lt;&lt;= setup.getAgeDisplay(_creature)&gt;&gt;&lt;br&gt;
       Color: &lt;&lt;print _creature.displayTraits.color&gt;&gt; | Size: &lt;&lt;print _creature.displayTraits.size&gt;&gt; | Pattern: &lt;&lt;print _creature.displayTraits.pattern&gt;&gt;&lt;br&gt;
       &lt;&lt;link &quot;Fulfill Request with This Creature&quot;&gt;&gt;
         &lt;&lt;set $money += $viewingRequest.reward&gt;&gt;
@@ -9953,7 +9953,6 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
         &lt;&lt;/if&gt;&gt;
         &lt;&lt;run $playerCreatures.deleteAt(_creatureIndex)&gt;&gt;
         &lt;&lt;run $requests.deleteAt($viewingRequestIndex)&gt;&gt;
-        &lt;&lt;fillRequestSlots&gt;&gt;
         &lt;&lt;goto &quot;RequestComplete&quot;&gt;&gt;
       &lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
@@ -10058,7 +10057,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 
     &lt;div&gt;
       &lt;strong&gt;&lt;&lt;print _creature.name&gt;&gt; #&lt;&lt;print _creature.id&gt;&gt;&lt;/strong&gt; (&lt;&lt;print _creature.gender&gt;&gt;)&lt;br&gt;
-      Stage: &lt;&lt;print _creature.stage&gt;&gt; | Age: &lt;&lt;print _creature.age&gt;&gt; days&lt;br&gt;
+      Stage: &lt;&lt;print _creature.stage&gt;&gt; | Age: &lt;&lt;= setup.getAgeDisplay(_creature)&gt;&gt;&lt;br&gt;
       &lt;&lt;if _creature.stage === &quot;adult&quot;&gt;&gt;
         Color: &lt;&lt;print _creature.displayTraits.color&gt;&gt; | Size: &lt;&lt;print _creature.displayTraits.size&gt;&gt; | Pattern: &lt;&lt;print _creature.displayTraits.pattern&gt;&gt;
       &lt;&lt;else&gt;&gt;
@@ -10703,7 +10702,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
       &lt;&lt;set _possibleColors = setup.getCreaturePossibleColors(_species)&gt;&gt;
     &lt;&lt;/if&gt;&gt;
     &lt;&lt;set _newRequest.requiredTraits = { color: _possibleColors.random() }&gt;&gt;
-    &lt;&lt;set _newRequest.reward = random(80, 120)&gt;&gt;
+    &lt;&lt;set _newRequest.reward = random(300, 400)&gt;&gt;
 
   &lt;&lt;elseif _difficulty === &quot;medium&quot;&gt;&gt;
     &lt;&lt;set _allowedRarities = [&quot;Common&quot;, &quot;Uncommon&quot;]&gt;&gt;
@@ -10733,7 +10732,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
       &lt;&lt;elseif _trait === &quot;pattern&quot;&gt;&gt;&lt;&lt;set _newRequest.requiredTraits.pattern = _template.possiblePatterns.random()&gt;&gt;
       &lt;&lt;/if&gt;&gt;
     &lt;&lt;/for&gt;&gt;
-    &lt;&lt;set _newRequest.reward = random(150, 200)&gt;&gt;
+    &lt;&lt;set _newRequest.reward = random(500, 800)&gt;&gt;
 
   &lt;&lt;else&gt;&gt;
     &lt;&lt;set _newRequest.requiredTraits = {
@@ -10741,7 +10740,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
       size: _template.possibleSizes.random(),
       pattern: _template.possiblePatterns.random()
     }&gt;&gt;
-    &lt;&lt;set _newRequest.reward = random(230, 270)&gt;&gt;
+    &lt;&lt;set _newRequest.reward = random(900, 1200)&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 
   &lt;&lt;run $requests.push(_newRequest)&gt;&gt;
