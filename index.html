@@ -1423,8 +1423,8 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 
 .vet-sprite-wrap {
   flex-shrink: 0;
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   background-color: var(--lighttangerine);
   border-radius: 10px;
   display: flex;
@@ -1848,6 +1848,14 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 
 .shop-list-add {
   font-family: 'Quicksand', sans-serif;
+  font-size: 1em;
+  color: var(--mid-text);
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.shop-list-desc {
+    font-family: 'Quicksand', sans-serif;
   font-size: 0.75em;
   color: var(--mid-text);
   font-style: italic;
@@ -2714,6 +2722,12 @@ max-width: 600px;
   width: 100%;
 }
 
+/* accessories */
+
+.creature-accessory {
+  position: absolute;
+  pointer-events: none;
+}
 
 /* ==============================================
    VIEW GRID (Adults, Babies, Eggs)
@@ -6022,9 +6036,13 @@ setup.getDistance = function(lat1, lon1, lat2, lon2) {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 };
 
-setup.STEP_DISTANCE = 1;
-setup.MIN_THRESHOLD = 9;
-setup.MAX_ACCURACY  = 20;
+setup.STEP_DISTANCE  = 1;
+setup.MIN_THRESHOLD  = 25;
+setup.MAX_ACCURACY   = 20;
+setup.TIME_GATE_MS   = 10000;
+
+setup._watchId       = null;
+setup._lastAccepted  = 0; /* timestamp of last accepted position update */
 
 setup.startTracking = function() {
     if (!navigator.geolocation) {
@@ -6035,25 +6053,29 @@ setup.startTracking = function() {
 
     setup._watchId = navigator.geolocation.watchPosition(
         function(position) {
-            // Reject poor-accuracy readings
+            /* Reject poor-accuracy readings */
             if (position.coords.accuracy > setup.MAX_ACCURACY) return;
+
+            /* Time gate: ignore updates that arrive too soon after the last accepted one */
+            var now = Date.now();
+            if (now - setup._lastAccepted < setup.TIME_GATE_MS) return;
 
             var newLat = position.coords.latitude;
             var newLon = position.coords.longitude;
             var lastLat = State.variables.latitude;
             var lastLon = State.variables.longitude;
 
-            // Skip if this is the very first reading
+            /* Skip if this is the very first reading */
             if (lastLat !== 0 || lastLon !== 0) {
                 var dist = setup.getDistance(lastLat, lastLon, newLat, newLon);
 
-                // Ignore update entirely if below movement threshold
+                /* Ignore update entirely if below movement threshold */
                 if (dist < setup.MIN_THRESHOLD) return;
 
                 var newSteps = Math.floor(dist / setup.STEP_DISTANCE);
                 State.variables.steps += newSteps;
 
-                // Check for egg hatches or other step-based events
+                /* Check for egg hatches or other step-based events */
                 setup.checkStepEvents();
 
                 var steps = State.variables.steps;
@@ -6083,9 +6105,10 @@ setup.startTracking = function() {
                 }
             }
 
-            // Only update stored position if we passed the threshold (or first reading)
+            /* Only update stored position and timestamp if we passed both gates */
             State.variables.latitude  = newLat;
             State.variables.longitude = newLon;
+            setup._lastAccepted = now;
         },
         function(err) {
             console.warn("Tracking error:", err.message);
@@ -6942,7 +6965,11 @@ setup.showLoginRewardDialog = function() {
         "</div>"
     );
     Dialog.open();
-};</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+};
+
+// accessory stuff
+
+</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── MAILBOX HEADER ── */
 &lt;div class=&quot;home-header&quot;&gt;
@@ -7524,6 +7551,13 @@ setup.showLoginRewardDialog = function() {
             &lt;div class=&quot;creature-sprite-pattern&quot;
                  @style=&quot;&#39;background-image:url(&#39; + _spriteSheet + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
             &lt;/div&gt;
+            &lt;&lt;if _creature.equippedAccessory&gt;&gt;
+    &lt;&lt;set _accessoryItem to setup.items[_creature.equippedAccessory]&gt;&gt;
+    &lt;&lt;set _accessoryOffset to _template.accessoryOffsets[_creature.equippedAccessory][_gender][_size]&gt;&gt;
+    &lt;img class=&quot;creature-accessory&quot;
+         @src=&quot;_accessoryItem.images[_size]&quot;
+         @style=&quot;&#39;position:absolute;top:&#39; + _accessoryOffset.top + &#39;px;left:&#39; + _accessoryOffset.left + &#39;px;&#39;&quot;&gt;
+  &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
 
@@ -7600,7 +7634,7 @@ setup.showLoginRewardDialog = function() {
           onclick=&quot;void(0)&quot;&gt;
       &lt;&lt;link &quot;🧬 Genetics&quot;&gt;&gt;
         &lt;&lt;set $profileTab = &quot;genetics&quot;&gt;&gt;
-        &lt;&lt;goto `passage()`&gt;&gt;
+        &lt;&lt;refresh&gt;&gt;
       &lt;&lt;/link&gt;&gt;
     &lt;/span&gt;
   &lt;/div&gt;
@@ -8166,6 +8200,7 @@ setup.showLoginRewardDialog = function() {
     &lt;span style=&quot;text-decoration: line-through;&quot;&gt;_featured.basePrice g&lt;/span&gt;
     &lt;strong&gt;&lt;&lt;= Math.floor(_featured.basePrice * 0.8)&gt;&gt; g&lt;/strong&gt; (20% OFF!)
   &lt;/div&gt;
+                &lt;div class=&quot;shop-list-add&quot;&gt;Tap image to add to cart&lt;/div&gt;
 &lt;/div&gt;
 
 /* ── CATEGORY PILLS ── */
@@ -8233,7 +8268,7 @@ setup.showLoginRewardDialog = function() {
                   &lt;&lt;if _existingIndex == -1&gt;&gt;
                     &lt;&lt;run $shopCart.push({ id: _item.id, name: _item.name, image: _item.image, price: _cartPrice, quantity: 1, isUnique: _isUnique })&gt;&gt;
                   &lt;&lt;/if&gt;&gt;
-                  &lt;&lt;goto &quot;Shop&quot;&gt;&gt;
+                  &lt;&lt;refresh&gt;&gt;
                 &lt;&lt;/link&gt;&gt;
               &lt;&lt;/capture&gt;&gt;
             &lt;&lt;/if&gt;&gt;
@@ -8250,10 +8285,9 @@ setup.showLoginRewardDialog = function() {
               &lt;&lt;elseif _item.rarity == &quot;Legendary&quot;&gt;&gt;&lt;span style=&quot;color:#ff8000;&quot;&gt;Legendary&lt;/span&gt;
               &lt;&lt;/if&gt;&gt;
             &lt;/div&gt;
+            &lt;div class=&quot;shop-list-desc&quot;&gt;_item.description&lt;/div&gt;
             &lt;&lt;if _isLocked&gt;&gt;
               &lt;span class=&quot;shop-list-locked&quot;&gt;🔒 Locked&lt;/span&gt;
-            &lt;&lt;elseif _item.category != &quot;Creatures&quot;&gt;&gt;
-              &lt;div class=&quot;shop-list-add&quot;&gt;Tap image to add to cart&lt;/div&gt;
             &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -8310,18 +8344,18 @@ setup.showLoginRewardDialog = function() {
                     &lt;&lt;else&gt;&gt;
                       &lt;&lt;run $shopCart.splice(_ci, 1)&gt;&gt;
                     &lt;&lt;/if&gt;&gt;
-                    &lt;&lt;goto &quot;Shop&quot;&gt;&gt;
+                    &lt;&lt;refresh&gt;&gt;
                   &lt;&lt;/link&gt;&gt;
                   &lt;&lt;= &#39;&lt;input type=&quot;number&quot; class=&quot;macro-numberbox&quot; value=&quot;&#39; + _entry.quantity + &#39;&quot; min=&quot;1&quot; onchange=&quot;var idx=&#39; + _ci + &#39;;var val=parseInt(this.value,10);if(!val||val&lt;1){SugarCube.State.variables.shopCart.splice(idx,1);}else{SugarCube.State.variables.shopCart[idx].quantity=val;}SugarCube.Engine.play(\&#39;Shop\&#39;);&quot;&gt;&#39;&gt;&gt;
                   &lt;&lt;link &quot;+&quot;&gt;&gt;
                     &lt;&lt;set $shopCart[_ci].quantity += 1&gt;&gt;
-                    &lt;&lt;goto &quot;Shop&quot;&gt;&gt;
+                    &lt;&lt;refresh&gt;&gt;
                   &lt;&lt;/link&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
                 &lt;span class=&quot;cart-line-price&quot;&gt;💰 _lineTotal g&lt;/span&gt;
                 &lt;&lt;link &quot;✕&quot;&gt;&gt;
                   &lt;&lt;run $shopCart.splice(_ci, 1)&gt;&gt;
-                  &lt;&lt;goto &quot;Shop&quot;&gt;&gt;
+                  &lt;&lt;refresh&gt;&gt;
                 &lt;&lt;/link&gt;&gt;
               &lt;/div&gt;
             &lt;/div&gt;
@@ -8515,7 +8549,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
   
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="PurchaseComplete" tags="" position="150,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="PurchaseComplete" tags="" position="200,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
   
@@ -8698,11 +8732,28 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
                 &lt;&lt;if _creature.isBaby&gt;&gt;
                   &lt;span style=&quot;font-size:2em;&quot;&gt;🥚&lt;/span&gt;
                 &lt;&lt;else&gt;&gt;
-                  &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;transform:&#39; + _scale + &#39;;transform-origin:top left;&#39;&quot;&gt;
-                    &lt;div class=&quot;creature-sprite-pattern&quot;
-                         @style=&quot;&#39;background-image:url(&#39; + _template.avatars[_gender].patternSpriteSheets[_size] + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;&#39;&quot;&gt;
-                    &lt;/div&gt;
-                  &lt;/div&gt;
+                  &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _xPos = _col * -240&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;240px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;120px&quot;&gt;&gt;
+    &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _xPos = _col * -160&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;160px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;80px&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _xPos = _col * -80&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;80px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;40px&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;div @style=&quot;&#39;width:&#39; + _scaledDimensions + &#39;;height:&#39; + _scaledDimensions + &#39;;overflow:hidden;flex-shrink:0;&#39;&quot;&gt;
+      &lt;div style=&quot;transform:scale(0.5);transform-origin:top left;&quot;&gt;
+        &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+          &lt;div class=&quot;creature-sprite-pattern&quot;
+               @style=&quot;&#39;background-image:url(&#39; + _template.avatars[_gender].patternSpriteSheets[_size] + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
                 &lt;&lt;/if&gt;&gt;
               &lt;/div&gt;
 
@@ -8726,71 +8777,75 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
                 &lt;&lt;/if&gt;&gt;
 
                 /* Action */
-                &lt;div class=&quot;creature-action&quot;&gt;
-                  &lt;&lt;if _canUse&gt;&gt;
-                    &lt;&lt;if _itemToUse.isAccessory&gt;&gt;
-                      &lt;&lt;if _alreadyEquipped&gt;&gt;
-                        &lt;&lt;capture _i, _itemToUse&gt;&gt;
-                          &lt;&lt;link &quot;Unequip&quot;&gt;&gt;
-                            &lt;&lt;run _creature.equippedAccessories.delete(_itemToUse.id)&gt;&gt;
-                            &lt;&lt;set _resultMessage = `Unequipped ${_itemToUse.name} from ${_creature.name}.`&gt;&gt;
-                            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
-                          &lt;&lt;/link&gt;&gt;
-                        &lt;&lt;/capture&gt;&gt;
-                      &lt;&lt;else&gt;&gt;
-                        &lt;&lt;capture _i, _itemToUse&gt;&gt;
-                          &lt;&lt;link &quot;Equip&quot;&gt;&gt;
-                            &lt;&lt;if !_creature.equippedAccessories&gt;&gt;&lt;&lt;set _creature.equippedAccessories = []&gt;&gt;&lt;&lt;/if&gt;&gt;
-                            &lt;&lt;run _creature.equippedAccessories.push(_itemToUse.id)&gt;&gt;
-                            &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
-                            &lt;&lt;set _resultMessage = `Equipped ${_itemToUse.name} on ${_creature.name}!`&gt;&gt;
-                            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
-                          &lt;&lt;/link&gt;&gt;
-                        &lt;&lt;/capture&gt;&gt;
-                      &lt;&lt;/if&gt;&gt;
-                    &lt;&lt;elseif _itemToUse.id === &quot;CarePotion&quot;&gt;&gt;
-                      &lt;&lt;capture _i, _itemToUse&gt;&gt;
-                        &lt;&lt;link &quot;Use&quot;&gt;&gt;
-                          &lt;&lt;set _careAmount = Math.min(30, 100 - _creature.care)&gt;&gt;
-                          &lt;&lt;set _creature.care += _careAmount&gt;&gt;
-                          &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
-                          &lt;&lt;set _resultMessage = `Used ${_itemToUse.name} on ${_creature.name}! Restored ${_careAmount} Care Points.`&gt;&gt;
-                          &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                          &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-                          &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
-                        &lt;&lt;/link&gt;&gt;
-                      &lt;&lt;/capture&gt;&gt;
-                    &lt;&lt;elseif _itemToUse.id === &quot;ScrollFertility&quot;&gt;&gt;
-    &lt;&lt;capture _i, _itemToUse&gt;&gt;
-        &lt;&lt;link &quot;Use&quot;&gt;&gt;
-            &lt;&lt;run _creature.fertilityOffset = Date.now()&gt;&gt;
-            &lt;&lt;set $inventory.ScrollFertility -= 1&gt;&gt;
-            &lt;&lt;set _resultMessage = `Used Scroll of Fertility on ${_creature.name}! They are now fertile for the next 3 days.`&gt;&gt;
+                /* Action */
+&lt;div class=&quot;creature-action&quot;&gt;
+  &lt;&lt;if _canUse&gt;&gt;
+    &lt;&lt;if _itemToUse.isAccessory&gt;&gt;
+      &lt;&lt;if _alreadyEquipped&gt;&gt;
+        &lt;&lt;capture _i, _itemToUse&gt;&gt;
+          &lt;&lt;link &quot;Unequip&quot;&gt;&gt;
+            &lt;&lt;set _creature.equippedAccessory to null&gt;&gt;
+            &lt;&lt;set $inventory[_itemToUse.id] += 1&gt;&gt;
+            &lt;&lt;set _resultMessage = `Unequipped ${_itemToUse.name} from ${_creature.name}.`&gt;&gt;
             &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
             &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
             &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;/link&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;capture _i, _itemToUse&gt;&gt;
+          &lt;&lt;link &quot;Equip&quot;&gt;&gt;
+            &lt;&lt;if _creature.equippedAccessory&gt;&gt;
+              &lt;&lt;set $inventory[_creature.equippedAccessory] += 1&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+            &lt;&lt;set _creature.equippedAccessory to _itemToUse.id&gt;&gt;
+            &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
+            &lt;&lt;set _resultMessage = `Equipped ${_itemToUse.name} on ${_creature.name}!`&gt;&gt;
+            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;/link&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;elseif _itemToUse.id === &quot;CarePotion&quot;&gt;&gt;
+      &lt;&lt;capture _i, _itemToUse&gt;&gt;
+        &lt;&lt;link &quot;Use&quot;&gt;&gt;
+          &lt;&lt;set _careAmount = Math.min(30, 100 - _creature.care)&gt;&gt;
+          &lt;&lt;set _creature.care += _careAmount&gt;&gt;
+          &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
+          &lt;&lt;set _resultMessage = `Used ${_itemToUse.name} on ${_creature.name}! Restored ${_careAmount} Care Points.`&gt;&gt;
+          &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
         &lt;&lt;/link&gt;&gt;
-    &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;/capture&gt;&gt;
+    &lt;&lt;elseif _itemToUse.id === &quot;ScrollFertility&quot;&gt;&gt;
+      &lt;&lt;capture _i, _itemToUse&gt;&gt;
+        &lt;&lt;link &quot;Use&quot;&gt;&gt;
+          &lt;&lt;run _creature.fertilityOffset = Date.now()&gt;&gt;
+          &lt;&lt;set $inventory.ScrollFertility -= 1&gt;&gt;
+          &lt;&lt;set _resultMessage = `Used Scroll of Fertility on ${_creature.name}! They are now fertile for the next 3 days.`&gt;&gt;
+          &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
+        &lt;&lt;/link&gt;&gt;
+      &lt;&lt;/capture&gt;&gt;
     &lt;&lt;elseif _itemToUse.id === &quot;ScrollImmortality&quot;&gt;&gt;
-    &lt;&lt;capture _i, _itemToUse&gt;&gt;
+      &lt;&lt;capture _i, _itemToUse&gt;&gt;
         &lt;&lt;link &quot;Use&quot;&gt;&gt;
-            &lt;&lt;set _creature.immortal = true&gt;&gt;
-            &lt;&lt;set $inventory.ScrollImmortality -= 1&gt;&gt;
-            &lt;&lt;set _resultMessage = `Used Scroll of Immortality on ${_creature.name}! They will now live forever.`&gt;&gt;
-            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;set _creature.immortal = true&gt;&gt;
+          &lt;&lt;set $inventory.ScrollImmortality -= 1&gt;&gt;
+          &lt;&lt;set _resultMessage = `Used Scroll of Immortality on ${_creature.name}! They will now live forever.`&gt;&gt;
+          &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
+          &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
         &lt;&lt;/link&gt;&gt;
-    &lt;&lt;/capture&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-                  &lt;&lt;else&gt;&gt;
-                    &lt;span class=&quot;inv-item-disabled&quot;&gt;Cannot Use&lt;/span&gt;
-                  &lt;&lt;/if&gt;&gt;
-                &lt;/div&gt;
+      &lt;&lt;/capture&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;span class=&quot;inv-item-disabled&quot;&gt;Cannot Use&lt;/span&gt;
+  &lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
 
               &lt;/div&gt;
             &lt;/div&gt;
@@ -11022,6 +11077,20 @@ silhouettes: {
         large:  &quot;https://i.imgur.com/gAIuPFE.png&quot;
     }
 },
+accessoryOffsets: {
+  Bow: {
+    male: {
+      small:  { top: 33, left: 55 },
+      medium: { top: 65, left: 110 },
+      large:  { top: 95, left: 166 }
+    },
+    female: {
+      small:  { top: 12, left: 46 },
+      medium: { top: 24, left: 94 },
+      large:  { top: 35, left: 140 }
+    }
+  }
+},
     rarity: &quot;Common&quot;,
     flavorText: &quot;Gentle and curious, Caevira wander forest trails collecting small treasures. They’re friendly companions who bond quickly with patient breeders.&quot;,
     careCur: 80,
@@ -11110,6 +11179,20 @@ silhouettes: {
         medium: &quot;https://i.imgur.com/IPuRhBk.png&quot;,
         large:  &quot;https://i.imgur.com/IPuRhBk.png&quot;
     }
+},
+accessoryOffsets: {
+  Bow: {
+    male: {
+      small:  { top: 69, left: 13 },
+      medium: { top: 138, left: 27 },
+      large:  { top: 210, left: 40 }
+    },
+    female: {
+      small:  { top: 40, left: 13 },
+      medium: { top: 82, left: 26 },
+      large:  { top: 120, left: 39 }
+    }
+  }
 },
    rarity: &quot;Common&quot;,
    flavorText: &quot;Noctulo are lively dusk-dwellers who enjoy fluttering between treetops. They’re playful companions that brighten any woodland outing.&quot;,
@@ -11200,6 +11283,20 @@ affectionMax: 100,
         large:  &quot;https://i.imgur.com/1MLYzzC.png&quot;
     }
 },
+accessoryOffsets: {
+  Bow: {
+    male: {
+      small:  { top: 33, left: 55 },
+      medium: { top: 65, left: 110 },
+      large:  { top: 95, left: 166 }
+    },
+    female: {
+      small:  { top: 12, left: 46 },
+      medium: { top: 24, left: 94 },
+      large:  { top: 35, left: 140 }
+    }
+  }
+},
     rarity: &quot;Common&quot;,
     flavorText: &quot;A sturdy critter with a mellow spirit, Urcanis enjoy lounging on warm rocks. They’re dependable helpers who adapt easily to any home.&quot;,
     careCur: 80,
@@ -11288,6 +11385,20 @@ affectionMax: 100,
         medium: &quot;https://i.imgur.com/uMhgOh5.png&quot;,
         large:  &quot;https://i.imgur.com/uMhgOh5.png&quot;
     }
+},
+accessoryOffsets: {
+  Bow: {
+    male: {
+      small:  { top: 33, left: 55 },
+      medium: { top: 65, left: 110 },
+      large:  { top: 95, left: 166 }
+    },
+    female: {
+      small:  { top: 12, left: 46 },
+      medium: { top: 24, left: 94 },
+      large:  { top: 35, left: 140 }
+    }
+  }
 },
     rarity: &quot;Uncommon&quot;,
     flavorText: &quot;Playful and sure-footed, Capranis love bounding across rugged terrain. Their upbeat nature makes them a favorite among new collectors.&quot;,
@@ -11378,6 +11489,20 @@ affectionMax: 100,
         medium: &quot;https://i.imgur.com/83gZ8ug.png&quot;,
         large:  &quot;https://i.imgur.com/83gZ8ug.png&quot;
     }
+},
+accessoryOffsets: {
+  Bow: {
+    male: {
+      small:  { top: 33, left: 55 },
+      medium: { top: 65, left: 110 },
+      large:  { top: 95, left: 166 }
+    },
+    female: {
+      small:  { top: 20, left: 36 },
+      medium: { top: 50, left: 88 },
+      large:  { top: 35, left: 140 }
+    }
+  }
 },
     rarity: &quot;Common&quot;,
     flavorText: &quot;Quiet and clever, Chiroden prefer cozy caves and twilight skies. Despite their shyness, they form strong connections with kind caretakers.&quot;,
@@ -11896,7 +12021,7 @@ affectionMax: 100,
 &lt;&lt;set $featuredCreatureIndex to -1&gt;&gt;
 
 &lt;&lt;set $vetServiceComplete = &quot;&quot;&gt;&gt;
-&lt;&lt;set $money = 300&gt;&gt;
+&lt;&lt;set $money = 3000&gt;&gt;
 &lt;&lt;set $maxEggSlots to 6&gt;&gt;
 &lt;&lt;set $eggSlotUpgradeCost to 200&gt;&gt;
 &lt;&lt;set $creaturesForSale to []&gt;&gt;
@@ -12227,19 +12352,24 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 },
   
   /* ACCESSORIES */
-  &quot;BowHeadband&quot;: {
-    id: &quot;BowHeadband&quot;,
-    name: &quot;Bow Headband&quot;,
-    category: &quot;Accessories&quot;,
-    basePrice: 150,
-    baseSell: 75,
-    image: &quot;https://via.placeholder.com/150/e91e63/ffffff?text=Bow&quot;,
-    description: &quot;A cute headband with a decorative bow. Increases affection gain by 10% when worn.&quot;,
-    rarity: &quot;Common&quot;,
-    isConsumable: false,
-    requiresMonster: true,
-    isAccessory: true
+&quot;Bow&quot;: {
+  id: &quot;Bow&quot;,
+  name: &quot;Bow&quot;,
+  category: &quot;Accessories&quot;,
+  basePrice: 150,
+  baseSell: 75,
+  image: &quot;https://i.imgur.com/nCH1bnG.png&quot;,
+  images: {
+    small:  &quot;https://i.imgur.com/sA1cgqL.png&quot;,
+    medium: &quot;https://i.imgur.com/8HtxOdP.png&quot;,
+    large:  &quot;https://i.imgur.com/nCH1bnG.png&quot;
   },
+  description: &quot;A cute bow accessory. (WIP: MAY CAUSE ERRORS)&quot;,
+  rarity: &quot;Common&quot;,
+  isConsumable: false,
+  requiresMonster: true,
+  isAccessory: true
+},
   
   &quot;WheatSeeds&quot;: {
   id: &quot;WheatSeeds&quot;,
@@ -12830,7 +12960,7 @@ isAccessory: false
     CreatureChow: 0,
     ScrollFertility: 0,
     ScrollImmortality: 0,
-    BowHeadband: 0,
+    Bow: 0,
     WheatSeeds: 0,
 CornSeeds: 0,
 PotatoSeeds: 0,
@@ -16008,7 +16138,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="CartCheckoutComplete" tags="" position="25,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="CartCheckoutComplete" tags="" position="100,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
 
