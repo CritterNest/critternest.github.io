@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -2070,6 +2064,32 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
   background-color: #017a74 !important;
 }
 
+/* Gender Toggle button for shop */
+
+.gender-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.gender-toggle a {
+  display: inline-block;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.7em;
+  font-weight: bold;
+  border: 2px solid #aaa;
+  border-radius: 20px;
+  padding: 5px 10px;
+  white-space: nowrap;
+  color: #aaa;
+  text-decoration: none;
+}
+
+.gender-toggle .active-cat-pill {
+  font-size: 0.7em !important;
+}
+
 /* ── REAL ESTATE BANNER ── */
 .re-banner {
   background: linear-gradient(135deg, var(--tangerine), var(--paleyellow));
@@ -2423,9 +2443,9 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 .detail-card1 {
   background: linear-gradient(135deg, #FDD5DF 0%, #FFB6C1 100%);
   border-radius: 20px;
-  padding: 40px;
-max-width: 600px;
-  max-height: 80vh;
+  padding: 20px;
+  max-width: 70vh;
+  max-height: 70vh;
   overflow-y: auto;
   width: 90%;
   color: #1c2841;
@@ -2440,7 +2460,10 @@ max-width: 600px;
 
 .detail-header1 {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 30px;
+  font-family: 'Chewy', system-ui;
+  color: var(--coral);
+  margin-bottom: -20px;
 }
 
 .detail-header1 h2 {
@@ -2449,19 +2472,19 @@ max-width: 600px;
 
 .item-image1 {
   text-align: center;
-  margin: 30px 0;
+  margin: 10px 0;
 }
 
 .image-box1 {
   background-color: rgba(255,255,255,0.2);
   border-radius: 20px;
-  padding: 30px;
+  padding: 20px;
   display: inline-block;
 }
 
 .rarity-badge1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .rarity-common1 {
@@ -2487,22 +2510,21 @@ max-width: 600px;
 
 .price-display1 {
   text-align: center;
-  font-size: 2em;
+  font-size: 34px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: -20px;
 }
 
 .description-box1 {
   background-color: rgba(255,255,255,0.1);
-  padding: 20px;
+  padding: 10px;
   border-radius: 12px;
-  margin-bottom: 30px;
   text-align: center;
 }
 
 .description-box1 p {
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 .quantity-selector1 {
@@ -2510,7 +2532,7 @@ max-width: 600px;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .quantity-display1 {
@@ -2519,8 +2541,29 @@ max-width: 600px;
 }
 
 .purchase-buttons1 {
-  display: flex;
-  gap: 15px;
+  display: block;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.purchase-buttons1 a {
+  padding: 5px 10px;
+  background-color: var(--tangerine);
+  color: var(--light-text);
+  font-family: 'Quicksand', sans-serif;
+  border: 2px solid var(--darkcoral);
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease
+}
+
+.purchase-buttons1 a:hover {
+  background-color: rgba(252, 237, 240, 0.8);
+  color: #d4394f;
+  border: 3px solid var(--coral);
+  text-decoration: none;
 }
 
 .button-disabled1 {
@@ -2562,6 +2605,13 @@ max-width: 600px;
   align-items: center;
   border-bottom: 2px solid #333;
   margin-bottom: 15px;
+}
+
+.modal-header-buy {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -30px;
 }
 
 .modal-header h2 {
@@ -2887,6 +2937,10 @@ max-width: 600px;
   background-color: var(--coral);
 }
 
+.breeding-confirm p {
+  color: var(--dark-text);
+}
+
 .fertility-notification {
   background-color: var(--lightyellow);
   border: 3px solid var(--teal);
@@ -3072,7 +3126,7 @@ max-width: 600px;
   font-style: italic;
 }
 
-.kitchen-tray-remove {
+.kitchen-tray-remove a {
   position: absolute;
   top: 3px;
   right: 3px;
@@ -3255,6 +3309,51 @@ max-width: 600px;
   border-color: #ccc;
   color: #aaa;
   text-decoration: line-through;
+}
+
+.kitchen-queue {
+  display: block;
+  align-items: center;
+  background-color: var(--paleyellow);
+  border: 2px solid var(--tangerine);
+  border-radius: 12px;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.kitchen-queue-header {
+  text-align: center;
+  background-color: var(--lighttangerine);
+  border-bottom: 2px solid var(--tangerine);
+  color: var(--mid-text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.kitchen-queue-header strong {
+  color: var(--coral);
+}
+
+.kitchen-queue-item {
+  text-align: left;
+  padding: 8px;
+}
+
+.kitchen-queue-name {
+  color: var(--mid-text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.kitchen-queue-time {
+  text-align: right;
+  color: var(--coral);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* ── COOK BUTTON ── */
@@ -4354,8 +4453,8 @@ max-width: 600px;
 }
 
 .info-box {
-  background-color: var(--teal);
-  color: var(--light-text);
+  background-color: var(--tangerine);
+  color: var(--mid-text);
   padding: 1em;
   border-radius: 10px;
   margin-bottom: 1.5em;
@@ -4363,7 +4462,7 @@ max-width: 600px;
 }
 
 .info-box strong {
-  color: var(--lightyellow);
+  color: var(--dark-text);
 }
 
 .warning {
@@ -6281,9 +6380,10 @@ setup.showNextFarmDialog = function () {
         });
         return;
     }
-    var item = setup._farmDialogQueue.shift();
-    var icon = (item._type === "farmDying") ? "🥀" : "🌾";
-    Dialog.create(icon + " Farm Alert", "farm-alert");
+var item = setup._farmDialogQueue.shift();
+var icon = item.icon || "🌾";
+var title = item.title || "Alert";
+Dialog.create(icon + " " + title, "farm-alert");
     Dialog.wiki("'''" + item.name + "''' " + item.message);
     $(document).one("dialog:closed", function () {
         setup.showNextFarmDialog();
@@ -6313,10 +6413,12 @@ setup.startFarmPoller = function () {
             if (msSinceWatered >= dyingThreshold && !plot._dyingNotified) {
                 plot._dyingNotified = true;
                 setup._farmDialogQueue.push({
-                    _type: "farmDying",
-                    name: cropData.name + " (Plot " + (i + 1) + ")",
-                    message: "is dying of thirst! Water it soon or it will be lost."
-                });
+    _type: "farmDying",
+    icon: "🥀",
+    title: "Farm Alert",
+    name: cropData.name + " (Plot " + (i + 1) + ")",
+    message: "is dying of thirst! Water it soon or it will be lost."
+});
                 setup.showNextFarmDialog();
             }
             if (msSinceWatered < dyingThreshold) {
@@ -6330,10 +6432,12 @@ setup.startFarmPoller = function () {
             if (isReady && !plot._harvestNotified) {
                 plot._harvestNotified = true;
                 setup._farmDialogQueue.push({
-                    _type: "farmHarvest",
-                    name: cropData.name + " (Plot " + (i + 1) + ")",
-                    message: "is ready to harvest!"
-                });
+    _type: "farmHarvest",
+    icon: "🌾",
+    title: "Farm Alert",
+    name: cropData.name + " (Plot " + (i + 1) + ")",
+    message: "is ready to harvest!"
+});
                 setup.showNextFarmDialog();
             }
             if (!isReady) {
@@ -6754,53 +6858,35 @@ setup.getCookingTier = function(recipeKey) {
 
 setup.getCookingDuration = function(tier) {
     switch(tier) {
-        case "exact": return 15 * 60 * 1000;  // 15 minutes
+        case "exact": return 1 * 60 * 1000;  // 1 minute
         case "tier1": return 30 * 60 * 1000;  // 30 minutes
         case "tier2": return 60 * 60 * 1000;  // 1 hour
         default:      return 0;
     }
 };
 
-/* ── Cooking poller ── */
-setup._cookingPollInterval = null;
-
 setup.startCookingPoller = function() {
     if (setup._cookingPollInterval) return;
     setup._cookingPollInterval = setInterval(function() {
         var queue = State.variables.cookingQueue;
         if (!queue || queue.length === 0) return;
-
         var now = Date.now();
-        var anyFinished = false;
-
         queue.forEach(function(meal) {
             if (meal.done || now < meal.finishTime) return;
             meal.done = true;
-            anyFinished = true;
-
-            // Add meal to inventory
-            var inv = State.variables.inventory;
-            if (!inv[meal.mealId]) inv[meal.mealId] = 0;
-            inv[meal.mealId] += 1;
-
-            // Store meal name
-            if (!setup.mealNames) setup.mealNames = {};
-            setup.mealNames[meal.mealId] = meal.recipeName;
-
-            // Notify
+          
+            // Notify — do NOT push to inventory or remove from queue here
             setup._farmDialogQueue.push({
-                _type: "cookingDone",
-                name: meal.recipeName,
-                message: "has finished cooking and is ready to collect!"
-            });
+    _type: "cookingDone",
+    icon: "🍳",
+    title: "Kitchen Alert",
+    name: meal.recipeName,
+    message: "has finished cooking and is ready to collect!"
+});
             setup.showNextFarmDialog();
         });
-
-        // Remove collected meals from queue
-        if (anyFinished) {
-            State.variables.cookingQueue = queue.filter(function(m) { return !m.done; });
-        }
-    }, 30000); // check every 30 seconds
+        // Removed: the filter that was deleting done meals
+    }, 30000);
 };
 
 setup.loginRewardDefs = [
@@ -7858,6 +7944,7 @@ setup.showLoginRewardDialog = function() {
 &lt;&lt;/if&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Breeding" tags="" position="1100,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set _availableEggSlots to $maxEggSlots - setup.countEggs()&gt;&gt;
 &lt;&lt;if _availableEggSlots &lt;= 0&gt;&gt;
   &lt;h2&gt;Creature Breeding&lt;/h2&gt;
   &lt;div class=&quot;warning&quot;&gt;
@@ -7872,7 +7959,7 @@ setup.showLoginRewardDialog = function() {
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
   &lt;div class=&quot;forth-button&quot;&gt;
-  &lt;&lt;link &quot;Purchase Egg Slots&quot; &quot;ShopEggSlots&quot;&gt;&gt;
+  &lt;&lt;link &quot;Purchase Egg Slots&quot; &quot;RealEstate&quot;&gt;&gt;
   &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;&lt;/div&gt;
 &lt;&lt;else&gt;&gt;
@@ -7887,7 +7974,7 @@ setup.showLoginRewardDialog = function() {
 
 &lt;div class=&quot;info-box&quot;&gt;
 &lt;strong&gt;Egg Slots:&lt;/strong&gt; &lt;&lt;= setup.countEggs()&gt;&gt;/$maxEggSlots
-  &lt;strong&gt;Current Day:&lt;/strong&gt; $currentDay&lt;br&gt;
+  &lt;br&gt;
   &lt;strong&gt;Breeding:&lt;/strong&gt; Select two adult creatures of opposite genders
 &lt;/div&gt;
 
@@ -8400,18 +8487,20 @@ setup.showLoginRewardDialog = function() {
 &lt;button class=&quot;scroll-top-btn&quot; onclick=&quot;window.scrollTo({top: 0, behavior: &#39;smooth&#39;})&quot;&gt;↑ Back to Top&lt;/button&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="ItemDetail" tags="" position="150,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if !$selectedGender&gt;&gt;&lt;&lt;set $selectedGender = &quot;Female&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;div class=&quot;modal-overlay&quot;&gt;
   
   &lt;div class=&quot;detail-card1&quot;&gt;
 
-      &lt;div class=&quot;modal-header-shop&quot;&gt;
+      &lt;div class=&quot;modal-header-buy&quot;&gt;
 &lt;&lt;link &quot;❌Close&quot; &quot;Shop&quot;&gt;&gt;
+&lt;&lt;set $selectedGender = null&gt;&gt;
       &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
     
     
     &lt;div class=&quot;detail-header1&quot;&gt;
-      &lt;h5&gt;$selectedItem.name&lt;/h5&gt;
+$selectedItem.name
     &lt;/div&gt;
     
     
@@ -8432,43 +8521,42 @@ setup.showLoginRewardDialog = function() {
       &lt;&lt;/if&gt;&gt;
     &lt;/div&gt;
     
-    
-    &lt;&lt;if $selectedItem.id == $featuredItemId&gt;&gt;
-      &lt;&lt;set _itemPrice = Math.floor($selectedItem.basePrice * 0.8)&gt;&gt;
-    &lt;&lt;else&gt;&gt;
       &lt;&lt;set _itemPrice = $selectedItem.basePrice&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
     
     &lt;div class=&quot;price-display1&quot;&gt;
       $ _itemPrice
     &lt;/div&gt;
     
+    &lt;div class=&quot;gender-toggle&quot;&gt;
+  &lt;&lt;if $selectedGender == &quot;Female&quot;&gt;&gt;
+    &lt;span class=&quot;active-cat-pill&quot;&gt;♀ Female&lt;/span&gt;
+    &lt;&lt;link &quot;♂ Male&quot;&gt;&gt;
+      &lt;&lt;set $selectedGender = &quot;Male&quot;&gt;&gt;
+      &lt;&lt;refresh&gt;&gt;
+    &lt;&lt;/link&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;link &quot;♀ Female&quot;&gt;&gt;
+      &lt;&lt;set $selectedGender = &quot;Female&quot;&gt;&gt;
+      &lt;&lt;refresh&gt;&gt;
+    &lt;&lt;/link&gt;&gt;
+    &lt;span class=&quot;active-cat-pill&quot;&gt;♂ Male&lt;/span&gt;
+  &lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
     
     &lt;div class=&quot;description-box1&quot;&gt;
       &lt;p&gt;$selectedItem.description&lt;/p&gt;
     &lt;/div&gt;
-    
-    
-    &lt;&lt;if $selectedItem.category != &quot;Creatures&quot; &amp;&amp; $selectedItem.id != &quot;FishingRod&quot; &amp;&amp; $selectedItem.id != &quot;Lantern&quot;&gt;&gt;
-    
-    &lt;span class=&quot;quantity-box&quot;&gt;
-    &lt;&lt;numberbox &quot;$purchaseQuantity&quot; 1&gt;&gt;
-&lt;/span&gt;
-    &lt;&lt;else&gt;&gt;
-      &lt;&lt;set $purchaseQuantity = 1&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    
-    
-    &lt;div class=&quot;purchase-buttons1&quot;&gt;
+
     
       &lt;&lt;if $selectedItem.category == &quot;Creatures&quot;&gt;&gt;
         
         &lt;&lt;if $money &gt;= _itemPrice&gt;&gt;
+            &lt;div class=&quot;purchase-buttons1&quot;&gt;
           &lt;&lt;link &quot;Buy Creature&quot;&gt;&gt;
             &lt;&lt;set $money -= _itemPrice&gt;&gt;
             &lt;&lt;set _purchasedCreature = clone(setup.creatureTemplates[$selectedItem.id])&gt;&gt;
 &lt;&lt;set _purchasedCreature.id to random(100000, 999999)&gt;&gt;
-&lt;&lt;set _purchasedCreature.gender to either(&quot;Male&quot;, &quot;Female&quot;)&gt;&gt;
+&lt;&lt;set _purchasedCreature.gender to $selectedGender&gt;&gt;
 &lt;&lt;set _possibleColors = setup.getCreaturePossibleColors(_purchasedCreature.name)&gt;&gt;
 &lt;&lt;set _purchasedCreature.genes = {
 color: [_possibleColors.random(), _possibleColors.random()],
@@ -8516,41 +8604,16 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
             
             &lt;&lt;goto &quot;PurchaseComplete&quot;&gt;&gt;
           &lt;&lt;/link&gt;&gt;
+          &lt;/div&gt;
         &lt;&lt;else&gt;&gt;
           &lt;div class=&quot;button-disabled1&quot;&gt;
             Not enough money!
           &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
         
-      &lt;&lt;else&gt;&gt;
-       
-        &lt;&lt;set _totalCost = _itemPrice * $purchaseQuantity&gt;&gt;
-        &lt;&lt;if $money &gt;= _totalCost&gt;&gt;
-          &lt;&lt;link &quot;Buy Now&quot;&gt;&gt;
-            &lt;&lt;set $money -= _totalCost&gt;&gt;
-            &lt;&lt;set $inventory[$selectedItem.id] += $purchaseQuantity&gt;&gt;
-            &lt;&lt;set $purchaseSuccess = &quot;Purchased &quot; + $purchaseQuantity + &quot;x &quot; + $selectedItem.name + &quot;!&quot;&gt;&gt;
-            &lt;&lt;set $purchaseQuantity = 1&gt;&gt;
-            
-            &lt;&lt;if $selectedItem.id == &quot;CreatureChow&quot;&gt;&gt;
-            
-            &lt;&lt;if $tutorialQuests.quests.buyFood.accepted &amp;&amp; !$tutorialQuests.quests.buyFood.complete&gt;&gt;
-  &lt;&lt;set $tutorialQuests.quests.buyFood.complete = true&gt;&gt;
-  &lt;&lt;addXP 30&gt;&gt;
-  &lt;&lt;set $money += 75&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-            
-            &lt;&lt;goto &quot;PurchaseComplete&quot;&gt;&gt;
-          &lt;&lt;/link&gt;&gt;
-        &lt;&lt;else&gt;&gt;
-          &lt;div class=&quot;button-disabled&quot;&gt;
-            Not enough money!
-          &lt;/div&gt;
-        &lt;&lt;/if&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
       
-    &lt;/div&gt;
+        &lt;&lt;/if&gt;&gt;
+     
     
   &lt;/div&gt;
   
@@ -8627,7 +8690,26 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;&lt;/if&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 
-&lt;&lt;if _itemsInCategory.length === 0&gt;&gt;
+&lt;&lt;if $selectedCategory === &quot;Meals&quot;&gt;&gt;
+  &lt;&lt;set _hasMeals = false&gt;&gt;
+  &lt;&lt;for _mealId, _qty range $inventory&gt;&gt;
+    &lt;&lt;if _qty &gt; 0 &amp;&amp; $mealNames &amp;&amp; $mealNames[_mealId]&gt;&gt;
+      &lt;&lt;set _hasMeals = true&gt;&gt;
+      &lt;div class=&quot;inv-item-card&quot;&gt;
+        &lt;div class=&quot;inv-item-body&quot;&gt;
+          &lt;div class=&quot;inv-item-name&quot;&gt;&lt;&lt;print $mealNames[_mealId]&gt;&gt;&lt;/div&gt;
+          &lt;div class=&quot;inv-item-qty&quot;&gt;Owned: &lt;strong&gt;&lt;&lt;print _qty&gt;&gt;&lt;/strong&gt;&lt;/div&gt;
+          &lt;span class=&quot;inv-item-note&quot;&gt;Ready to eat&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/for&gt;&gt;
+  &lt;&lt;if !_hasMeals&gt;&gt;
+    &lt;div class=&quot;vet-no-creatures&quot;&gt;No meals in your inventory yet.&lt;/div&gt;
+  &lt;&lt;/if&gt;&gt;
+  
+&lt;&lt;else&gt;&gt;
+&lt;&lt;if _itemsInCategory.length === 0 &amp;&amp; _item.category !== &quot;Meals&quot;&gt;&gt;
   &lt;div class=&quot;vet-no-creatures&quot;&gt;No items in this category yet.&lt;/div&gt;
 &lt;&lt;else&gt;&gt;
   &lt;&lt;for _item range _itemsInCategory&gt;&gt;
@@ -8668,6 +8750,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
       &lt;/div&gt;
     &lt;&lt;/capture&gt;&gt;
   &lt;&lt;/for&gt;&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="13" name="CreatureSelectModal" tags="" position="900,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _itemToUse = _currentItem&gt;&gt;
@@ -9739,7 +9822,12 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
           &lt;&lt;if _selItem.image&gt;&gt;&lt;img @src=&quot;_selItem.image&quot; alt=&quot;_selItem.name&quot;&gt;&lt;&lt;/if&gt;&gt;
           &lt;span class=&quot;kitchen-tray-name&quot;&gt;&lt;&lt;print _selItem.name&gt;&gt;&lt;/span&gt;
           &lt;&lt;capture _i&gt;&gt;
-            &lt;button class=&quot;kitchen-tray-remove&quot; onclick=&quot;SugarCube.State.variables.cookingSelection.splice(&lt;&lt;= _i&gt;&gt;, 1); SugarCube.Engine.play(&#39;Kitchen&#39;);&quot;&gt;✕&lt;/button&gt;
+          &lt;span class=&quot;kitchen-tray-remove&quot;&gt;
+            &lt;&lt;link &quot;✕&quot;&gt;&gt;
+            &lt;&lt;set $cookingSelection.splice(_i, 1)&gt;&gt;
+            &lt;&lt;refresh&gt;&gt;
+            &lt;&lt;/link&gt;&gt;
+            &lt;/span&gt;
           &lt;&lt;/capture&gt;&gt;
         &lt;/div&gt;
       &lt;&lt;else&gt;&gt;
@@ -9775,7 +9863,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
   &lt;div class=&quot;shop-categories-scroll&quot;&gt;
     &lt;&lt;for _cat range [&quot;Protein&quot;, &quot;Vegetable&quot;, &quot;Base&quot;, &quot;Flavor&quot;]&gt;&gt;
       &lt;&lt;capture _cat&gt;&gt;
-        &lt;&lt;link _cat&gt;&gt;&lt;&lt;set $kitchenTab = _cat&gt;&gt;&lt;&lt;goto &quot;Kitchen&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+        &lt;&lt;link _cat&gt;&gt;&lt;&lt;set $kitchenTab = _cat&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
       &lt;&lt;/capture&gt;&gt;
     &lt;&lt;/for&gt;&gt;
   &lt;/div&gt;
@@ -9807,8 +9895,9 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
             &lt;&lt;elseif _isFull&gt;&gt;
               &lt;span class=&quot;kitchen-ing-status full&quot;&gt;Tray full&lt;/span&gt;
             &lt;&lt;else&gt;&gt;
-              &lt;&lt;link &quot;＋ Add&quot; &quot;Kitchen&quot;&gt;&gt;
+              &lt;&lt;link &quot;＋ Add&quot;&gt;&gt;
                 &lt;&lt;run $cookingSelection.push(_ingId)&gt;&gt;
+                &lt;&lt;refresh&gt;&gt;
               &lt;&lt;/link&gt;&gt;
             &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
@@ -9819,24 +9908,30 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;/div&gt;
 
 /* ── COOKING QUEUE ── */
-&lt;&lt;if $cookingQueue.length &gt; 0&gt;&gt;
-  &lt;div class=&quot;kitchen-queue&quot;&gt;
-    &lt;div class=&quot;kitchen-queue-header&quot;&gt;🍳 Currently Cooking (&lt;strong&gt;&lt;&lt;print $cookingQueue.length&gt;&gt;/3&lt;/strong&gt;)&lt;/div&gt;
-    &lt;&lt;for _qi = 0; _qi &lt; $cookingQueue.length; _qi++&gt;&gt;
-      &lt;&lt;set _qm = $cookingQueue[_qi]&gt;&gt;
-      &lt;&lt;set _msLeft = Math.max(0, _qm.finishTime - Date.now())&gt;&gt;
-      &lt;&lt;set _minsLeft = Math.ceil(_msLeft / 60000)&gt;&gt;
-      &lt;div class=&quot;kitchen-queue-item&quot;&gt;
-        &lt;span class=&quot;kitchen-queue-name&quot;&gt;&lt;&lt;print _qm.recipeName&gt;&gt;&lt;/span&gt;
-        &lt;&lt;if _msLeft === 0&gt;&gt;
-          &lt;span class=&quot;kitchen-queue-ready&quot;&gt;✅ Ready!&lt;/span&gt;
-        &lt;&lt;else&gt;&gt;
-          &lt;span class=&quot;kitchen-queue-time&quot;&gt;⏳ _minsLeft min left&lt;/span&gt;
-        &lt;&lt;/if&gt;&gt;
-      &lt;/div&gt;
-    &lt;&lt;/for&gt;&gt;
-  &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;
+&lt;div class=&quot;kitchen-queue&quot;&gt;
+  &lt;div class=&quot;kitchen-queue-header&quot;&gt;🍳 Currently Cooking (&lt;strong&gt;&lt;&lt;print $cookingQueue.length&gt;&gt;/3&lt;/strong&gt;)&lt;/div&gt;
+  &lt;&lt;for _qi = 0; _qi &lt; $cookingQueue.length; _qi++&gt;&gt;
+    &lt;&lt;set _qm = $cookingQueue[_qi]&gt;&gt;
+    &lt;div class=&quot;kitchen-queue-item&quot;&gt;
+      &lt;span class=&quot;kitchen-queue-name&quot;&gt;🍲 &lt;&lt;print _qm.recipeName&gt;&gt;&lt;/span&gt;
+      &lt;&lt;if _qm.done&gt;&gt;
+        &lt;&lt;capture _qi&gt;&gt;
+          &lt;&lt;link &quot;✅ Collect&quot;&gt;&gt;
+            &lt;&lt;set _collected = $cookingQueue[_qi]&gt;&gt;
+            &lt;&lt;if !$inventory[_collected.mealId]&gt;&gt;&lt;&lt;set $inventory[_collected.mealId] = 0&gt;&gt;&lt;&lt;/if&gt;&gt;
+            &lt;&lt;set $inventory[_collected.mealId] += 1&gt;&gt;
+            &lt;&lt;run $cookingQueue.splice(_qi, 1)&gt;&gt;
+            &lt;&lt;refresh&gt;&gt;
+          &lt;&lt;/link&gt;&gt;
+        &lt;&lt;/capture&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;set _msLeft = Math.max(0, _qm.finishTime - Date.now())&gt;&gt;
+        &lt;&lt;set _minsLeft = Math.ceil(_msLeft / 60000)&gt;&gt;
+        &lt;span class=&quot;kitchen-queue-time&quot;&gt;⏳ &lt;&lt;print _minsLeft&gt;&gt; min left&lt;/span&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;/div&gt;
+  &lt;&lt;/for&gt;&gt;
+&lt;/div&gt;
 
 /* ── COOKBOOK LINK ── */
 &lt;div class=&quot;cookbook-section&quot; style=&quot;margin-top:1em;&quot;&gt;
@@ -9846,7 +9941,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;/div&gt;
 
 &lt;div class=&quot;back-forth-buttons&quot; style=&quot;margin-top:1em;&quot;&gt;
-  &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+  &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Go Home&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
 
 &lt;&lt;/if&gt;&gt;
@@ -10887,8 +10982,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;&lt;set $gigLastResult to &quot;&quot;&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="40" name="FarmingWidgets" tags="widget" position="500,0" size="100,100">:: FarmWidgets [widget]
-&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="40" name="FarmingWidgets" tags="widget" position="500,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── Constants ── */
 &lt;&lt;set setup.MS_PER_DAY = 86400000&gt;&gt;
@@ -15263,6 +15357,9 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
     &lt;&lt;set $inventory[_ing1] -= 1&gt;&gt;
     &lt;&lt;set $inventory[_ing2] -= 1&gt;&gt;
     &lt;&lt;set $inventory[_ing3] -= 1&gt;&gt;
+    
+    &lt;&lt;if !$mealNames&gt;&gt;&lt;&lt;set $mealNames = {}&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $mealNames[_mealId] = _recipeName&gt;&gt;
 
     /* Add to cooking queue */
     &lt;&lt;run $cookingQueue.push({
