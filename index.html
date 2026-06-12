@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-		<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -110,7 +104,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="CritterNest v3" startnode="58" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="7689b7a1-dc88-4e9d-9791-90601c09e612" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ==============================================
+	<tw-storydata name="CritterNest v3" startnode="56" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="7689b7a1-dc88-4e9d-9791-90601c09e612" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ==============================================
    FONTS & COLORS
    ============================================== */
 
@@ -6149,7 +6143,7 @@ setup.getDistance = function(lat1, lon1, lat2, lon2) {
 
 setup.STEP_DISTANCE  = 1;
 setup.MIN_THRESHOLD  = 25;
-setup.MAX_ACCURACY   = 20;
+setup.MAX_ACCURACY   = 50;
 setup.TIME_GATE_MS   = 10000;
 
 setup._watchId       = null;
@@ -6238,6 +6232,16 @@ setup.stopTracking = function() {
         setup._watchId = null;
     }
 };
+
+document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+        // App just resumed — invalidate last position so the next GPS
+        // reading is treated as a fresh start, not a movement delta
+        State.variables.latitude  = 0;
+        State.variables.longitude = 0;
+        setup._lastAccepted = Date.now(); // also reset the time gate
+    }
+});
 
 // game events
 
@@ -8311,7 +8315,6 @@ setup.showLoginRewardDialog = function() {
   &lt;&lt;link &quot;Seeds&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Seeds&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;&lt;link &quot;Items&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Items&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;&lt;link &quot;Fishing&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Fishing&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Accessories&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Accessories&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 
 /* ── ITEM LIST ── */
@@ -8646,7 +8649,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="11" name="Inventory" tags="" position="900,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $selectedCategory = $selectedCategory || &quot;Consumables&quot;&gt;&gt;
-&lt;&lt;set _categories = [&quot;Consumables&quot;, &quot;Meals&quot;, &quot;Fish&quot;, &quot;Ingredients&quot;, &quot;Seeds&quot;, &quot;Items&quot;, &quot;Fishing&quot;, &quot;Accessories&quot;]&gt;&gt;
+&lt;&lt;set _categories = [&quot;Consumables&quot;, &quot;Meals&quot;, &quot;Fish&quot;, &quot;Ingredients&quot;, &quot;Seeds&quot;, &quot;Items&quot;, &quot;Fishing&quot;]&gt;&gt;
 
 /* ── HEADER ── */
 &lt;div class=&quot;vet-banner&quot;&gt;
@@ -8789,13 +8792,6 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
             &lt;&lt;/if&gt;&gt;
           &lt;&lt;/if&gt;&gt;
 
-          &lt;&lt;if _itemToUse.isAccessory&gt;&gt;
-            &lt;&lt;if !_creature.equippedAccessories&gt;&gt;
-              &lt;&lt;set _creature.equippedAccessories = []&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
-            &lt;&lt;set _alreadyEquipped = _creature.equippedAccessories.includes(_itemToUse.id)&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
-
           &lt;&lt;capture _i, _creature&gt;&gt;
 
             /* ── SPRITE SETUP ── */
@@ -8875,38 +8871,12 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
                 /* Action */
 &lt;div class=&quot;creature-action&quot;&gt;
   &lt;&lt;if _canUse&gt;&gt;
-    &lt;&lt;if _itemToUse.isAccessory&gt;&gt;
-      &lt;&lt;if _alreadyEquipped&gt;&gt;
-        &lt;&lt;capture _i, _itemToUse&gt;&gt;
-          &lt;&lt;link &quot;Unequip&quot;&gt;&gt;
-            &lt;&lt;set _creature.equippedAccessory to null&gt;&gt;
-            &lt;&lt;set $inventory[_itemToUse.id] += 1&gt;&gt;
-            &lt;&lt;set _resultMessage = `Unequipped ${_itemToUse.name} from ${_creature.name}.`&gt;&gt;
-            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
-          &lt;&lt;/link&gt;&gt;
-        &lt;&lt;/capture&gt;&gt;
-      &lt;&lt;else&gt;&gt;
-        &lt;&lt;capture _i, _itemToUse&gt;&gt;
-          &lt;&lt;link &quot;Equip&quot;&gt;&gt;
-            &lt;&lt;if _creature.equippedAccessory&gt;&gt;
-              &lt;&lt;set $inventory[_creature.equippedAccessory] += 1&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
-            &lt;&lt;set _creature.equippedAccessory to _itemToUse.id&gt;&gt;
-            &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
-            &lt;&lt;set _resultMessage = `Equipped ${_itemToUse.name} on ${_creature.name}!`&gt;&gt;
-            &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
-            &lt;&lt;replace &quot;#result-message&quot;&gt;&gt;&lt;div class=&quot;result-message success&quot;&gt;_resultMessage&lt;/div&gt;&lt;&lt;/replace&gt;&gt;
-          &lt;&lt;/link&gt;&gt;
-        &lt;&lt;/capture&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-    &lt;&lt;elseif _itemToUse.id === &quot;CarePotion&quot;&gt;&gt;
+    
+    &lt;&lt;if _itemToUse.id === &quot;CarePotion&quot;&gt;&gt;
       &lt;&lt;capture _i, _itemToUse&gt;&gt;
         &lt;&lt;link &quot;Use&quot;&gt;&gt;
-          &lt;&lt;set _careAmount = Math.min(30, 100 - _creature.care)&gt;&gt;
-          &lt;&lt;set _creature.care += _careAmount&gt;&gt;
+          &lt;&lt;set _careAmount = Math.min(30, 100 - _creature.careCur)&gt;&gt;
+          &lt;&lt;set _creature.careCur += _careAmount&gt;&gt;
           &lt;&lt;set $inventory[_itemToUse.id] -= 1&gt;&gt;
           &lt;&lt;set _resultMessage = `Used ${_itemToUse.name} on ${_creature.name}! Restored ${_careAmount} Care Points.`&gt;&gt;
           &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
@@ -9574,58 +9544,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
   &lt;b&gt;+$5 earned&lt;/b&gt;&lt;br&gt;
 &lt;&lt;/if&gt;&gt;
 [[OK|Composition]]
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="ShopEggSlots" tags="" position="1000,100" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;h2&gt;Purchase Egg Slots&lt;/h2&gt;
-
-&lt;div class=&quot;info-box&quot;&gt;
-  &lt;strong&gt;Your Money:&lt;/strong&gt; $money dollars&lt;br&gt;
-  &lt;strong&gt;Current Egg Slots:&lt;/strong&gt; $maxEggSlots&lt;br&gt;
-  &lt;strong&gt;Eggs in Use:&lt;/strong&gt; &lt;&lt;= setup.countEggs()&gt;&gt;/$maxEggSlots
-&lt;/div&gt;
-
-&lt;div class=&quot;breeding-confirm&quot;&gt;
-  &lt;h3&gt;Upgrade Egg Capacity&lt;/h3&gt;
-  &lt;p&gt;Purchase 6 additional egg slots for &lt;strong&gt;$eggSlotUpgradeCost coins&lt;/strong&gt;&lt;/p&gt;
-  
-  &lt;&lt;if $money &gt;= $eggSlotUpgradeCost&gt;&gt;
-    &lt;&lt;link &quot;Purchase +6 Egg Slots&quot;&gt;&gt;
-      &lt;&lt;set $money -= $eggSlotUpgradeCost&gt;&gt;
-      &lt;&lt;set $maxEggSlots += 6&gt;&gt;
-      &lt;&lt;set $eggSlotUpgradeCost to Math.round($eggSlotUpgradeCost * 1.5)&gt;&gt;
-      &lt;&lt;goto &quot;EggSlotsPurchased&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
-  &lt;&lt;else&gt;&gt;
-    &lt;p class=&quot;warning&quot;&gt;You don&#39;t have enough money.&lt;/p&gt;
-  &lt;&lt;/if&gt;&gt;
-  
-  &lt;br&gt;
-  &lt;div class=&quot;back-forth-buttons&quot;&gt;
-&lt;div class=&quot;back-button&quot;&gt;
-&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="EggSlotsPurchased" tags="" position="1000,200" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;h2&gt;Egg Slots Upgraded!&lt;/h2&gt;
-
-&lt;div class=&quot;success&quot;&gt;
-  &lt;p&gt;You now have $maxEggSlots egg slots!&lt;/p&gt;
-  &lt;p&gt;Currently using: &lt;&lt;= setup.countEggs()&gt;&gt;/$maxEggSlots&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;br&gt;
-&lt;div class=&quot;back-forth-buttons&quot;&gt;
-&lt;div class=&quot;back-button&quot;&gt;
-&lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;div class=&quot;forth-button&quot;&gt;
-&lt;&lt;link &quot;View Eggs&quot; &quot;ViewEggs&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="27" name="Achievements" tags="" position="1200,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="Achievements" tags="" position="1200,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;for _ach, _achData range $achievements&gt;&gt;
   &lt;&lt;if _achData.goal !== undefined &amp;&amp; !_achData.unlocked &amp;&amp; _ach.startsWith(&quot;first&quot;) &amp;&amp; _ach.endsWith(&quot;Steps&quot;)&gt;&gt;
     &lt;&lt;set $achievements[_ach].progress = Math.min($steps, _achData.goal)&gt;&gt;
@@ -9760,7 +9679,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="28" name="Memorial" tags="" position="1300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Memorial" tags="" position="1300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;p6&gt;Memorial&lt;/p6&gt;
 
 &lt;&lt;if $deadCreatures === undefined || $deadCreatures.length === 0&gt;&gt;
@@ -9790,7 +9709,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="Kitchen" tags="" position="1050,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="27" name="Kitchen" tags="" position="1050,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;if !$kitchenRenovated&gt;&gt;
   &lt;div class=&quot;re-banner&quot; style=&quot;text-align:center;&quot;&gt;
@@ -9951,7 +9870,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;/div&gt;
 
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="RequestBoard" tags="" position="300,925" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="28" name="RequestBoard" tags="" position="300,925" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;checkExpiredRequests&gt;&gt;
 
 &lt;h style=&quot;display: block; font-family: &#39;Fontdiner Swanky&#39;, serif; color: var(--coral); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;📋 Request Board&lt;/h&gt;
@@ -10058,7 +9977,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="FulfillRequest" tags="" position="300,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="FulfillRequest" tags="" position="300,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h style=&quot;font-family: &#39;Chewy&#39;, cursive; color: var(--coral); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;Select a Creature&lt;/h&gt;
 
 &lt;div style=&quot;background-color: var(--tangerine); padding: 1.5em; border-radius: 10px; margin-bottom: 1.5em; border: 3px solid var(--coral);&quot;&gt;
@@ -10320,7 +10239,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="RequestComplete" tags="" position="300,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="RequestComplete" tags="" position="300,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h style=&quot;font-family: &#39;Chewy&#39;, cursive; color: var(--teal); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;✓ Request Complete!&lt;/h&gt;
 
 &lt;&lt;if $tutorialQuests.quests.fulfillRequest.accepted &amp;&amp; !$tutorialQuests.quests.fulfillRequest.complete&gt;&gt;
@@ -10366,7 +10285,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="VetClinic" tags="" position="450,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="VetClinic" tags="" position="450,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── HEADER ── */
 &lt;div class=&quot;vet-banner&quot;&gt;
@@ -10460,7 +10379,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="VetSelectCreature" tags="" position="450,900" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="VetSelectCreature" tags="" position="450,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── SERVICE BANNER ── */
 &lt;div class=&quot;vet-select-banner&quot;&gt;
@@ -10610,7 +10529,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="35" name="VetServiceComplete" tags="" position="450,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="VetServiceComplete" tags="" position="450,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;vet-complete-wrap&quot;&gt;
 
@@ -10637,7 +10556,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="VetShop" tags="" position="450,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="VetShop" tags="" position="450,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── HEADER ── */
 &lt;div class=&quot;vet-banner&quot;&gt;
@@ -10681,7 +10600,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="VetItemDetail" tags="" position="450,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="35" name="VetItemDetail" tags="" position="450,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;vet-item-overlay&quot;&gt;
   &lt;div class=&quot;vet-item-sheet&quot;&gt;
@@ -10748,7 +10667,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="38" name="CreatureNameWidget" tags="widget" position="400,0" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="CreatureNameWidget" tags="widget" position="400,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;creatureName&quot;&gt;&gt;
   &lt;&lt;set _creature to $args[0]&gt;&gt;
@@ -10759,7 +10678,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="AchRequestsWidgets" tags="widget" position="600,0" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="37" name="AchRequestsWidgets" tags="widget" position="600,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;showAchievements&quot;&gt;&gt;
 &lt;span id=&quot;achievement-wrapper&quot;&gt;
@@ -10988,7 +10907,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;&lt;set $gigLastResult to &quot;&quot;&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="40" name="FarmingWidgets" tags="widget" position="500,0" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="38" name="FarmingWidgets" tags="widget" position="500,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── Constants ── */
 &lt;&lt;set setup.MS_PER_DAY = 86400000&gt;&gt;
@@ -11110,7 +11029,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="41" name="InitCreatureSetup" tags="" position="0,100" size="100,100">&lt;&lt;set setup.creatureTemplates = {
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="InitCreatureSetup" tags="" position="0,100" size="100,100">&lt;&lt;set setup.creatureTemplates = {
 	&quot;Caervira&quot;: {
 	name: &quot;Caervira&quot;,
 	type: &quot;Forest&quot;,
@@ -11182,20 +11101,6 @@ silhouettes: {
         medium: &quot;https://i.imgur.com/IafnMvC.png&quot;,
         large:  &quot;https://i.imgur.com/gAIuPFE.png&quot;
     }
-},
-accessoryOffsets: {
-  Bow: {
-    male: {
-      small:  { top: 33, left: 55 },
-      medium: { top: 65, left: 110 },
-      large:  { top: 95, left: 166 }
-    },
-    female: {
-      small:  { top: 12, left: 46 },
-      medium: { top: 24, left: 94 },
-      large:  { top: 35, left: 140 }
-    }
-  }
 },
     rarity: &quot;Common&quot;,
     flavorText: &quot;Gentle and curious, Caevira wander forest trails collecting small treasures. They’re friendly companions who bond quickly with patient breeders.&quot;,
@@ -11286,20 +11191,6 @@ accessoryOffsets: {
         large:  &quot;https://i.imgur.com/IPuRhBk.png&quot;
     }
 },
-accessoryOffsets: {
-  Bow: {
-    male: {
-      small:  { top: 69, left: 13 },
-      medium: { top: 138, left: 27 },
-      large:  { top: 210, left: 40 }
-    },
-    female: {
-      small:  { top: 40, left: 13 },
-      medium: { top: 82, left: 26 },
-      large:  { top: 120, left: 39 }
-    }
-  }
-},
    rarity: &quot;Common&quot;,
    flavorText: &quot;Noctulo are lively dusk-dwellers who enjoy fluttering between treetops. They’re playful companions that brighten any woodland outing.&quot;,
     careMax: 100,
@@ -11388,20 +11279,6 @@ affectionMax: 100,
         medium: &quot;https://i.imgur.com/1MLYzzC.png&quot;,
         large:  &quot;https://i.imgur.com/1MLYzzC.png&quot;
     }
-},
-accessoryOffsets: {
-  Bow: {
-    male: {
-      small:  { top: 33, left: 55 },
-      medium: { top: 65, left: 110 },
-      large:  { top: 95, left: 166 }
-    },
-    female: {
-      small:  { top: 12, left: 46 },
-      medium: { top: 24, left: 94 },
-      large:  { top: 35, left: 140 }
-    }
-  }
 },
     rarity: &quot;Common&quot;,
     flavorText: &quot;A sturdy critter with a mellow spirit, Urcanis enjoy lounging on warm rocks. They’re dependable helpers who adapt easily to any home.&quot;,
@@ -11492,20 +11369,6 @@ affectionMax: 100,
         large:  &quot;https://i.imgur.com/uMhgOh5.png&quot;
     }
 },
-accessoryOffsets: {
-  Bow: {
-    male: {
-      small:  { top: 33, left: 55 },
-      medium: { top: 65, left: 110 },
-      large:  { top: 95, left: 166 }
-    },
-    female: {
-      small:  { top: 12, left: 46 },
-      medium: { top: 24, left: 94 },
-      large:  { top: 35, left: 140 }
-    }
-  }
-},
     rarity: &quot;Uncommon&quot;,
     flavorText: &quot;Playful and sure-footed, Capranis love bounding across rugged terrain. Their upbeat nature makes them a favorite among new collectors.&quot;,
     
@@ -11595,20 +11458,6 @@ affectionMax: 100,
         medium: &quot;https://i.imgur.com/83gZ8ug.png&quot;,
         large:  &quot;https://i.imgur.com/83gZ8ug.png&quot;
     }
-},
-accessoryOffsets: {
-  Bow: {
-    male: {
-      small:  { top: 33, left: 55 },
-      medium: { top: 65, left: 110 },
-      large:  { top: 95, left: 166 }
-    },
-    female: {
-      small:  { top: 20, left: 36 },
-      medium: { top: 50, left: 88 },
-      large:  { top: 35, left: 140 }
-    }
-  }
 },
     rarity: &quot;Common&quot;,
     flavorText: &quot;Quiet and clever, Chiroden prefer cozy caves and twilight skies. Despite their shyness, they form strong connections with kind caretakers.&quot;,
@@ -12249,7 +12098,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
   &quot;Aether&quot;: &quot;✨&quot;
 }&gt;&gt;
 
-&lt;&lt;set $lastTickTime to Date.now()&gt;&gt;</tw-passagedata><tw-passagedata pid="42" name="InitShopInventory" tags="" position="100,0" size="100,100">&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;
+&lt;&lt;set $lastTickTime to Date.now()&gt;&gt;</tw-passagedata><tw-passagedata pid="40" name="InitShopInventory" tags="" position="100,0" size="100,100">&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;
 &lt;&lt;set $shopCart = []&gt;&gt;
 &lt;&lt;set $purchaseSummary = []&gt;&gt;
 
@@ -12455,26 +12304,6 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
     description: &quot;When used on a creature, they will no longer age.&quot;,
     isConsumable: true,
     requiresMonster: true
-},
-  
-  /* ACCESSORIES */
-&quot;Bow&quot;: {
-  id: &quot;Bow&quot;,
-  name: &quot;Bow&quot;,
-  category: &quot;Accessories&quot;,
-  basePrice: 150,
-  baseSell: 75,
-  image: &quot;https://i.imgur.com/nCH1bnG.png&quot;,
-  images: {
-    small:  &quot;https://i.imgur.com/sA1cgqL.png&quot;,
-    medium: &quot;https://i.imgur.com/8HtxOdP.png&quot;,
-    large:  &quot;https://i.imgur.com/nCH1bnG.png&quot;
-  },
-  description: &quot;A cute bow accessory. (WIP: MAY CAUSE ERRORS)&quot;,
-  rarity: &quot;Common&quot;,
-  isConsumable: false,
-  requiresMonster: true,
-  isAccessory: true
 },
   
   &quot;WheatSeeds&quot;: {
@@ -13066,7 +12895,6 @@ isAccessory: false
     CreatureChow: 0,
     ScrollFertility: 0,
     ScrollImmortality: 0,
-    Bow: 0,
     WheatSeeds: 0,
 CornSeeds: 0,
 PotatoSeeds: 0,
@@ -13123,7 +12951,7 @@ Cilantro: 0,
 &lt;&lt;set setup.creatureFoods = [&quot;CreatureChow&quot;]&gt;&gt;
 
 /* Featured item (changes daily) */
-&lt;&lt;set $featuredItemId = either(&quot;CarePotion&quot;, &quot;EnergyDrink&quot;, &quot;CreatureChow&quot;, &quot;ScrollFertility&quot;, &quot;ScrollImmortality&quot;, &quot;BowHeadband&quot;, &quot;WheatSeeds&quot;, &quot;CornSeeds&quot;, &quot;PotatoSeeds&quot;, &quot;CarrotSeeds&quot;, &quot;TomatoSeeds&quot;, &quot;OnionSeeds&quot;, &quot;LettuceSeeds&quot;, &quot;RiceSeeds&quot;, &quot;GarlicSeeds&quot;, &quot;BasilSeeds&quot;, &quot;ParsleySeeds&quot;, &quot;CilantroSeeds&quot;, &quot;CookingOil&quot;, &quot;Herbs&quot;, &quot;Berries&quot;, &quot;Flour&quot;, &quot;Sugar&quot;, &quot;Wheat&quot;, &quot;Corn&quot;, &quot;Potato&quot;, &quot;Carrot&quot;, &quot;Tomato&quot;, &quot;Onion&quot;, &quot;Lettuce&quot;, &quot;Rice&quot;, &quot;Garlic&quot;, &quot;Basil&quot;, &quot;Parsley&quot;, &quot;Cilantro&quot;, &quot;Pasta&quot;, &quot;Coconut&quot;, &quot;PickledVeggies&quot;, &quot;Saffron&quot;)&gt;&gt;</tw-passagedata><tw-passagedata pid="43" name="InitFreelanceComp" tags="" position="100,100" size="100,100">&lt;&lt;set $maxFreelancingAttempts to 2&gt;&gt;
+&lt;&lt;set $featuredItemId = either(&quot;CarePotion&quot;, &quot;EnergyDrink&quot;, &quot;CreatureChow&quot;, &quot;ScrollFertility&quot;, &quot;ScrollImmortality&quot;, &quot;WheatSeeds&quot;, &quot;CornSeeds&quot;, &quot;PotatoSeeds&quot;, &quot;CarrotSeeds&quot;, &quot;TomatoSeeds&quot;, &quot;OnionSeeds&quot;, &quot;LettuceSeeds&quot;, &quot;RiceSeeds&quot;, &quot;GarlicSeeds&quot;, &quot;BasilSeeds&quot;, &quot;ParsleySeeds&quot;, &quot;CilantroSeeds&quot;, &quot;CookingOil&quot;, &quot;Herbs&quot;, &quot;Berries&quot;, &quot;Flour&quot;, &quot;Sugar&quot;, &quot;Wheat&quot;, &quot;Corn&quot;, &quot;Potato&quot;, &quot;Carrot&quot;, &quot;Tomato&quot;, &quot;Onion&quot;, &quot;Lettuce&quot;, &quot;Rice&quot;, &quot;Garlic&quot;, &quot;Basil&quot;, &quot;Parsley&quot;, &quot;Cilantro&quot;, &quot;Pasta&quot;, &quot;Coconut&quot;, &quot;PickledVeggies&quot;, &quot;Saffron&quot;)&gt;&gt;</tw-passagedata><tw-passagedata pid="41" name="InitFreelanceComp" tags="" position="100,100" size="100,100">&lt;&lt;set $maxFreelancingAttempts to 2&gt;&gt;
 &lt;&lt;set $freelancingAttempts to 0&gt;&gt;
 &lt;&lt;set $activeGig to &quot;&quot;&gt;&gt;
 
@@ -13507,7 +13335,7 @@ correctFontStyle: &quot;This is a great font style for grabbing attention while 
 
 &lt;&lt;set $allColorPalettes to [&quot;sage green, beige, warm brown&quot;, &quot;green, dark brown, gold&quot;, &quot;plum, silver, white&quot;, &quot;lime green, bright blue, yellow&quot;, &quot;navy blue, teal, orange&quot;, &quot;purple, green, golden yellow&quot;, &quot;orange, periwinkle, teal&quot;, &quot;slate gray, peacock blue, red orange&quot;, &quot;white, sky blue, indigo&quot;]&gt;&gt;
 
-&lt;&lt;set $allFontStyles to [&quot;script&quot;, &quot;handwriting&quot;, &quot;calligraphy&quot;, &quot;futuristic&quot;, &quot;bold&quot;, &quot;sans-serif&quot;, &quot;modern&quot;, &quot;formal&quot;, &quot;bubble&quot;, &quot;brush&quot;, &quot;retro&quot;, &quot;monospaced&quot;]&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="InitTrophyRequest" tags="" position="0,200" size="100,100">/* Request Stuff */
+&lt;&lt;set $allFontStyles to [&quot;script&quot;, &quot;handwriting&quot;, &quot;calligraphy&quot;, &quot;futuristic&quot;, &quot;bold&quot;, &quot;sans-serif&quot;, &quot;modern&quot;, &quot;formal&quot;, &quot;bubble&quot;, &quot;brush&quot;, &quot;retro&quot;, &quot;monospaced&quot;]&gt;&gt;</tw-passagedata><tw-passagedata pid="42" name="InitTrophyRequest" tags="" position="0,200" size="100,100">/* Request Stuff */
 &lt;&lt;set $requests = []&gt;&gt;
 &lt;&lt;set $completedRequests = { simple: 0, medium: 0, complex: 0 }&gt;&gt;
 &lt;&lt;set $requestsUnlocked = { simple: true, medium: false, complex: false }&gt;&gt;
@@ -14031,7 +13859,7 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
 
 &lt;&lt;set $stepMilestones = {}&gt;&gt;
 &lt;&lt;set $totalAchievementsUnlocked to 0&gt;&gt;
-&lt;&lt;set $achievementQueue to []&gt;&gt;  /* For displaying achievement notifications */</tw-passagedata><tw-passagedata pid="45" name="InitFarming" tags="" position="100,200" size="100,100">/* Farm Stuff */
+&lt;&lt;set $achievementQueue to []&gt;&gt;  /* For displaying achievement notifications */</tw-passagedata><tw-passagedata pid="43" name="InitFarming" tags="" position="100,200" size="100,100">/* Farm Stuff */
 
 &lt;&lt;run setup.startFarmPoller()&gt;&gt;
 
@@ -14214,7 +14042,7 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
       stage4: &quot;https://i.imgur.com/PLACEHOLDER4.png&quot;
     }
   }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="46" name="Farm" tags="" position="600,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="Farm" tags="" position="600,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;updateSeason&gt;&gt;
 
 &lt;h2&gt;🌾 Your Farm&lt;/h2&gt;
@@ -14379,7 +14207,7 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="47" name="InitFishing" tags="" position="0,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="45" name="InitFishing" tags="" position="0,300" size="100,100">&lt;&lt;nobr&gt;&gt;
 /* Fish behavior definitions */
 &lt;&lt;set setup.fishBehaviors = {
  
@@ -14628,7 +14456,7 @@ setup.nightEnvironmentalCues = [
 &lt;&lt;set $weatherChecked to false&gt;&gt;
 &lt;&lt;set $weatherCode to 0&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="48" name="ProcessCast" tags="" position="700,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="46" name="ProcessCast" tags="" position="700,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $fishingAttempts += 1&gt;&gt;
 
 &lt;!-- Determine what was caught --&gt;
@@ -14722,7 +14550,7 @@ setup.nightEnvironmentalCues = [
     &lt;&lt;/button&gt;&gt;
   &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="49" name="TensionGame" tags="" position="700,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="47" name="TensionGame" tags="" position="700,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;!-- Initialize tension game on first visit --&gt;
 &lt;&lt;if !$tensionGame&gt;&gt;
@@ -14843,7 +14671,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 });
 &lt;&lt;/script&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="50" name="TensionResult" tags="" position="700,900" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="48" name="TensionResult" tags="" position="700,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;if $chosenCastIsNight&gt;&gt;
   &lt;img src=&quot;https://i.imgur.com/MH9qcEf.png&quot; class=&quot;lake-image&quot;&gt;
@@ -14961,7 +14789,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="51" name="InitCooking" tags="" position="100,300" size="100,100">&lt;&lt;set setup.ingredientProperties = {
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="49" name="InitCooking" tags="" position="100,300" size="100,100">&lt;&lt;set setup.ingredientProperties = {
   /* PROTEINS */
   &quot;YellowPerch&quot;: {
     category: &quot;Protein&quot;,
@@ -15261,7 +15089,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 
 &lt;&lt;set $cookingQueue = []&gt;&gt;
 
-&lt;&lt;run setup.startCookingPoller()&gt;&gt;</tw-passagedata><tw-passagedata pid="52" name="CookingResult" tags="" position="1050,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;run setup.startCookingPoller()&gt;&gt;</tw-passagedata><tw-passagedata pid="50" name="CookingResult" tags="" position="1050,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _ing1 = $cookingSelection[0]&gt;&gt;
 &lt;&lt;set _ing2 = $cookingSelection[1]&gt;&gt;
 &lt;&lt;set _ing3 = $cookingSelection[2]&gt;&gt;
@@ -15450,7 +15278,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Keep Cooking&quot; &quot;Kitchen&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
   &lt;div class=&quot;forth-button&quot;&gt;&lt;&lt;link &quot;Go Home&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="53" name="Cookbook" tags="" position="1050,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="51" name="Cookbook" tags="" position="1050,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;re-banner&quot; style=&quot;text-align:center;&quot;&gt;
   &lt;div style=&quot;font-size:2em;&quot;&gt;📖&lt;/div&gt;
@@ -15524,7 +15352,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;div class=&quot;forth-button&quot;&gt;&lt;&lt;link &quot;Go Home&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="54" name="InitRealEstate" tags="" position="0,400" size="100,100">&lt;&lt;set $buildCategory to &quot;All&quot;&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="52" name="InitRealEstate" tags="" position="0,400" size="100,100">&lt;&lt;set $buildCategory to &quot;All&quot;&gt;&gt;
 
 &lt;&lt;set $hasFarm to false&gt;&gt;
 
@@ -15577,7 +15405,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   requiredRankName: &quot;Rank 1&quot;,
   description: &quot;Purchase additional egg slots for your hatchery. +6 slots per upgrade.&quot;
 }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="RealEstate" tags="" position="150,925" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="53" name="RealEstate" tags="" position="150,925" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── BANNER ── */
 &lt;div class=&quot;re-banner&quot;&gt;
@@ -15717,7 +15545,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="BuildDetail" tags="" position="150,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="54" name="BuildDetail" tags="" position="150,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;modal-overlay&quot;&gt;
   
   &lt;div class=&quot;detail-card1&quot;&gt;
@@ -15778,7 +15606,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
   
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="57" name="BuildComplete" tags="" position="150,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="BuildComplete" tags="" position="150,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
   
@@ -15796,7 +15624,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="58" name="Introduction" tags="" position="600,200" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="Introduction" tags="" position="600,200" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if Save.browser.auto.has(0)&gt;&gt;
     &lt;button id=&quot;btn-continue&quot;&gt;Continue&lt;/button&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15918,7 +15746,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="59" name="LoadingLicense" tags="" position="600,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="57" name="LoadingLicense" tags="" position="600,300" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;span class=&quot;printLicense&quot;&gt;
 
@@ -15971,7 +15799,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;/div&gt;
 &lt;/span&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="60" name="InitRanks" tags="" position="100,400" size="100,100">&lt;&lt;set $loginRewards = {
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="58" name="InitRanks" tags="" position="100,400" size="100,100">&lt;&lt;set $loginRewards = {
   currentDay: 0,
   lastClaimTime: 0,
   completed: false,
@@ -16042,7 +15870,7 @@ ERROR: Please finish filling out your personal info before continuing.
     breeding:       { label: &quot;Breed Your Creatures&quot;,   desc: &quot;Tap the map on the bottom toolbar and visit the Breeding Barn. Breed a male and female creature.&quot;,     accepted: false, complete: false, xp: 40,  money: 100 },
     fulfillRequest: { label: &quot;Fulfill a Request&quot;,      desc: &quot;Head to the map in the bottom toolbar and check out the Request Board. Fulfill a request.&quot;,                  accepted: false, complete: false, xp: 60,  money: 150 }
   }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="61" name="Mailbox" tags="" position="700,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="59" name="Mailbox" tags="" position="700,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $mailbox.length &gt; 0&gt;&gt;
   &lt;&lt;for _i = 0; _i &lt; $mailbox.length; _i++&gt;&gt;
   &lt;&lt;capture _i&gt;&gt;
@@ -16081,7 +15909,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="62" name="StoryDisplayTitle" tags="" position="0,1400" size="100,100">&lt;center&gt;&lt;div class=&quot;story-icon&quot;&gt;&lt;img src=&quot;https://i.imgur.com/30UEn7N.png&quot;&gt;&lt;/div&gt;&lt;/center&gt;</tw-passagedata><tw-passagedata pid="63" name="Locations" tags="" position="225,500" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="60" name="StoryDisplayTitle" tags="" position="0,1400" size="100,100">&lt;center&gt;&lt;div class=&quot;story-icon&quot;&gt;&lt;img src=&quot;https://i.imgur.com/30UEn7N.png&quot;&gt;&lt;/div&gt;&lt;/center&gt;</tw-passagedata><tw-passagedata pid="61" name="Locations" tags="" position="225,500" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── THE PLAZA ── */
 &lt;div class=&quot;locations-banner&quot;&gt;
@@ -16247,7 +16075,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="CartCheckoutComplete" tags="" position="100,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="62" name="CartCheckoutComplete" tags="" position="100,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
 
@@ -16272,7 +16100,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="PawnShop" tags="" position="25,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="63" name="PawnShop" tags="" position="25,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $pawnCategory == undefined&gt;&gt;&lt;&lt;set $pawnCategory = &quot;All&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;&lt;if !$shopCart&gt;&gt;&lt;&lt;set $shopCart = []&gt;&gt;&lt;&lt;/if&gt;&gt;
 
@@ -16448,7 +16276,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="66" name="CollectionsWidgets" tags="widget" position="300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="64" name="CollectionsWidgets" tags="widget" position="300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;comboKey&quot;&gt;&gt;
     &lt;&lt;set _key = _args[0] + &quot;_&quot; + _args[1]&gt;&gt;
@@ -16463,7 +16291,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;run setup.recordCombo(_args[0])&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="67" name="CollectionMenu" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="CollectionMenu" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
     &lt;&lt;for _species, _data range setup.creatureTemplates&gt;&gt;
         &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
@@ -16559,7 +16387,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;/for&gt;&gt;
 
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="68" name="SMGig" tags="" position="700,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="66" name="SMGig" tags="" position="700,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;gig-wrap&quot;&gt;
 
   &lt;div class=&quot;sm-tutorial-box&quot;&gt;
@@ -16668,7 +16496,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;&lt;/if&gt;&gt;
 
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SMResults" tags="" position="800,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="67" name="SMResults" tags="" position="800,1325" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;gig-wrap&quot;&gt;
   &lt;div class=&quot;gig-results-box&quot;&gt;
     &lt;h2 class=&quot;gig-title&quot;&gt;📊 Gig Complete!&lt;/h2&gt;
@@ -16696,7 +16524,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="70" name="FreelanceResume" tags="" position="700,1075" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="68" name="FreelanceResume" tags="" position="700,1075" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;gig-wrap&quot;&gt;
   &lt;div class=&quot;sm-tutorial-box&quot;&gt;
@@ -16725,7 +16553,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="71" name="SellCheckoutComplete" tags="" position="25,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SellCheckoutComplete" tags="" position="25,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Sale Complete!&lt;/h1&gt;
   &lt;p style=&quot;font-size: 1.1em; margin: 20px 0; color: var(--dark-text);&quot;&gt;You sold:&lt;/p&gt;
@@ -16746,7 +16574,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="72" name="LogoDesign" tags="" position="700,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="70" name="LogoDesign" tags="" position="700,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $logosCompleted gte 3&gt;&gt;
 &lt;p&gt;&lt;strong&gt;Logo Design Session Complete!&lt;/strong&gt;&lt;/p&gt;
                     &lt;p&gt;You&#39;ve finished designing 3 logos today.&lt;/p&gt;
@@ -16782,7 +16610,7 @@ ERROR: Please finish filling out your personal info before continuing.
                 &lt;/div&gt;
                 &lt;/div&gt;
             &lt;&lt;/if&gt;&gt;
- &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="73" name="LogoShape" tags="" position="800,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+ &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="71" name="LogoShape" tags="" position="800,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctShape to $currentClient.shape.random()&gt;&gt;
 
@@ -16850,7 +16678,7 @@ ERROR: Please finish filling out your personal info before continuing.
                 
 
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="74" name="LogoColorPalette" tags="" position="900,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="72" name="LogoColorPalette" tags="" position="900,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctColorPalette to $currentClient.colorPalette.random()&gt;&gt;
 
@@ -16912,7 +16740,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;&lt;/for&gt;&gt;
 &lt;/p&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="75" name="LogoFontStyle" tags="" position="1000,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="73" name="LogoFontStyle" tags="" position="1000,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;set $correctFontStyle to $currentClient.fontStyle.random()&gt;&gt;
 
@@ -16974,7 +16802,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;&lt;/for&gt;&gt;
 &lt;/p&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="LogoComplete" tags="" position="1100,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="74" name="LogoComplete" tags="" position="1100,1450" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;p style=&quot;display: block; text-align: center; font-size: 20px;&quot;&gt;&lt;strong&gt;Logo Design Complete&lt;/strong&gt;
 &lt;/p&gt;
@@ -17017,7 +16845,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="77" name="InitLocation" tags="" position="0,500" size="100,100">&lt;&lt;set $latitude     to 0&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="75" name="InitLocation" tags="" position="0,500" size="100,100">&lt;&lt;set $latitude     to 0&gt;&gt;
 &lt;&lt;set $longitude    to 0&gt;&gt;
 &lt;&lt;set $steps        to 0&gt;&gt;
 &lt;&lt;set $eggPending   to false&gt;&gt;
@@ -17026,7 +16854,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;&lt;set $hatchQueue to []&gt;&gt;
 
-&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="78" name="NotificationsWidget" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="NotificationsWidget" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;showHatchedEggs&quot;&gt;&gt;
 &lt;span id=&quot;hatch-wrapper&quot;&gt;
@@ -17065,7 +16893,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;/span&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="79" name="PassageFooter" tags="" position="0,1500" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="77" name="PassageFooter" tags="" position="0,1500" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;run setup.applyRealTimeTick()&gt;&gt;
 
@@ -17085,7 +16913,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;set $weatherRendered to false&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="80" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="78" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
   &lt;div id=&quot;passage-container&quot;&gt;
     &lt;div id=&quot;passages&quot;&gt;
       &lt;div data-passage&gt;&lt;/div&gt;
@@ -17099,7 +16927,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;button id=&quot;btn-locations&quot;&gt;🗺️&lt;/button&gt;
     &lt;button id=&quot;btn-restart&quot;&gt;↺&lt;/button&gt;
   &lt;/nav&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="81" name="FeaturedCreatureModal" tags="" position="500,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="FeaturedCreatureModal" tags="" position="500,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;cart-modal&quot; id=&quot;featured-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
   &lt;div class=&quot;cart-modal-content&quot;&gt;
 
