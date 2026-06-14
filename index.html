@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-		<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -8490,6 +8484,11 @@ setup.showLoginRewardDialog = function() {
             &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _egg.speciesName&gt;&gt; Egg&lt;/div&gt;
             &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= Math.max(0, _egg.hatchSteps - $steps)&gt;&gt; steps left&lt;/div&gt;
           &lt;/div&gt;
+                      &lt;&lt;button &quot;🐣 Hatch&quot;&gt;&gt;
+  &lt;&lt;set _egg.hatchSteps = 0&gt;&gt;
+  &lt;&lt;run setup.checkStepEvents()&gt;&gt;
+  &lt;&lt;goto &quot;ViewEggs&quot;&gt;&gt;
+&lt;&lt;/button&gt;&gt;
         &lt;&lt;/capture&gt;&gt;
       &lt;&lt;/for&gt;&gt;
     &lt;&lt;/if&gt;&gt;
