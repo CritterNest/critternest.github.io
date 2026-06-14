@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -6999,40 +6993,44 @@ setup.checkRankUp = function() {
 
     var ranks = [
         {
-            id: "rankOne", threshold: 150, next: "rankTwo",
-            unlocks: function() { v.maxFreelancingAttempts++; },
+            id: "rankOne", threshold: 0, next: "rankTwo",
+            unlocks: function() { },
+            unlocksText: ""
+        },
+        {
+            id: "rankTwo", threshold: 150, next: "rankThree",
+            unlocks: function() {
+              
+              v.maxFreelancingAttempts++;
+            },
             unlocksText: "//+1 Freelancing Attempt a day//"
         },
         {
-            id: "rankTwo", threshold: 400, next: "rankThree",
-            unlocks: function() {
-                v.fishingrodUnlocked = true;
-                v.wormbaitUnlocked = true;
-                v.maxFreelancingAttempts++;
-            },
+            id: "rankThree", threshold: 400, next: "rankFour",
+            unlocks: function() { 
+              v.maxFreelancingAttempts++;
+              v.fishingrodUnlocked = true;
+              v.wormbaitUnlocked = true;},
             unlocksText: "//Buy Fishing Rod and Worm Bait, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankThree", threshold: 800, next: "rankFour",
-            unlocks: function() { v.maxFreelancingAttempts++; },
+            id: "rankFour", threshold: 800, next: "rankFive",
+            unlocks: function() {
+
+                v.maxFreelancingAttempts++;
+            },
             unlocksText: "//+1 Freelancing Attempt a day//"
         },
         {
-            id: "rankFour", threshold: 1400, next: "rankFive",
-            unlocks: function() {
-                v.kitchenUnlocked = true;
-                v.lanternUnlocked = true;
-                v.maxFreelancingAttempts++;
-            },
+            id: "rankFive", threshold: 1400, next: "rankSix",
+            unlocks: function() { 
+              v.maxFreelancingAttempts++;
+              v.kitchenUnlocked = true;
+              v.lanternUnlocked = true;},
             unlocksText: "//Purchase the Kitchen renovation from Real Estate, Buy the Lantern, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankFive", threshold: 2250, next: "rankSix",
-            unlocks: function() { v.maxFreelancingAttempts++; },
-            unlocksText: "//+1 Freelancing Attempt a day//"
-        },
-        {
-            id: "rankSix", threshold: 3250, next: "rankSeven",
+            id: "rankSix", threshold: 2250, next: "rankSeven",
             unlocks: function() {
                 v.farmUnlocked = true;
                 v.maxFreelancingAttempts++;
@@ -7043,16 +7041,17 @@ setup.checkRankUp = function() {
 
     for (var i = 0; i < ranks.length; i++) {
         var r = ranks[i];
-        if (rank.id === r.id && xp >= r.threshold) {
-            v.playerRank = setup.playerRanks[r.next];
-            r.unlocks();
+ var next = ranks[i + 1];
+    if (rank.id === r.id && xp >= r.threshold) {
+        v.playerRank = setup.playerRanks[r.next];
+        next.unlocks();
             v.mailbox.push({
                 title: "Rank Up!",
                 read: false,
                 message: "To the Aspiring Breeder,<br><br>You've moved on to " +
                     v.playerRank.name + "!<br>Congratulations on your advancement. " +
                     "We will be watching for further progress.<br><br>" +
-                    "<strong>Unlocked:</strong> " + r.unlocksText +
+                    "<strong>Unlocked:</strong> " + next.unlocksText + 
                     "<br><br>With sincerity,<br>DCHW"
             });
           
@@ -11956,9 +11955,9 @@ affectionMax: 100,
      avatars: {
      male: {
     patternSpriteSheets: {
-    small: &quot;https://i.imgur.com/d78zjoD.png&quot;,
-    medium: &quot;https://i.imgur.com/TQHC7CE.png&quot;,
-    large: &quot;https://i.imgur.com/AO6dVOL.png&quot;
+    small: &quot;https://i.imgur.com/uObhmQc.png&quot;,
+    medium: &quot;https://i.imgur.com/koJmfO0.png&quot;,
+    large: &quot;https://i.imgur.com/ms8HVQO.png&quot;
     },
     babySpriteSheets: {
     small: &quot;https://i.imgur.com/8nY07ko.png&quot;,
@@ -11998,8 +11997,8 @@ affectionMax: 100,
       beige_solid: 15,
       beige_stripes: 16,
       beige_spots: 17,
-      exotic_solid: 18,
-      exotic_solid: 19
+      seafoam_solid: 18,
+      sunset_solid: 19
    },
    babySpriteColumns: {
    lightpurple: 0,
@@ -12028,7 +12027,7 @@ affectionMax: 100,
     affectionCur: 30,
     fertility: 50,
     speciesColors: [&quot;purple&quot;, &quot;blue&quot;],
-    exoticColors: [&quot;&quot;, &quot;&quot;],
+    exoticColors: [&quot;seafoam&quot;, &quot;sunset&quot;],
     possiblePatterns: [&quot;solid&quot;, &quot;spots&quot;, &quot;stripes&quot;],
     possibleSizes: [&quot;small&quot;, &quot;medium&quot;, &quot;large&quot;],
     colorDominance: [&quot;purple&quot;, &quot;blue&quot;, &quot;white&quot;, &quot;beige&quot;, &quot;brown&quot;, &quot;black&quot;],
@@ -12123,9 +12122,9 @@ affectionMax: 100,
   avatars: {
   male: {
   patternSpriteSheets: {
-  small: &quot;https://i.imgur.com/qLRFY3g.png&quot;,
-  medium: &quot;https://i.imgur.com/1n13rxB.png&quot;,
-  large: &quot;https://i.imgur.com/kFGxIDL.png&quot;
+  small: &quot;https://i.imgur.com/rwppa8a.png&quot;,
+  medium: &quot;https://i.imgur.com/dRz3hys.png&quot;,
+  large: &quot;https://i.imgur.com/lfaNQXE.png&quot;
   },
   babySpriteSheets: {
   small: &quot;https://i.imgur.com/IZBEduB.png&quot;,
@@ -12150,18 +12149,23 @@ affectionMax: 100,
   gray_solid: 0,
   gray_stripes: 1,
   gray_spots: 2,
-  black_solid: 3,
-  black_stripes: 4,
-  black_spots: 5,
+  blue_solid: 3,
+  blue_stripes: 4,
+  blue_spots: 5,
   brown_solid: 6,
   brown_stripes: 7,
   brown_spots: 8,
-  white_solid: 9,
-  white_stripes: 10,
-  white_spots: 11,
-  silver_solid: 12,
-  silver_stripes: 13,
-  silver_spots: 14
+  black_solid: 9,
+  black_stripes: 10,
+  black_spots: 11,
+  white_solid: 12,
+  white_stripes: 13,
+  white_spots: 14,
+  beige_solid: 15,
+  beige_stripes: 16,
+  beige_spots: 17,
+  pine_solid: 18,
+  lavender_solid: 19
   },
   babySpriteColumns: {
   gray: 0,
@@ -12172,9 +12176,9 @@ affectionMax: 100,
   },
   silhouettes: {
     male: {
-        small:  &quot;&quot;,
-        medium: &quot;&quot;,
-        large:  &quot;&quot;
+        small:  &quot;https://i.imgur.com/0jF9R9c.png&quot;,
+        medium: &quot;https://i.imgur.com/0jF9R9c.png&quot;,
+        large:  &quot;https://i.imgur.com/0jF9R9c.png&quot;
     },
     female: {
         small:  &quot;&quot;,
@@ -12400,7 +12404,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
     category: &quot;Creatures&quot;,
     basePrice: 500,
     monsterType: &quot;River&quot;,
-    image: &quot;https://i.imgur.com/XcSWIGH.png&quot;,
+    image: &quot;https://i.imgur.com/GJ2zDiQ.png&quot;,
     description: &quot;A flowing River-type creature.&quot;,
     rarity: &quot;Uncommon&quot;,
     isConsumable: false,
@@ -12449,7 +12453,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
     category: &quot;Creatures&quot;,
     basePrice: 900,
     monsterType: &quot;Volcano&quot;,
-    image: &quot;https://i.imgur.com/hplfB08.png&quot;,
+    image: &quot;https://i.imgur.com/HTWg2ff.png&quot;,
     description: &quot;A wild creature from the Volcanic regions.&quot;,
     rarity: &quot;Rare&quot;,
     isConsumable: false,
