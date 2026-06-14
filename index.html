@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-			<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -564,6 +558,11 @@ hr {
   color: var(--dark-text) !important;
 }
 
+.login-reward-body #ui-dialog {
+    width: 100%;
+  max-width: 480px;
+}
+
 .login-reward-body {
   font-family: 'Quicksand', sans-serif;
   text-align: center;
@@ -692,8 +691,92 @@ hr {
   color: var(--dark-text);
 }
 
+/* DevTools stuff */
 
+.devtools {
+  display: flex;
+  justify-content: space-between;
+}
 
+.devtools button {
+  background-color: var(--paleyellow);
+  color: var(--mid-text);
+  font-family: 'Hachi Maru Pop', cursive;
+  font-size: 1.5em;
+  border: 3px solid var(--coralorange);
+  border-radius: 10px;
+  padding: 0.3em 0.7em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.devtools button:hover, .devtools button:active {
+    background-color: var(--lighttangerine);
+  border: 3px dashed var(--coral);
+  color: var(--dark-text);
+}
+
+.devtools-bg-snapshot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  z-index: 0;
+  padding: 0.8em 0.6em;
+  max-width: 480px;
+  width: 100%;
+  box-sizing: border-box;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#passage-devtools.passage {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.devtools-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+}
+
+.devtools-modal-content {
+  background-color: var(--lightyellow);
+  border: 4px solid var(--coral);
+  border-radius: 20px 20px 0 0;
+  padding: 1.2em;
+  width: 100%;
+  max-width: 480px;
+  max-height: 75vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1001;
+}
+
+.modal-bg-snapshot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  z-index: 0;
+  padding: 0.8em 0.6em;
+  max-width: 480px;
+  width: 100%;
+  box-sizing: border-box;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 /* ==============================================
    LOCATIONS PAGE
@@ -4371,6 +4454,26 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
   image-rendering: pixelated;
 }
 
+.farm-title {
+  display: block;
+  text-align: center;
+  color: var(--teal);
+  font-family: 'Fontdiner Swanky', sans-serif;
+  font-size: 24px;
+}
+
+.farm-message {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  color: var(--mid-text);
+}
+
+.farm-header {
+  color: var(--coral);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
 
 /* ==============================================
    BOUNTY BOARD
@@ -5314,6 +5417,12 @@ $(document).on('click', '#btn-continue', function() {
     Save.browser.auto.load(0).then(function() {
         Engine.show();
     });
+});
+
+// modal bg stuff
+
+$(document).on(':passagestart', function() {
+  State.variables.modalBg = $('#passages').html();
 });
 
 // Genetics
@@ -6380,26 +6489,22 @@ $(document).on(':passageend', function() {
       window.applyTutorialHighlight();
 });
 
-setup.DEBUG_GROWTH_SPEED = 3600000 / 86400000;
-
 /* ── Farm real-time notification poller ── */
 setup._farmPollInterval = null;
 
-/* Separate dialog shower for farm (mirrors your hatch pattern) */
 setup._farmDialogQueue = [];
 setup.showNextFarmDialog = function () {
     if (setup._farmDialogQueue.length === 0) return;
-    // If a dialog is already open, wait for it to close
     if ($(".ui-dialog:visible").length > 0) {
         $(document).one("dialog:closed", function () {
             setup.showNextFarmDialog();
         });
         return;
     }
-var item = setup._farmDialogQueue.shift();
-var icon = item.icon || "🌾";
-var title = item.title || "Alert";
-Dialog.create(icon + " " + title, "farm-alert");
+    var item = setup._farmDialogQueue.shift();
+    var icon = item.icon || "🌾";
+    var title = item.title || "Alert";
+    Dialog.create(icon + " " + title, "farm-alert");
     Dialog.wiki("'''" + item.name + "''' " + item.message);
     $(document).one("dialog:closed", function () {
         setup.showNextFarmDialog();
@@ -6407,53 +6512,46 @@ Dialog.create(icon + " " + title, "farm-alert");
     Dialog.open();
 };
 
-// Fix: push to the right queue
 setup.startFarmPoller = function () {
     if (setup._farmPollInterval) return;
     setup._farmPollInterval = setInterval(function () {
         var plots   = State.variables.farmPlots;
         var season  = State.variables.currentSeason;
         if (!plots) return;
-
         var now = Date.now();
         var MS  = 86400000;
         var droughtLimit = (season === "Summer") ? MS : MS * 2;
-
         plots.forEach(function (plot, i) {
             if (plot.crop === null) return;
-
             var msSinceWatered = now - plot.lastWatered;
             var cropData       = setup.crops[plot.crop];
             var dyingThreshold = droughtLimit * 0.9;
-
             if (msSinceWatered >= dyingThreshold && !plot._dyingNotified) {
                 plot._dyingNotified = true;
                 setup._farmDialogQueue.push({
-    _type: "farmDying",
-    icon: "🥀",
-    title: "Farm Alert",
-    name: cropData.name + " (Plot " + (i + 1) + ")",
-    message: "is dying of thirst! Water it soon or it will be lost."
-});
+                    _type: "farmDying",
+                    icon: "🥀",
+                    title: "Farm Alert",
+                    name: cropData.name + " (Plot " + (i + 1) + ")",
+                    message: "is dying of thirst! Water it soon or it will be lost."
+                });
                 setup.showNextFarmDialog();
             }
             if (msSinceWatered < dyingThreshold) {
                 plot._dyingNotified = false;
             }
-
             var winterMod        = (season === "Winter") ? 1.5 : 1;
-            var growthDurationMs = Math.ceil(cropData.growthDays * winterMod * MS * setup.DEBUG_GROWTH_SPEED);
+            var growthDurationMs = Math.ceil(cropData.growthDays * winterMod * MS);
             var isReady          = (now - plot.plantedDay) >= growthDurationMs;
-
             if (isReady && !plot._harvestNotified) {
                 plot._harvestNotified = true;
                 setup._farmDialogQueue.push({
-    _type: "farmHarvest",
-    icon: "🌾",
-    title: "Farm Alert",
-    name: cropData.name + " (Plot " + (i + 1) + ")",
-    message: "is ready to harvest!"
-});
+                    _type: "farmHarvest",
+                    icon: "🌾",
+                    title: "Farm Alert",
+                    name: cropData.name + " (Plot " + (i + 1) + ")",
+                    message: "is ready to harvest!"
+                });
                 setup.showNextFarmDialog();
             }
             if (!isReady) {
@@ -6491,7 +6589,6 @@ setup.showNextHatchDialog = function() {
 setup.checkStepEvents = function() {
     var steps     = State.variables.steps;
     var creatures = State.variables.playerCreatures;
-    var today     = State.variables.currentDay;
 
     for (var i = 0; i < creatures.length; i++) {
         var c = creatures[i];
@@ -6524,9 +6621,30 @@ $(document).ready(function() {
   $(document).on('click', '#btn-back', function() {
     Engine.play(previous());
   });
+  
+    $(document).on('click', '#btn-undo', function() {
+    Engine.backward();
+  });
 
   $(document).on('click', '#btn-save', function() {
     UI.saves();
+  });
+  
+  $(document).on('click', '#btn-devtools', function() {
+  State.variables.devtoolsBg = $('#passages').html();
+  Engine.play('DevTools');
+});
+  
+  $(document).on('click', '#btn-devtools-close', function() {
+  Engine.play(previous());
+});
+  
+    $(document).on('click', '#btn-xp', function() {
+    $.wiki("<<addXP 100>>");
+  });
+  
+      $(document).on('click', '#btn-money', function() {
+    State.variables.money += 1000;
   });
 
   $(document).on('click', '#btn-restart', function() {
@@ -6540,6 +6658,8 @@ $(document).on('click', '#btn-locations', function() {
   Engine.play('Locations');
 });
 });
+
+// freelancing stuff
 
 window.goFreelancing = function() {
   if (!State.variables.activeGig) {
@@ -6601,11 +6721,89 @@ setup.checkCreatureDeath = function(c, rarity) {
 // run away check
 
 window.checkCreatureEscape = function(creature) {
-   if (creature.stage === "egg") return false;
-   if (creature.careCur >= 0) return false;
-   
-   
-   return Math.random() < 0.05;
+    if (creature.stage === "egg") return false;
+    if (creature.hungerCur >= 1 && creature.careCur >= 1) return false;
+
+    var affectionRatio = creature.affectionCur / (creature.affectionMax || 100);
+    var chance;
+    if (affectionRatio >= 0.75) {
+        chance = 0.02;
+    } else if (affectionRatio >= 0.50) {
+        chance = 0.05;
+    } else {
+        chance = 0.08;
+    }
+    return Math.random() < chance;
+};
+
+window.checkCreatureReturn = function(creature) {
+    var now = Date.now();
+    if (creature.lastReturnCheck && (now - creature.lastReturnCheck) < 24 * 60 * 60 * 1000) {
+        return false;
+    }
+    creature.lastReturnCheck = now;
+    return Math.random() < 0.25;
+};
+
+setup.checkDailyEscape = function() {
+    var now = Date.now();
+    var sv = State.variables;
+
+    // --- 9 PM calendar-day gate ---
+    var today = new Date();
+    var todayStr = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    var isPastNine = today.getHours() >= 21;
+
+    if (!isPastNine) return;
+    if (sv.lastEscapeCheckDate === todayStr) return;
+    sv.lastEscapeCheckDate = todayStr;
+
+    // --- Check player creatures for escape ---
+    var creatures = sv.playerCreatures;
+    for (var i = creatures.length - 1; i >= 0; i--) {
+        var c = creatures[i];
+        if (c.stage === "egg") continue;
+        if (checkCreatureEscape(c)) {
+            var escaped = clone(c);
+            escaped.escapeTime = now;
+            escaped.lastReturnCheck = null;
+            sv.escapedCreatures.push(escaped);
+            creatures.splice(i, 1);
+            sv.notificationQueue.push({
+                icon: "🏃",
+                title: "A Creature Ran Away!",
+                message: (c.petName || c.name) + " ran away due to poor care. Check on them — they may return within 3 days."
+            });
+        }
+    }
+
+    // --- Check escaped creatures for return or permanent loss ---
+    var escaped = sv.escapedCreatures;
+    for (var j = escaped.length - 1; j >= 0; j--) {
+        var ec = escaped[j];
+        var eName = ec.petName || ec.name;
+        var timeGone = now - (ec.escapeTime || now);
+
+        if (timeGone > 72 * 60 * 60 * 1000) {
+            escaped.splice(j, 1);
+            sv.notificationQueue.push({
+                icon: "💔",
+                title: "Lost Forever",
+                message: eName + " has been gone too long. They're not coming back."
+            });
+        } else if (checkCreatureReturn(ec)) {
+            var returned = clone(ec);
+            returned.escapeTime = null;
+            returned.lastReturnCheck = null;
+            sv.playerCreatures.push(returned);
+            escaped.splice(j, 1);
+            sv.notificationQueue.push({
+                icon: "🎉",
+                title: "A Creature Returned!",
+                message: eName + " has come back home! Give them better care this time."
+            });
+        }
+    }
 };
 
 // collection menu record combo function
@@ -6630,63 +6828,45 @@ setup.applyRealTimeTick = function() {
 
         if (c.stage === "egg") continue;
 
-        // Hunger drain
-        if (!c.lastHungerDrain) c.lastHungerDrain = now;
-        var hungerIntervals = Math.floor((now - c.lastHungerDrain) / setup.DRAIN_INTERVAL);
-        if (hungerIntervals > 0) {
-            var hungerDrain = rarity === "Common" ? 6 : rarity === "Uncommon" ? 5 : rarity === "Rare" ? 4 : 4;
-            c.hungerCur = Math.max(-20, c.hungerCur - (hungerDrain * hungerIntervals));
-            c.lastHungerDrain = now;
-
-            if (c.hungerCur <= 0) {
-                var oldStamina = c.stamina;
-                c.stamina = Math.max(0, c.stamina - hungerIntervals);
-                if (c.stamina < oldStamina) {
-                    State.variables.notificationQueue.push({
-                        icon: "⚡",
-                        title: "Stamina Lost!",
-                        message: name + " is starving and lost " + (oldStamina - c.stamina) + " stamina. Feed them soon!"
-                    });
-                }
-
-                if (c.hungerCur <= -20) {
-                    if (checkCreatureEscape(c)) {
-                        var escaped = clone(c);
-                        escaped.escapeDay = State.variables.currentDay;
-                        State.variables.escapedCreatures.push(escaped);
-                        creatures.splice(i, 1);
-                        i--;
-                        State.variables.notificationQueue.push({
-                            icon: "🏃",
-                            title: "A Creature Ran Away!",
-                            message: name + " was starving and has run away. They may return within 28 days if you're lucky..."
-                        });
-                        continue;
-                    }
-                }
-            }
+        // --- Hunger drain ---
+if (!c.lastHungerDrain) c.lastHungerDrain = now;
+var hungerIntervals = Math.floor((now - c.lastHungerDrain) / setup.DRAIN_INTERVAL);
+if (hungerIntervals > 0) {
+    var hungerDrain = rarity === "Common" ? 6 : rarity === "Uncommon" ? 5 : 4;
+    c.hungerCur = Math.max(0, c.hungerCur - (hungerDrain * hungerIntervals));
+    c.lastHungerDrain = now;
+    if (c.hungerCur < 1) {
+        var oldStamina = c.stamina;
+        c.stamina = Math.max(0, c.stamina - hungerIntervals);
+        if (c.stamina < oldStamina) {
+            State.variables.notificationQueue.push({
+                icon: "⚡",
+                title: "Stamina Lost!",
+                message: name + " is starving and lost " + (oldStamina - c.stamina) + " stamina. Feed them soon!"
+            });
         }
+    }
+}
 
-        // --- Care drain ---
-        if (!c.lastCareDrain) c.lastCareDrain = now;
-        var careIntervals = Math.floor((now - c.lastCareDrain) / setup.DRAIN_INTERVAL);
-        if (careIntervals > 0) {
-            c.careCur = Math.max(-20, c.careCur - (4 * careIntervals)); // CHANGED
-            c.lastCareDrain = now;
-
-            if (c.careCur <= 0) {
-                var affectionLoss = Math.ceil(c.affectionCur * 0.10) * careIntervals;
-                var oldAffection  = c.affectionCur;
-                c.affectionCur    = Math.max(-20, c.affectionCur - affectionLoss);
-                if (c.affectionCur < oldAffection) {
-                    State.variables.notificationQueue.push({
-                        icon: "😢",
-                        title: "Neglected!",
-                        message: name + " hasn't been cared for and lost affection. Give them some attention!"
-                    });
-                }
-            }
+// --- Care drain ---
+if (!c.lastCareDrain) c.lastCareDrain = now;
+var careIntervals = Math.floor((now - c.lastCareDrain) / setup.DRAIN_INTERVAL);
+if (careIntervals > 0) {
+    c.careCur = Math.max(0, c.careCur - (4 * careIntervals));
+    c.lastCareDrain = now;
+    if (c.careCur < 1) {
+        var affectionLoss = Math.ceil(c.affectionCur * 0.10) * careIntervals;
+        var oldAffection = c.affectionCur;
+        c.affectionCur = Math.max(0, c.affectionCur - affectionLoss);
+        if (c.affectionCur < oldAffection) {
+            State.variables.notificationQueue.push({
+                icon: "😢",
+                title: "Neglected!",
+                message: name + " hasn't been cared for and lost affection. Give them some attention!"
+            });
         }
+    }
+}
 
         // --- Stamina regen ---
         if (!c.lastStaminaRegen) c.lastStaminaRegen = now;
@@ -6813,21 +6993,26 @@ setup.checkRankUp = function() {
 
     var ranks = [
         {
-            id: "rankOne", threshold: 100, next: "rankTwo",
+            id: "rankOne", threshold: 150, next: "rankTwo",
             unlocks: function() { v.maxFreelancingAttempts++; },
             unlocksText: "//+1 Freelancing Attempt a day//"
         },
         {
-            id: "rankTwo", threshold: 200, next: "rankThree",
+            id: "rankTwo", threshold: 400, next: "rankThree",
             unlocks: function() {
                 v.fishingrodUnlocked = true;
                 v.wormbaitUnlocked = true;
                 v.maxFreelancingAttempts++;
             },
-            unlocksText: "//Buy Fishing Rod, +1 Freelancing Attempt a day//"
+            unlocksText: "//Buy Fishing Rod and Worm Bait, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankThree", threshold: 350, next: "rankFour",
+            id: "rankThree", threshold: 800, next: "rankFour",
+            unlocks: function() { v.maxFreelancingAttempts++; },
+            unlocksText: "//+1 Freelancing Attempt a day//"
+        },
+        {
+            id: "rankFour", threshold: 1400, next: "rankFive",
             unlocks: function() {
                 v.kitchenUnlocked = true;
                 v.lanternUnlocked = true;
@@ -6836,7 +7021,12 @@ setup.checkRankUp = function() {
             unlocksText: "//Purchase the Kitchen renovation from Real Estate, Buy the Lantern, +1 Freelancing Attempt a day//"
         },
         {
-            id: "rankFour", threshold: 500, next: "rankFive",
+            id: "rankFive", threshold: 2250, next: "rankSix",
+            unlocks: function() { v.maxFreelancingAttempts++; },
+            unlocksText: "//+1 Freelancing Attempt a day//"
+        },
+        {
+            id: "rankSix", threshold: 3250, next: "rankSeven",
             unlocks: function() {
                 v.farmUnlocked = true;
                 v.maxFreelancingAttempts++;
@@ -6859,6 +7049,17 @@ setup.checkRankUp = function() {
                     "<strong>Unlocked:</strong> " + r.unlocksText +
                     "<br><br>With sincerity,<br>DCHW"
             });
+          
+          if (r.next === "rankSix") {
+    setup._farmDialogQueue.push({
+        _type: "rankMax",
+        icon: "🚀",
+        title: "Max Rank Reached",
+        name: "Congratulations!",
+        message: "You've reached the current max rank."
+    });
+    setup.showNextFarmDialog();
+}
             break; // only one rank-up at a time
         }
     }
@@ -7073,11 +7274,7 @@ setup.showLoginRewardDialog = function() {
         "</div>"
     );
     Dialog.open();
-};
-
-// accessory stuff
-
-</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+};</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── MAILBOX HEADER ── */
 &lt;div class=&quot;home-header&quot;&gt;
@@ -8693,7 +8890,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;br&gt;
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
   &lt;div class=&quot;back-button&quot;&gt;
-    &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;link &quot;Go Back&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
@@ -8771,6 +8968,9 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _itemToUse = _currentItem&gt;&gt;
 
 &lt;div class=&quot;cart-modal&quot; id=&quot;creature-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
+
+&lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
+
   &lt;div class=&quot;cart-modal-content&quot;&gt;
 
     /* ── HEADER ── */
@@ -8928,6 +9128,10 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 
   &lt;/div&gt;
 &lt;/div&gt;
+
+&lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
+  $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
+})&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="14" name="TheLake" tags="" position="700,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $selectedBait = null&gt;&gt;
@@ -9681,7 +9885,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;br&gt;
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
   &lt;div class=&quot;back-button&quot;&gt;
-    &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;link &quot;Go Home&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
@@ -10608,8 +10812,12 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="35" name="VetItemDetail" tags="" position="450,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
+  &lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
+
 &lt;div class=&quot;vet-item-overlay&quot;&gt;
+
   &lt;div class=&quot;vet-item-sheet&quot;&gt;
+ 
 
     /* ── HEADER ── */
     &lt;div class=&quot;vet-item-header&quot;&gt;
@@ -10672,6 +10880,10 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 
   &lt;/div&gt;
 &lt;/div&gt;
+
+&lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
+  $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
+})&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="CreatureNameWidget" tags="widget" position="400,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
@@ -10887,8 +11099,12 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;addXP&quot;&gt;&gt;
+&lt;&lt;if $playerRank.id is &quot;rankSix&quot;&gt;&gt;
+
+&lt;&lt;else&gt;&gt;
   &lt;&lt;set $playerXP += _args[0]&gt;&gt;
   &lt;&lt;run setup.checkRankUp()&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;refresh&quot;&gt;&gt;
@@ -10920,12 +11136,12 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 
 /* ── updateSeason ── */
 &lt;&lt;widget &quot;updateSeason&quot;&gt;&gt;
-  &lt;&lt;set _dayOfYear = $currentDay % 112&gt;&gt;
-  &lt;&lt;if _dayOfYear &gt;= 1 &amp;&amp; _dayOfYear &lt;= 28&gt;&gt;
+  &lt;&lt;set _month = new Date().getMonth()&gt;&gt;
+  &lt;&lt;if _month &gt;= 2 &amp;&amp; _month &lt;= 4&gt;&gt;
     &lt;&lt;set $currentSeason = &quot;Spring&quot;&gt;&gt;
-  &lt;&lt;elseif _dayOfYear &gt;= 29 &amp;&amp; _dayOfYear &lt;= 56&gt;&gt;
+  &lt;&lt;elseif _month &gt;= 5 &amp;&amp; _month &lt;= 7&gt;&gt;
     &lt;&lt;set $currentSeason = &quot;Summer&quot;&gt;&gt;
-  &lt;&lt;elseif _dayOfYear &gt;= 57 &amp;&amp; _dayOfYear &lt;= 84&gt;&gt;
+  &lt;&lt;elseif _month &gt;= 8 &amp;&amp; _month &lt;= 10&gt;&gt;
     &lt;&lt;set $currentSeason = &quot;Fall&quot;&gt;&gt;
   &lt;&lt;else&gt;&gt;
     &lt;&lt;set $currentSeason = &quot;Winter&quot;&gt;&gt;
@@ -10957,7 +11173,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
         &lt;&lt;set _plot.growthStage = Math.min(100, Math.floor(((_now - _plot.plantedDay) / _growthDurationMs) * 100))&gt;&gt;
       &lt;&lt;/if&gt;&gt;
 
-      &lt;&lt;if $isRainy&gt;&gt;
+      &lt;&lt;if $isBadWeather&gt;&gt;
         &lt;&lt;set _plot.lastWatered = _now&gt;&gt;
       &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
@@ -11989,6 +12205,7 @@ affectionMax: 100,
 &lt;&lt;set $pendingSales to []&gt;&gt;
 &lt;&lt;set $currentCreature = null&gt;&gt;
 &lt;&lt;set $escapedCreatures to []&gt;&gt;
+&lt;&lt;set $lastEscapeCheckDate to &quot;&quot;&gt;&gt;
 &lt;&lt;set $playerName to &quot;&quot;&gt;&gt;
 &lt;&lt;set $playerPronouns to &quot;&quot;&gt;&gt;
 &lt;&lt;set $breedingLicense to false&gt;&gt;
@@ -14051,49 +14268,38 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
 }&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="Farm" tags="" position="600,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;updateSeason&gt;&gt;
 
-&lt;h2&gt;🌾 Your Farm&lt;/h2&gt;
+&lt;div class=&quot;farm-title&quot;&gt;🌾 Your Farm&lt;/div&gt;
 
+&lt;div class=&quot;farm-message&quot;&gt;
 &lt;div style=&quot;background-color: #f0f8f0; padding: 10px; border-radius: 5px; margin-bottom: 15px;&quot;&gt;
-  &lt;strong&gt;Day:&lt;/strong&gt; $currentDay | 
+  &lt;strong&gt;Day:&lt;/strong&gt; &lt;&lt;= new Date().toLocaleDateString(&quot;en-US&quot;, { month: &quot;long&quot;, day: &quot;numeric&quot; })&gt;&gt; |
   &lt;strong&gt;Season:&lt;/strong&gt; $currentSeason | 
-  &lt;strong&gt;Weather:&lt;/strong&gt; &lt;&lt;if $isRainy&gt;&gt;🌧️ Rainy&lt;&lt;else&gt;&gt;☀️ Clear&lt;&lt;/if&gt;&gt;
+  &lt;strong&gt;Weather:&lt;/strong&gt; &lt;&lt;if $isBadWeather&gt;&gt;🌧️ Wet&lt;&lt;else&gt;&gt;☀️ Clear&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 
-&lt;h3&gt;Farm Plots ($maxPlots plots available)&lt;/h3&gt;
+&lt;div class=&quot;farm-header&quot;&gt;Farm Plots ($maxPlots / 12)&lt;/div&gt;
 
-&lt;&lt;if $isRainy&gt;&gt;
+&lt;&lt;if $isbadWeather&gt;&gt;
   &lt;div style=&quot;background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 15px;&quot;&gt;
     🌧️ &lt;em&gt;The rain is watering all your crops today!&lt;/em&gt;
   &lt;/div&gt;
-&lt;&lt;else&gt;&gt;
-  &lt;&lt;set _needsWater = false&gt;&gt;
-  &lt;&lt;for _checkPlot = 0; _checkPlot &lt; $farmPlots.length; _checkPlot++&gt;&gt;
-    &lt;&lt;if $farmPlots[_checkPlot].crop !== null&gt;&gt;
-      &lt;&lt;set _checkDaysWithoutWater = $currentDay - $farmPlots[_checkPlot].lastWatered&gt;&gt;
-      &lt;&lt;if _checkDaysWithoutWater &gt; 0&gt;&gt;
-        &lt;&lt;set _needsWater = true&gt;&gt;
-        &lt;&lt;break&gt;&gt;
-      &lt;&lt;/if&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-  &lt;&lt;/for&gt;&gt;
-  &lt;&lt;/if&gt;&gt;
-  
+&lt;&lt;/if&gt;&gt;
 
-&lt;div style=&quot;display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0;&quot;&gt;
+&lt;div style=&quot;display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 0;&quot;&gt;
   &lt;&lt;for _i = 0; _i &lt; $farmPlots.length; _i++&gt;&gt;
     &lt;&lt;set _plot = $farmPlots[_i]&gt;&gt;
     &lt;&lt;capture _i, _plot&gt;&gt;
-      &lt;div style=&quot;border: 2px solid #8b4513; padding: 10px; background-color: #faf8f3; border-radius: 5px; min-height: 280px;&quot;&gt;
+      &lt;div style=&quot;border: 2px solid #8b4513; padding: 10px; background-color: #faf8f3; border-radius: 5px; min-height: 260px; box-sizing: border-box;&quot;&gt;
         &lt;div style=&quot;font-weight: bold; margin-bottom: 8px; text-align: center; border-bottom: 1px solid #8b4513; padding-bottom: 5px;&quot;&gt;
           Plot &lt;&lt;= _i + 1&gt;&gt;
         &lt;/div&gt;
-        
+
         &lt;&lt;if _plot.crop === null&gt;&gt;
-          &lt;!-- Empty plot with background image --&gt;
           &lt;div style=&quot;text-align: center; margin: 10px auto;&quot;&gt;
-            &lt;img src=&quot;https://i.imgur.com/qtYB5PE.png&quot; class=&quot;farm-plot&quot; alt=&quot;Empty Plot&quot;&gt;
+            &lt;img src=&quot;https://i.imgur.com/qtYB5PE.png&quot; class=&quot;farm-plot&quot; alt=&quot;Empty Plot&quot; style=&quot;width: 100%; max-width: 110px; height: auto; display: block; margin: 0 auto; image-rendering: crisp-edges; image-rendering: pixelated;&quot;&gt;
           &lt;/div&gt;
-          
+
           &lt;div style=&quot;margin-top: 10px; font-size: 0.9em;&quot;&gt;
             &lt;strong&gt;Plant:&lt;/strong&gt;&lt;br&gt;
             &lt;&lt;if $inventory.WheatSeeds &gt; 0&gt;&gt;&lt;&lt;link &quot;Wheat&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;set $tempPlot = _i&gt;&gt;&lt;&lt;set $tempCrop = &quot;Wheat&quot;&gt;&gt;&lt;&lt;plantCrop $tempPlot $tempCrop&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
@@ -14108,81 +14314,80 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
             &lt;&lt;if $inventory.BasilSeeds &gt; 0&gt;&gt;&lt;&lt;link &quot;Basil&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;set $tempPlot = _i&gt;&gt;&lt;&lt;set $tempCrop = &quot;Basil&quot;&gt;&gt;&lt;&lt;plantCrop $tempPlot $tempCrop&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
             &lt;&lt;if $inventory.ParsleySeeds &gt; 0&gt;&gt;&lt;&lt;link &quot;Parsley&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;set $tempPlot = _i&gt;&gt;&lt;&lt;set $tempCrop = &quot;Parsley&quot;&gt;&gt;&lt;&lt;plantCrop $tempPlot $tempCrop&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
             &lt;&lt;if $inventory.CilantroSeeds &gt; 0&gt;&gt;&lt;&lt;link &quot;Cilantro&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;set $tempPlot = _i&gt;&gt;&lt;&lt;set $tempCrop = &quot;Cilantro&quot;&gt;&gt;&lt;&lt;plantCrop $tempPlot $tempCrop&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
-            
+
             &lt;&lt;if $inventory.WheatSeeds === 0 &amp;&amp; $inventory.CornSeeds === 0 &amp;&amp; $inventory.PotatoSeeds === 0 &amp;&amp; $inventory.CarrotSeeds === 0 &amp;&amp; $inventory.TomatoSeeds === 0 &amp;&amp; $inventory.OnionSeeds === 0 &amp;&amp; $inventory.LettuceSeeds === 0 &amp;&amp; $inventory.RiceSeeds === 0 &amp;&amp; $inventory.GarlicSeeds === 0 &amp;&amp; $inventory.BasilSeeds === 0 &amp;&amp; $inventory.ParsleySeeds === 0 &amp;&amp; $inventory.CilantroSeeds === 0&gt;&gt;
               &lt;span style=&quot;color: #888; font-size: 0.85em;&quot;&gt;No seeds&lt;/span&gt;
             &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
+
         &lt;&lt;else&gt;&gt;
           &lt;&lt;set _cropData = setup.crops[_plot.crop]&gt;&gt;
-          
+
           &lt;div style=&quot;color: #2d5016; font-weight: bold; text-align: center; margin-bottom: 8px;&quot;&gt;
             _cropData.name
           &lt;/div&gt;
-          
-          &lt;!-- Layered images: plot background + crop overlay --&gt;
-          &lt;div style=&quot;position: relative; width: 120px; height: 120px; margin: 8px auto;&quot;&gt;
-            &lt;!-- Plot background --&gt;
-            &lt;img src=&quot;https://i.imgur.com/qtYB5PE.png&quot; 
-                 style=&quot;position: absolute; top: 0; left: 0; width: 120px; height: 120px; border-radius: 8px; border: 2px solid var(--mid-text); image-rendering: crisp-edges; image-rendering: pixelated;&quot; 
+
+          &lt;div style=&quot;position: relative; width: 100%; max-width: 110px; height: 110px; margin: 8px auto;&quot;&gt;
+            &lt;img src=&quot;https://i.imgur.com/qtYB5PE.png&quot;
+                 style=&quot;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px; border: 2px solid var(--mid-text); image-rendering: crisp-edges; image-rendering: pixelated;&quot;
                  alt=&quot;Plot&quot;&gt;
-            
-            &lt;!-- Crop overlay based on growth stage --&gt;
+
             &lt;&lt;if _plot.growthStage &lt; 20&gt;&gt;
-            &lt;img @src=&quot;_cropData.images.stage0&quot; style=&quot;position: absolute; top: 2px; left: 0; width: 120px; height: 120px; image-rendering: crisp-edges; image-rendering: pixelated;&quot;&gt;
-                   alt=&quot; _cropData.name Seedling&quot;&gt;
+              &lt;img @src=&quot;_cropData.images.stage0&quot;
+                   style=&quot;position: absolute; top: 2px; left: 0; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated;&quot;
+                   alt=&quot;_cropData.name Seedling&quot;&gt;
             &lt;&lt;elseif _plot.growthStage &lt; 50&gt;&gt;
-              &lt;img @src=&quot;_cropData.images.stage1&quot; 
-                   style=&quot;position: absolute; top: 3px; left: 0; width: 120px; height: 120px; image-rendering: crisp-edges; image-rendering: pixelated;&quot; 
-                   alt=&quot; _cropData.name Sprout&quot;&gt;
+              &lt;img @src=&quot;_cropData.images.stage1&quot;
+                   style=&quot;position: absolute; top: 3px; left: 0; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated;&quot;
+                   alt=&quot;_cropData.name Sprout&quot;&gt;
             &lt;&lt;elseif _plot.growthStage &lt; 75&gt;&gt;
-              &lt;img @src=&quot; _cropData.images.stage2&quot; 
-                   style=&quot;position: absolute; top: 2px; left: 0; width: 120px; height: 120px; image-rendering: crisp-edges; image-rendering: pixelated;&quot; 
+              &lt;img @src=&quot;_cropData.images.stage2&quot;
+                   style=&quot;position: absolute; top: 2px; left: 0; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated;&quot;
                    alt=&quot;_cropData.name Young&quot;&gt;
             &lt;&lt;elseif _plot.growthStage &lt; 100&gt;&gt;
-              &lt;img @src=&quot;_cropData.images.stage3&quot; 
-                   style=&quot;position: absolute; top: 2px; left: 0; width: 120px; height: 120px; image-rendering: crisp-edges; image-rendering: pixelated;&quot; 
+              &lt;img @src=&quot;_cropData.images.stage3&quot;
+                   style=&quot;position: absolute; top: 2px; left: 0; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated;&quot;
                    alt=&quot;_cropData.name Growing&quot;&gt;
             &lt;&lt;else&gt;&gt;
-              &lt;img @src=&quot;_cropData.images.stage4&quot; 
-                   style=&quot;position: absolute; top: 2px; left: 0; width: 120px; height: 120px; image-rendering: crisp-edges; image-rendering: pixelated;&quot; 
+              &lt;img @src=&quot;_cropData.images.stage4&quot;
+                   style=&quot;position: absolute; top: 2px; left: 0; width: 100%; height: 100%; image-rendering: crisp-edges; image-rendering: pixelated;&quot;
                    alt=&quot;_cropData.name Mature&quot;&gt;
             &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
-          
+
           &lt;div style=&quot;font-size: 0.85em; margin-bottom: 5px;&quot;&gt;
             &lt;strong&gt;Growth:&lt;/strong&gt; &lt;&lt;= _plot.growthStage&gt;&gt;%
           &lt;/div&gt;
-          
-          &lt;&lt;set _now = Date.now()&gt;&gt;
-&lt;&lt;set _MS = setup.MS_PER_DAY&gt;&gt;
-&lt;&lt;set _msSinceWatered = _now - _plot.lastWatered&gt;&gt;
-&lt;&lt;set _droughtLimit = ($currentSeason === &quot;Summer&quot;) ? _MS : (_MS * 2)&gt;&gt;
 
-&lt;div style=&quot;font-size: 0.85em; margin-bottom: 8px;&quot;&gt;
-  &lt;strong&gt;Water:&lt;/strong&gt;&lt;br&gt;
-  &lt;&lt;if $isRainy&gt;&gt;
-    &lt;span style=&quot;color: #1e90ff;&quot;&gt;💧 Watered (raining)&lt;/span&gt;
-  &lt;&lt;elseif _plot.justPlanted&gt;&gt;
-    &lt;span style=&quot;color: #ffa500;&quot;&gt;⚠️ Needs water&lt;/span&gt;
-  &lt;&lt;elseif _msSinceWatered &lt; (_droughtLimit * 0.5)&gt;&gt;
-    &lt;span style=&quot;color: #1e90ff;&quot;&gt;💧 Watered&lt;/span&gt;
-  &lt;&lt;elseif _msSinceWatered &lt; (_droughtLimit * 0.75)&gt;&gt;
-    &lt;span style=&quot;color: #ffa500;&quot;&gt;⚠️ Needs water&lt;/span&gt;
-  &lt;&lt;elseif _msSinceWatered &lt; _droughtLimit&gt;&gt;
-    &lt;span style=&quot;color: #d90000;&quot;&gt;⚠️ Dying! Water immediately!&lt;/span&gt;
-  &lt;&lt;else&gt;&gt;
-    &lt;span style=&quot;color: #7d0101;&quot;&gt;💀 Dead&lt;/span&gt;
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
-          
+          &lt;&lt;set _now = Date.now()&gt;&gt;
+          &lt;&lt;set _MS = setup.MS_PER_DAY&gt;&gt;
+          &lt;&lt;set _msSinceWatered = _now - _plot.lastWatered&gt;&gt;
+          &lt;&lt;set _droughtLimit = ($currentSeason === &quot;Summer&quot;) ? _MS : (_MS * 2)&gt;&gt;
+
+          &lt;div style=&quot;font-size: 0.85em; margin-bottom: 8px;&quot;&gt;
+            &lt;strong&gt;Water:&lt;/strong&gt;&lt;br&gt;
+            &lt;&lt;if $isRainy&gt;&gt;
+              &lt;span style=&quot;color: #1e90ff;&quot;&gt;💧 Watered (raining)&lt;/span&gt;
+            &lt;&lt;elseif _plot.justPlanted&gt;&gt;
+              &lt;span style=&quot;color: #ffa500;&quot;&gt;⚠️ Needs water&lt;/span&gt;
+            &lt;&lt;elseif _msSinceWatered &lt; (_droughtLimit * 0.5)&gt;&gt;
+              &lt;span style=&quot;color: #1e90ff;&quot;&gt;💧 Watered&lt;/span&gt;
+            &lt;&lt;elseif _msSinceWatered &lt; (_droughtLimit * 0.75)&gt;&gt;
+              &lt;span style=&quot;color: #ffa500;&quot;&gt;⚠️ Needs water&lt;/span&gt;
+            &lt;&lt;elseif _msSinceWatered &lt; _droughtLimit&gt;&gt;
+              &lt;span style=&quot;color: #d90000;&quot;&gt;⚠️ Dying! Water immediately!&lt;/span&gt;
+            &lt;&lt;else&gt;&gt;
+              &lt;span style=&quot;color: #7d0101;&quot;&gt;💀 Dead&lt;/span&gt;
+            &lt;&lt;/if&gt;&gt;
+          &lt;/div&gt;
+
           &lt;div style=&quot;text-align: center; margin-top: 8px;&quot;&gt;
-            &lt;&lt;if (_daysWithoutWater &gt; 0 || _plot.justPlanted) &amp;&amp; !$isRainy &amp;&amp; _plot.growthStage !== 100&gt;&gt;
+            &lt;&lt;if _plot.crop !== null &amp;&amp; _plot.growthStage &lt; 100 &amp;&amp; !$isRainy&gt;&gt;
               &lt;&lt;link &quot;💧 Water&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;waterCrop _i&gt;&gt;&lt;&lt;/link&gt;&gt;
             &lt;&lt;/if&gt;&gt;
-            
+
             &lt;&lt;if _plot.growthStage &gt;= 100&gt;&gt;
-              &lt;&lt;if _daysWithoutWater &gt; 0 &amp;&amp; !$isRainy&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
+              &lt;&lt;if _plot.crop !== null &amp;&amp; _plot.growthStage &lt; 100 &amp;&amp; !$isRainy&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
               &lt;&lt;link &quot;🌾 Harvest&quot; &quot;Farm&quot;&gt;&gt;
                 &lt;&lt;harvestCrop _i&gt;&gt;
                 &lt;&lt;set $farmMessage = &quot;Harvested &quot; + _harvestedAmount + &quot;x &quot; + _harvestedCrop + &quot;!&quot;&gt;&gt;
@@ -15826,42 +16031,49 @@ ERROR: Please finish filling out your personal info before continuing.
    &quot;rankOne&quot;: {
       id: &quot;rankOne&quot;,
       name: &quot;Novice Nester&quot;,
-      xpRequired: 100,
+      xpRequired: 150,
       description: &quot;Congratulations on receiving your breeding license! Explore and complete activities to rank up.&quot;,
       },
       &quot;rankTwo&quot;: {
       id: &quot;rankTwo&quot;,
       name: &quot;Up-and-Coming Apprentice&quot;,
-      xp: 100,
-      xpRequired: 200,
+      xp: 150,
+      xpRequired: 250,
       description: &quot;Welcome to Rank Two.&quot;,
       },
       &quot;rankThree&quot;: {
       id: &quot;rankThree&quot;,
       name: &quot;Certified Caretaker&quot;,
-      xp: 200,
-      xpRequired: 350,
+      xp: 250,
+      xpRequired: 400,
       description: &quot;Welcome to Rank Three.&quot;,
       },
       &quot;rankFour&quot;: {
       id: &quot;rankFour&quot;,
       name: &quot;Tactful Technician&quot;,
-      xp: 350,
-      xpRequired: 500,
+      xp: 400,
+      xpRequired: 600,
       description: &quot;Welcome to Rank Four.&quot;,
       },
       &quot;rankFive&quot;: {
       id: &quot;rankFive&quot;,
       name: &quot;Bountiful Breeder&quot;,
-      xp: 500,
-      xpRequired: 750,
+      xp: 600,
+      xpRequired: 850,
       description: &quot;Welcome to Rank Five.&quot;,
+      },
+      &quot;rankSix&quot;: {
+      id: &quot;rankSix&quot;,
+      name: &quot;Trained Expert&quot;,
+      xp: 850,
+      xpRequired: 1000,
+      description: &quot;Welcome to Rank Six.&quot;,
       }
 }&gt;&gt;
 
 &lt;&lt;set $breedingLicense to true&gt;&gt;
 &lt;&lt;set $playerRank to setup.playerRanks.rankOne&gt;&gt;
-&lt;&lt;set $playerXP = 0&gt;&gt;
+&lt;&lt;set $playerXP to 0&gt;&gt;
 
 &lt;&lt;set $tutorialQuests = {
   dismissed: false,
@@ -16919,6 +17131,8 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;set $weatherRendered to false&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
+&lt;&lt;run setup.checkDailyEscape()&gt;&gt;
+
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="78" name="StoryInterface" tags="" position="100,1400" size="100,100">&lt;div id=&quot;ui-wrapper&quot;&gt;
   &lt;div id=&quot;passage-container&quot;&gt;
     &lt;div id=&quot;passages&quot;&gt;
@@ -16931,10 +17145,14 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;button id=&quot;btn-save&quot;&gt;💾&lt;/button&gt;
     &lt;button id=&quot;btn-home&quot;&gt;🏠&lt;/button&gt;
     &lt;button id=&quot;btn-locations&quot;&gt;🗺️&lt;/button&gt;
-    &lt;button id=&quot;btn-restart&quot;&gt;↺&lt;/button&gt;
+    &lt;button id=&quot;btn-devtools&quot;&gt;🛠️&lt;/button&gt;
   &lt;/nav&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="FeaturedCreatureModal" tags="" position="500,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+
+  &lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
+
 &lt;div class=&quot;cart-modal&quot; id=&quot;featured-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
+
   &lt;div class=&quot;cart-modal-content&quot;&gt;
 
     &lt;div class=&quot;cart-modal-header&quot;&gt;
@@ -17048,6 +17266,34 @@ ERROR: Please finish filling out your personal info before continuing.
 
   &lt;/div&gt;
 &lt;/div&gt;
+
+&lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
+  $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
+})&gt;&gt;
+
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="80" name="DevTools" tags="" position="100,1500" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;devtools-modal&quot; id=&quot;creature-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
+
+  &lt;div class=&quot;devtools-bg-snapshot&quot; id=&quot;devtools-bg&quot;&gt;&lt;/div&gt;
+
+  &lt;div class=&quot;devtools-modal-content&quot;&gt;
+    &lt;div class=&quot;cart-modal-header&quot;&gt;
+      &lt;h3&gt;Developer Tools&lt;/h3&gt;
+&lt;button class=&quot;cart-modal-close&quot; id=&quot;btn-devtools-close&quot;&gt;✕&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;devtools&quot;&gt;
+      &lt;button id=&quot;btn-undo&quot;&gt;↶&lt;/button&gt;
+      &lt;button id=&quot;btn-xp&quot;&gt;✨&lt;/button&gt;
+      &lt;button id=&quot;btn-money&quot;&gt;💰&lt;/button&gt;
+      &lt;button id=&quot;btn-restart&quot;&gt;↻&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+&lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
+  $(&#39;#devtools-bg&#39;).html(State.variables.devtoolsBg);
+})&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
