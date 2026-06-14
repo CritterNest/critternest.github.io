@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-				<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -6675,7 +6669,7 @@ window.goFreelancing = function() {
   var gig = State.variables.activeGig;
   if ((gig === 'SMGig' && State.variables.smCurrentQ !== -1) ||
       (gig === 'Composition' && State.variables.photosCompleted > 0) ||
-      (gig === 'LogoDesign' && State.variables.logosCompleted > 0)) {
+      (gig === 'LogoDesign' && State.variables.logosCompleted > 0 && State.variables.logosCompleted < 3)) {
     Engine.play('FreelanceResume');
   } else {
     Engine.play(gig);
@@ -13511,7 +13505,7 @@ fontStyle: [&quot;script&quot;, &quot;calligraphy&quot;, &quot;formal&quot;],
 incorrectShape: &quot;When thinking of a shape for Fernwood Apothecary, think elegance and intricacy.&quot;,
 correctShape: &quot;A perfect shape design for Fernwood Apothecary&#39;s luxurious ambiance.&quot;,
 incorrectColorPalette: &quot;Fernwood Apothecary&#39;s color palette should be subtle and stylish.&quot;,
-correctColorPalatte: &quot;This is an excellent choice for Fernwood Apothecary. Each color is understated yet distinguished togther.&quot;,
+correctColorPalette: &quot;This is an excellent choice for Fernwood Apothecary. Each color is understated yet distinguished togther.&quot;,
 incorrectFontStyle: &quot;The font style of Fernwood Apothecary should flow and give the viewer a sense of tranquility.&quot;,
 correctFontStyle: &quot;This is the correct font style to envoke peace and mindfulness.&quot;
 },
@@ -17081,12 +17075,20 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
 &lt;div class=&quot;center-button&quot;&gt;
-&lt;&lt;link &quot;Continue&quot; &quot;LogoDesign&quot;&gt;&gt;
-
-&lt;&lt;set $logosCompleted += 1&gt;&gt;
-&lt;&lt;set $logoScore to 0&gt;&gt;
-
-&lt;&lt;/link&gt;&gt;
+&lt;&lt;if $logosCompleted + 1 gte 3&gt;&gt;
+  &lt;&lt;link &quot;Finish&quot; &quot;Home&quot;&gt;&gt;
+    &lt;&lt;set $logosCompleted to 0&gt;&gt;
+    &lt;&lt;set $logoScore to 0&gt;&gt;
+    &lt;&lt;set $logosMoney to 0&gt;&gt;
+    &lt;&lt;set $activeGig to &quot;&quot;&gt;&gt;
+    &lt;&lt;set $freelancingAttempts += 1&gt;&gt;
+  &lt;&lt;/link&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;link &quot;Continue&quot; &quot;LogoDesign&quot;&gt;&gt;
+    &lt;&lt;set $logosCompleted += 1&gt;&gt;
+    &lt;&lt;set $logoScore to 0&gt;&gt;
+  &lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
