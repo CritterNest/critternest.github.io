@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-			<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -9368,6 +9362,12 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
             &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _baby.speciesName&gt;&gt;&lt;&lt;if _baby.gender === &quot;Male&quot;&gt;&gt; ♂&lt;&lt;else&gt;&gt; ♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
             &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= _baby.displayTraits.color&gt;&gt; · &lt;&lt;= _baby.displayTraits.size&gt;&gt;&lt;/div&gt;
           &lt;/div&gt;
+          &lt;&lt;capture _baby&gt;&gt;
+  &lt;&lt;button &quot;🌟 Grow Up&quot;&gt;&gt;
+    &lt;&lt;run _baby.bornAt = Date.now() - setup.BABY_DURATION&gt;&gt;
+    &lt;&lt;goto &quot;ViewBabies&quot;&gt;&gt;
+  &lt;&lt;/button&gt;&gt;
+&lt;&lt;/capture&gt;&gt;
         &lt;&lt;/capture&gt;&gt;
       &lt;&lt;/for&gt;&gt;
     &lt;&lt;/if&gt;&gt;
