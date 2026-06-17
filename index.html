@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -137,6 +131,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   --teal: #03A8A1;
   --lightpeach: #ffddc4;
   --peach: #ffc499;
+  --brown: #c48443;
   --dark-text: #5A3E2B;
   --mid-text: #855636;
   --light-text: #ffffff;
@@ -1098,6 +1093,37 @@ hr {
   background-color: var(--paleyellow);
   border: 3px solid var(--coralorange);
   border-radius: 12px;
+  position: relative;
+}
+
+.mimikin-small-display {
+  position: absolute;
+  top: 40px;
+  left: 80px;
+  width: 50px;
+  height: 50px;
+}
+
+.mimikin-medium-display {
+  position: absolute;
+  top: 110px;
+  left: 150px;
+  width: 50px;
+  height: 50px;
+}
+
+.mimikin-large-display {
+  position: absolute;
+  top: 170px;
+  left: 220px;
+  width: 50px;
+  height: 50px;
+}
+
+.mimikin-small-display img, .mimikin-medium-display img, .mimikin-large-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .featured-critter-name {
@@ -4716,6 +4742,7 @@ body[data-tags~="creature-profile"] h4 {
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
+  position: relative;
 }
 
 .profile-flavor {
@@ -5408,6 +5435,496 @@ font-family: 'Hachi Maru Pop', cursive;
   border: 2px solid var(--coral);
   border-radius: 10px;
   color: var(--mid-text);
+}
+
+/* ==============================================
+   heck yeah gacha
+   ============================================== */
+
+/* mimikin display */
+
+.mimikin-button {
+  text-align: center;
+}
+
+.mimikin-button a {
+  font-family: 'Hachi Maru Pop', cursive;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--coral);
+  background-color: var(--lightyellow);
+  border: 2px solid var(--coralorange);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.mimikin-button a:hover {
+  text-decoration: none !important;
+  color: var(--brown);
+}
+
+.mimikin-button a.link-internal {
+    display: inline-block;
+    transition: transform 0.2s ease-in-out;
+}
+
+.mimikin-button a.link-internal:hover {
+    transform: translateY(-5px);
+    color: #ff4444;
+}
+
+.mimikin-display {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+}
+
+.mimikin-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── Slot Machine Container ── */
+.slot-machine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(160deg, #402c59, #295369, #402c59);
+  border: 4px solid #f4845f;
+  border-radius: 24px;
+  padding: 24px 20px 20px;
+  margin: 16px auto;
+  max-width: 340px;
+  box-shadow: 0 0 24px rgba(244, 132, 95, 0.4), inset 0 0 12px rgba(0,0,0,0.3);
+  font-family: 'Chewy', cursive;
+}
+
+.slot-machine-title {
+  color: #f4d35e;
+  font-family: 'Chewy', cursive;
+  font-size: 1.4em;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(244, 211, 94, 0.6);
+  margin-bottom: 16px;
+}
+
+/* ── Reels ── */
+.slot-reels {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.slot-reel {
+  width: 80px;
+  height: 80px;
+  background: #fff8f0;
+  border: 3px solid #f4845f;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4em;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+  transition: border-color 0.3s ease;
+}
+
+/* Reel states */
+.slot-reel.spinning {
+  animation: reelPulse 0.4s ease infinite alternate;
+  border-color: #a8d8d0;
+}
+
+.slot-reel.locked {
+  border-color: #f4d35e;
+  animation: reelLock 0.3s ease forwards;
+}
+
+.slot-reel.locked.win {
+  border-color: #f4d35e;
+  animation: reelWin 0.5s ease forwards;
+}
+
+.slot-reel.locked.lose {
+  border-color: #888;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+@keyframes reelPulse {
+  from { transform: scale(1);   background: #fff8f0; }
+  to   { transform: scale(1.04); background: #e8f6f4; }
+}
+
+@keyframes reelLock {
+  0%   { transform: scale(1.1); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes reelWin {
+  0%   { transform: scale(1.1); box-shadow: 0 0 0px #f4d35e; }
+  50%  { transform: scale(1.15); box-shadow: 0 0 16px #f4d35e; }
+  100% { transform: scale(1); box-shadow: 0 0 8px #f4d35e; }
+}
+
+/* ── Pull Lever Button ── */
+.slot-lever-btn {
+  background: linear-gradient(135deg, #f4845f, #e85d3a, #f4845f);
+  color: #fff;
+  font-family: 'Chewy', cursive;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(244, 132, 95, 0.5);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  margin-bottom: 8px;
+}
+
+.slot-lever-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(244, 132, 95, 0.4);
+}
+
+.slot-lever-btn:disabled {
+  background: #888;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ── Result Text ── */
+#slot-result {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1em;
+  color: #fff8f0;
+  text-align: center;
+  min-height: 28px;
+  margin-top: 8px;
+}
+
+#slot-result.win-text {
+  color: #f4d35e;
+  font-family: 'Chewy', cursive;
+  font-size: 1.3em;
+  text-shadow: 0 0 8px rgba(244, 211, 94, 0.5);
+  animation: resultFadeIn 0.4s ease forwards;
+}
+
+#slot-result.lose-text {
+  color: #a8d8d0;
+  animation: resultFadeIn 0.4s ease forwards;
+}
+
+@keyframes resultFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Gacha Result Card ── */
+.gacha-result {
+  text-align: center;
+  background: linear-gradient(135deg, #a8d8d0, #e8f6f4, #a8d8d0);
+  border: 3px solid #f4d35e;
+  border-radius: 18px;
+  padding: 16px;
+  margin: 12px auto;
+  max-width: 280px;
+  animation: cardReveal 0.5s ease forwards;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.gacha-result img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.gacha-result strong {
+  font-family: 'Chewy', cursive;
+  font-size: 1.3em;
+  color: #2b1f3a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.gacha-result .rarity-tag {
+  display: inline-block;
+  background: #f4845f;
+  color: #fff;
+  font-size: 0.8em;
+  border-radius: 50px;
+  padding: 2px 12px;
+  margin-bottom: 6px;
+  font-family: 'Chewy', cursive;
+  letter-spacing: 1px;
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: scale(0.85) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Paytable ── */
+.paytable {
+  background: rgba(255,255,255,0.3);
+  border: 4px solid #a8d8d0;
+  border-radius: 16px;
+  padding: 0 16px;
+  margin: 5px auto;
+  max-width: 340px;
+  font-family: 'Quicksand', sans-serif;
+  color: var(--brown);
+  font-weight: bold;
+    overflow: hidden;
+}
+
+.paytable p {
+  padding: 10px;  
+  margin: -5px -20px 5px -20px;
+  background-color: rgba(224, 157, 165,0.3);
+  font-family: 'Chewy', cursive;
+  color: #e5be36;
+  font-size: 1.3em;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.paytable-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.9em;
+}
+
+.paytable-row:last-child {
+  border-bottom: none;
+  color: #888;
+  font-style: italic;
+}
+
+/* GachaSteady animations CSS */
+
+/* ── Steady Machine Container ── */
+.steady-machine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(160deg, #402c59, #295369, #402c59);
+  border: 4px solid #a8d8d0;
+  border-radius: 24px;
+  padding: 24px 20px 20px;
+  margin: 16px auto;
+  max-width: 340px;
+  box-shadow: 0 0 24px rgba(168, 216, 208, 0.4), inset 0 0 12px rgba(0,0,0,0.3);
+  font-family: 'Chewy', cursive;
+}
+
+.steady-machine-title {
+  color: #a8d8d0;
+  font-family: 'Chewy', cursive;
+  font-size: 1.4em;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(168, 216, 208, 0.6);
+  margin-bottom: 16px;
+}
+
+/* ── Crank ── */
+.crank-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.crank-btn {
+  background: linear-gradient(135deg, #a8d8d0, #6bb8ae, #a8d8d0);
+  color: #2b1f3a;
+  font-family: 'Chewy', cursive;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(168, 216, 208, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  margin-bottom: 8px;
+}
+
+.crank-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(168, 216, 208, 0.3);
+}
+
+.crank-btn:disabled {
+  background: #888;
+  box-shadow: none;
+  cursor: default;
+}
+
+.crank-handle {
+  font-size: 2em;
+  display: inline-block;
+  transform-origin: center;
+}
+
+.crank-handle.cranking {
+  animation: crankSpin 0.6s ease forwards;
+}
+
+@keyframes crankSpin {
+  0%   { transform: rotate(0deg); }
+  40%  { transform: rotate(180deg); }
+  70%  { transform: rotate(300deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Chute ── */
+.capsule-chute {
+  width: 80px;
+  height: 120px;
+  background: rgba(255,255,255,0.05);
+  border: 3px solid #a8d8d0;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+/* ── Capsule ── */
+.capsule {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f4845f, #f4d35e, #f4845f);
+  border: 3px solid #fff8f0;
+  position: absolute;
+  top: -64px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6em;
+}
+
+.capsule.dropping {
+  animation: capsuleDrop 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.capsule.cracking {
+  animation: capsuleCrack 0.5s ease forwards;
+}
+
+@keyframes capsuleDrop {
+  0%   { top: -64px; }
+  70%  { top: 56px; }
+  82%  { top: 44px; }
+  91%  { top: 52px; }
+  100% { top: 48px; }
+}
+
+@keyframes capsuleCrack {
+  0%   { transform: translateX(-50%) scale(1) rotate(0deg);   opacity: 1; }
+  30%  { transform: translateX(-50%) scale(1.15) rotate(-8deg); opacity: 1; }
+  60%  { transform: translateX(-50%) scale(1.2) rotate(8deg);  opacity: 0.7; }
+  100% { transform: translateX(-50%) scale(0.5) rotate(0deg);  opacity: 0; }
+}
+
+/* ── Steady Result ── */
+#steady-result {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1em;
+  color: #fff8f0;
+  text-align: center;
+  min-height: 28px;
+  margin-top: 8px;
+}
+
+#steady-final {
+  width: 100%;
+}
+
+#steady-final a, #slot-final a {
+  background-color: #e8f6f4;
+  border: 2px solid #f4d35e;
+  padding: 5px 8px;
+  border-radius: 8px;
+  color: #4a877d;
+  font-weight: bold !important;
+}
+
+/* ── Gacha Machines Hub ── */
+.gacha-machines-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.gacha-machine-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  padding: 20px 12px;
+  font-family: 'Chewy', cursive;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.steady-card {
+  background: linear-gradient(160deg, #1a2f3a, #2b1f3a);
+  border: 3px solid #a8d8d0;
+  box-shadow: 0 0 16px rgba(168, 216, 208, 0.3);
+}
+
+.lucky-card {
+  background: linear-gradient(160deg, #2b1f3a, #1a2f3a);
+  border: 3px solid #f4845f;
+  box-shadow: 0 0 16px rgba(244, 132, 95, 0.3);
+}
+
+.gacha-machine-card-title {
+  color: #fff8f0;
+  font-size: 1em;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.gacha-machine-card-cost {
+  color: #f4d35e;
+  font-size: 1.1em;
+}
+
+.gogogacha-links {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.gogogacha-links a {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: italic;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+    padding: 5px 25px 5px 25px;
+  color: var(--coralorange);
+}
+
+.gogogacha-links a:hover {
+  color: var(--coral);
+  text-decoration: none;
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">$(document).one(':storyready', function() {
     Config.saves.maxAutoSaves = 1;
     Config.saves.isAllowed = function() { return true; };
@@ -5432,17 +5949,19 @@ $(document).on(':passagestart', function() {
 });
 
 // Genetics
-window.getDisplayedTrait = function(allele1, allele2, dominanceList) {
-   const exotic1 = !dominanceList.includes(allele1);
-   const exotic2 = !dominanceList.includes(allele2);
+window.getDisplayedTrait = function(allele1, allele2, dominanceList, isMutated) {
+    const pos1 = dominanceList.indexOf(allele1);
+    const pos2 = dominanceList.indexOf(allele2);
+    const rank1 = pos1 === -1 ? dominanceList.length : pos1;
+    const rank2 = pos2 === -1 ? dominanceList.length : pos2;
 
-   if (exotic1 && exotic2) return allele1;
-   if (exotic1) return allele1;
-   if (exotic2) return allele2;
+    if (isMutated) {
+        // Force exotic to win — return whichever allele is exotic
+        if (pos1 === -1) return allele1;
+        if (pos2 === -1) return allele2;
+    }
 
-   const position1 = dominanceList.indexOf(allele1);
-   const position2 = dominanceList.indexOf(allele2);
-   return position1 <= position2 ? allele1 : allele2;
+    return rank1 <= rank2 ? allele1 : allele2;
 };
 
 window.getBlendedSize = function(allele1, allele2, sizeScale) {
@@ -5504,11 +6023,48 @@ window.getRandomTrait = function(traitArray, excludeCurrent) {
    return available[random(0, available.length - 1)];
 };
 
-window.applyMutation = function(gene, template, traitType, playerRank) {
-   if (traitType !== "color") return gene;
-   if (!template.exoticColors || template.exoticColors.length === 0) return gene;
-   if (!shouldMutate(template.rarity, playerRank)) return gene;
-   return getRandomTrait(template.exoticColors, gene);
+window.applyMutation = function(gene1, gene2, template, traitType, playerRank) {
+    if (traitType !== "color") return [gene1, gene2];
+    if (!template.exoticColors || template.exoticColors.length === 0) return [gene1, gene2];
+    if (!shouldMutate(template.rarity, playerRank)) return [gene1, gene2];
+
+    const exotic = getRandomTrait(template.exoticColors);
+    // Find which allele is dominant using the normal dominance list
+    const pos1 = template.colorDominance.indexOf(gene1);
+    const pos2 = template.colorDominance.indexOf(gene2);
+    const rank1 = pos1 === -1 ? template.colorDominance.length : pos1;
+    const rank2 = pos2 === -1 ? template.colorDominance.length : pos2;
+
+    // Replace the dominant allele with the exotic, preserve the recessive
+    if (rank1 <= rank2) {
+        return [exotic, gene2]; // gene1 was dominant
+    } else {
+        return [gene1, exotic]; // gene2 was dominant
+    }
+};
+
+window.sanitizeColorAllele = function(allele, chosenTemplate, parentTemplate) {
+    const globalColors = setup.globalColors;
+    const speciesColors = chosenTemplate.speciesColors || [];
+    const exoticColors = chosenTemplate.exoticColors || [];
+    const parentExoticColors = parentTemplate ? (parentTemplate.exoticColors || []) : [];
+
+    // Valid non-exotic for chosen species — keep it
+    if (globalColors.includes(allele) || speciesColors.includes(allele)) {
+        return { allele: allele, wasExotic: false };
+    }
+
+    // Was exotic for the parent species — remap to a random exotic for chosen species
+    if (parentExoticColors.includes(allele)) {
+        if (exoticColors.length > 0) {
+            return { allele: getRandomTrait(exoticColors), wasExotic: true };
+        }
+        // Chosen species has no exotics — fall back to most dominant normal color
+        return { allele: chosenTemplate.colorDominance[0], wasExotic: false };
+    }
+
+    // Illegal allele (e.g. red Caervira gene in a Chiroden) — replace with most dominant normal color
+    return { allele: chosenTemplate.colorDominance[0], wasExotic: false };
 };
 
 // Fertility
@@ -6663,6 +7219,150 @@ $(document).ready(function() {
 $(document).on('click', '#btn-locations', function() {
   Engine.play('Locations');
 });
+  
+  $(document).on('click', '#crank-btn', function() {
+  var btn = document.getElementById('crank-btn');
+  btn.disabled = true;
+
+  State.variables.money -= 150;
+  var mimikinId = pullMimikin();
+  State.variables.gachaResult = mimikinId;
+  if (State.variables.playerMimikins.indexOf(mimikinId) === -1) {
+    State.variables.playerMimikins.push(mimikinId);
+  }
+
+  // Crank spin
+  var handle = document.getElementById('crank-handle');
+  handle.classList.add('cranking');
+
+  // Capsule drops after crank
+  setTimeout(function() {
+    var capsule = document.getElementById('capsule');
+    capsule.classList.add('dropping');
+  }, 700);
+
+  // Result text appears after landing
+  setTimeout(function() {
+    var el = document.getElementById('steady-result');
+    el.innerHTML = '✨ The capsule landed! ✨';
+  }, 1500);
+
+  // Capsule cracks open
+setTimeout(function() {
+  var capsule = document.getElementById('capsule');
+  capsule.style.top = '48px';
+  capsule.style.animation = 'none';
+  void capsule.offsetWidth; // force reflow
+  capsule.style.animation = '';
+  capsule.classList.remove('dropping');
+  capsule.classList.add('cracking');
+}, 2000);
+
+  // Mimikin card + navigation reveal
+  setTimeout(function() {
+    var mimi = setup.mimikins[State.variables.gachaResult];
+    var final = document.getElementById('steady-final');
+    var html = '';
+    html += '<div class="gacha-result">';
+    html += '<img src="' + mimi.image + '" alt="' + mimi.name + '">';
+    html += '<strong>' + mimi.name + '</strong>';
+    html += '<span class="rarity-tag">' + mimi.rarity + '</span>';
+    html += '<p>' + mimi.mimikinsType + ' type &middot; ' + mimi.description + '</p>';
+    html += '</div>';
+    html += '<div style="text-align:center; margin-top:12px; font-family:\'Quicksand\',sans-serif;">';
+    html += '<a onclick="SugarCube.Engine.play(\'GachaSteady\')">Pull again!</a> | ';
+    html += '<a onclick="SugarCube.Engine.play(\'GachaMachines\')">Back to machines</a>';
+    html += '</div>';
+    final.innerHTML = html;
+  }, 2600);
+});
+  
+  $(document).on('click', '#lever-btn', function() {
+  var btn = document.getElementById('lever-btn');
+  btn.disabled = true;
+
+  State.variables.money -= 50;
+  var result = spinSlots();
+  State.variables.slotResult = result;
+  State.variables.gachaResult = null;
+  State.variables.slotConsolation = 0;
+
+  if (result.matchThree) {
+    State.variables.gachaResult = pullMimikinByRarity(result.matchedSymbol.rarity);
+    State.variables.playerMimikins.push(State.variables.gachaResult);
+  } else if (result.matchTwo) {
+    State.variables.slotConsolation = result.matchedSymbol.consolation;
+    State.variables.money += result.matchedSymbol.consolation;
+  }
+
+  setTimeout(function() {
+    var r1 = document.getElementById('reel-1');
+    r1.textContent = result.reels[0];
+    r1.classList.remove('spinning');
+    r1.classList.add('locked');
+    if (result.matchThree || (result.matchTwo && result.matchedEmoji === result.reels[0])) {
+      r1.classList.add('win');
+    } else {
+      r1.classList.add('lose');
+    }
+  }, 800);
+
+  setTimeout(function() {
+    var r2 = document.getElementById('reel-2');
+    r2.textContent = result.reels[1];
+    r2.classList.remove('spinning');
+    r2.classList.add('locked');
+    if (result.matchThree || (result.matchTwo && result.matchedEmoji === result.reels[1])) {
+      r2.classList.add('win');
+    } else {
+      r2.classList.add('lose');
+    }
+  }, 1600);
+
+  setTimeout(function() {
+    var r3 = document.getElementById('reel-3');
+    r3.textContent = result.reels[2];
+    r3.classList.remove('spinning');
+    r3.classList.add('locked');
+    if (result.matchThree || (result.matchTwo && result.matchedEmoji === result.reels[2])) {
+      r3.classList.add('win');
+    } else {
+      r3.classList.add('lose');
+    }
+
+    var el = document.getElementById('slot-result');
+    if (result.matchThree) {
+      el.className = 'win-text';
+      el.innerHTML = '✨ Three of a kind! ✨';
+    } else if (result.matchTwo) {
+      el.className = 'win-text';
+      el.innerHTML = 'Two of a kind! +' + State.variables.slotConsolation + ' 🪙';
+    } else {
+      el.className = 'lose-text';
+      el.innerHTML = 'No match... try again?';
+    }
+  }, 2400);
+
+  setTimeout(function() {
+    var final = document.getElementById('slot-final');
+    var html = '';
+    if (result.matchThree) {
+      var mimi = setup.mimikins[State.variables.gachaResult];
+      html += '<div class="gacha-result">';
+      html += '<img src="' + mimi.image + '" alt="' + mimi.name + '">';
+      html += '<strong>' + mimi.name + '</strong>';
+      html += '<span class="rarity-tag">' + mimi.rarity + '</span>';
+      html += '<p>' + mimi.mimikinsType + ' type &middot; ' + mimi.description + '</p>';
+      html += '</div>';
+    }
+    html += '<div style="text-align:center; margin-top:12px; font-family:\'Quicksand\',sans-serif;">';
+html += '<a onclick="SugarCube.Engine.play(\'GachaLucky\')">Try again!</a> | ';
+html += '<a onclick="SugarCube.Engine.play(\'GachaMachines\')">Back to machines</a>';
+    html += '</div>';
+    final.innerHTML = html;
+  }, 3200);
+});
+  
 });
 
 // freelancing stuff
@@ -7285,7 +7985,116 @@ setup.showLoginRewardDialog = function() {
         "</div>"
     );
     Dialog.open();
-};</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="600,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+};
+
+// Daily featured item
+
+var FEATURED_ITEMS = [
+  "CarePotion", "EnergyDrink", "CreatureChow", "ScrollFertility", "ScrollImmortality",
+  "WheatSeeds", "CornSeeds", "PotatoSeeds", "CarrotSeeds", "TomatoSeeds", "OnionSeeds",
+  "LettuceSeeds", "RiceSeeds", "GarlicSeeds", "BasilSeeds", "ParsleySeeds", "CilantroSeeds",
+  "CookingOil", "Herbs", "Berries", "Flour", "Sugar", "Wheat", "Corn", "Potato",
+  "Carrot", "Tomato", "Onion", "Lettuce", "Rice", "Garlic", "Basil", "Parsley",
+  "Cilantro", "Pasta", "Coconut", "PickledVeggies", "Saffron"
+];
+
+setup.checkDailyFeatured = function () {
+  var now = new Date();
+  // Build a day key like "2026-06-14"
+  var dayKey = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+
+  var sv = State.variables;
+
+  // If the day key matches, nothing to do
+  if (sv.featuredDayKey === dayKey) return;
+
+  // Day has changed (or first run) — pick a new item avoiding yesterday's
+  var pool = FEATURED_ITEMS.filter(function (id) {
+    return id !== sv.featuredItemId;
+  });
+
+  var index = Math.floor(Math.random() * pool.length);
+  sv.featuredItemId = pool[index];
+  sv.featuredDayKey = dayKey;
+};
+
+// Mimikins
+
+window.pullMimikin = function() {
+  var pool = Object.values(setup.mimikins);
+  var totalWeight = pool.reduce(function(sum, m) {
+    return sum + m.gachaWeight;
+  }, 0);
+  var roll = Math.random() * totalWeight;
+  var running = 0;
+  for (var i = 0; i < pool.length; i++) {
+    running += pool[i].gachaWeight;
+    if (roll < running) return pool[i].id;
+  }
+  return pool[pool.length - 1].id;
+};
+
+window.spinSlots = function() {
+  var symbols = setup.slotSymbols;
+  var weightedPool = [];
+  symbols.forEach(function(s) {
+    for (var i = 0; i < s.weight; i++) weightedPool.push(s.emoji);
+  });
+
+  var reels = [
+    weightedPool[Math.floor(Math.random() * weightedPool.length)],
+    weightedPool[Math.floor(Math.random() * weightedPool.length)],
+    weightedPool[Math.floor(Math.random() * weightedPool.length)]
+  ];
+
+  var matchThree = reels[0] === reels[1] && reels[1] === reels[2];
+
+  var matchedEmoji = null;
+  var matchTwo = false;
+
+  if (!matchThree) {
+    if (reels[0] === reels[1])      { matchTwo = true; matchedEmoji = reels[0]; }
+    else if (reels[1] === reels[2]) { matchTwo = true; matchedEmoji = reels[1]; }
+    else if (reels[0] === reels[2]) { matchTwo = true; matchedEmoji = reels[0]; }
+  } else {
+    matchedEmoji = reels[0];
+  }
+
+  var matchedSymbol = matchedEmoji
+    ? symbols.find(function(s) { return s.emoji === matchedEmoji; })
+    : null;
+
+  // Dud match-3 or dud match-2 counts as no match
+  if (matchedSymbol && matchedSymbol.rarity === null) {
+    matchThree = false;
+    matchTwo = false;
+    matchedEmoji = null;
+    matchedSymbol = null;
+  }
+
+  return {
+    reels: reels,
+    matchThree: matchThree,
+    matchTwo: matchTwo,
+    matchedEmoji: matchedEmoji,
+    matchedSymbol: matchedSymbol
+  };
+};
+
+window.pullMimikinByRarity = function(rarity) {
+  var pool = Object.values(setup.mimikins).filter(function(m) {
+    return m.rarity === rarity;
+  });
+  if (!pool.length) return null;
+  var totalWeight = pool.reduce(function(sum, m) { return sum + m.gachaWeight; }, 0);
+  var roll = Math.random() * totalWeight;
+  var running = 0;
+  for (var i = 0; i < pool.length; i++) {
+    running += pool[i].gachaWeight;
+    if (roll < running) return pool[i].id;
+  }
+  return pool[pool.length - 1].id;
+};</script><tw-tag name="creature-profile" color="yellow"></tw-tag><tw-passagedata pid="1" name="Home" tags="" position="650,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── MAILBOX HEADER ── */
 &lt;div class=&quot;home-header&quot;&gt;
@@ -7386,6 +8195,7 @@ setup.showLoginRewardDialog = function() {
   &lt;&lt;/for&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
+
 &lt;&lt;if _featuredIndex &gt;= 0&gt;&gt;
   &lt;&lt;set _fc = $playerCreatures[_featuredIndex]&gt;&gt;
   &lt;&lt;set _fcName = (ndef _fc.petName || _fc.petName === &quot;&quot;) ? _fc.name : _fc.petName&gt;&gt;
@@ -7407,11 +8217,43 @@ setup.showLoginRewardDialog = function() {
     &lt;&lt;set _fcXPos = _fcCol * -80&gt;&gt;&lt;&lt;set _fcDim = &quot;80px&quot;&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 
+
+
   &lt;div class=&quot;featured-critter&quot;&gt;
     &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;margin:0 auto;&#39;&quot;&gt;
+    
+                &lt;&lt;if def _fc.mimikin&gt;&gt;
+      
+      &lt;&lt;if _fcSize is &quot;small&quot;&gt;&gt;
+      
+
+  &lt;div class=&quot;mimikin-small-display&quot;&gt;
+    [img[_fc.mimikin.image]]
+  &lt;/div&gt;
+      
+     &lt;&lt;elseif _fcSize is &quot;medium&quot;&gt;&gt;
+
+  &lt;div class=&quot;mimikin-medium-display&quot;&gt;
+    [img[_fc.mimikin.image]]
+  &lt;/div&gt;
+  
+  &lt;&lt;else&gt;&gt;
+  
+    &lt;div class=&quot;mimikin-large-display&quot;&gt;
+    [img[_fc.mimikin.image]]
+  &lt;/div&gt;
+
+&lt;&lt;/if&gt;&gt;
+  &lt;&lt;elseif ndef _fc.mimikin&gt;&gt;
+
+
+&lt;&lt;/if&gt;&gt;
+    
       &lt;div class=&quot;creature-sprite-pattern&quot;
            @style=&quot;&#39;background-image:url(&#39; + _fcTemplate.avatars[_fcGender].patternSpriteSheets[_fcSize] + &#39;);background-position:&#39; + _fcXPos + &#39;px 0px;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;&#39;&quot;&gt;
       &lt;/div&gt;
+     
+
     &lt;/div&gt;
     &lt;div class=&quot;featured-critter-name&quot;&gt;
       &lt;&lt;link _fcName &quot;ViewCreature&quot;&gt;&gt;
@@ -7422,6 +8264,7 @@ setup.showLoginRewardDialog = function() {
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
+
 
 /* ── QUICK CARE ── */
 &lt;div class=&quot;home-section&quot; id=&quot;quick-care-section&quot;&gt;
@@ -7624,6 +8467,7 @@ setup.showLoginRewardDialog = function() {
 &lt;&lt;include &quot;InitRealEstate&quot;&gt;&gt;
 &lt;&lt;include &quot;InitRanks&quot;&gt;&gt;
 &lt;&lt;include &quot;InitLocation&quot;&gt;&gt;
+&lt;&lt;include &quot;InitMimikins&quot;&gt;&gt;
 &lt;&lt;set $gameStarted to true&gt;&gt;
 &lt;&lt;run setup.startTracking()&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="BreedingWidgets" tags="widget" position="300,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;widget &quot;breedCreatures&quot;&gt;&gt;
@@ -7670,47 +8514,72 @@ setup.showLoginRewardDialog = function() {
       
       &lt;&lt;set _roll to random(1, _totalWeight)&gt;&gt;
       &lt;&lt;if _roll &lt;= _weight1&gt;&gt;
-   &lt;&lt;set _chosenSpecies to _parent1.name&gt;&gt;
-&lt;&lt;else&gt;&gt;
-   &lt;&lt;set _chosenSpecies to _parent2.name&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;&lt;set _chosenTemplate to setup.creatureTemplates[_chosenSpecies]&gt;&gt;
-      
-/* Inherit genes from parents */
-&lt;&lt;set _colorGene1 = either(_parent1.genes.color[0], _parent1.genes.color[1])&gt;&gt;
-&lt;&lt;set _colorGene2 = either(_parent2.genes.color[0], _parent2.genes.color[1])&gt;&gt;
+         &lt;&lt;set _chosenSpecies to _parent1.name&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+         &lt;&lt;set _chosenSpecies to _parent2.name&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      &lt;&lt;set _chosenTemplate to setup.creatureTemplates[_chosenSpecies]&gt;&gt;
 
-&lt;&lt;set _patternGene1 = either(_parent1.genes.pattern[0], _parent1.genes.pattern[1])&gt;&gt;
-&lt;&lt;set _patternGene2 = either(_parent2.genes.pattern[0], _parent2.genes.pattern[1])&gt;&gt;
+      /* Inherit genes from parents */
+      &lt;&lt;set _colorGene1 = either(_parent1.genes.color[0], _parent1.genes.color[1])&gt;&gt;
+      &lt;&lt;set _colorGene2 = either(_parent2.genes.color[0], _parent2.genes.color[1])&gt;&gt;
 
-&lt;&lt;set _sizeGene1 = either(_parent1.genes.size[0], _parent1.genes.size[1])&gt;&gt;
-&lt;&lt;set _sizeGene2 = either(_parent2.genes.size[0], _parent2.genes.size[1])&gt;&gt;
+      &lt;&lt;set _patternGene1 = either(_parent1.genes.pattern[0], _parent1.genes.pattern[1])&gt;&gt;
+      &lt;&lt;set _patternGene2 = either(_parent2.genes.pattern[0], _parent2.genes.pattern[1])&gt;&gt;
 
-/* Store original genes for mutation tracking */
-&lt;&lt;set _origColor1 = _colorGene1&gt;&gt;
-&lt;&lt;set _origColor2 = _colorGene2&gt;&gt;
+      &lt;&lt;set _sizeGene1 = either(_parent1.genes.size[0], _parent1.genes.size[1])&gt;&gt;
+      &lt;&lt;set _sizeGene2 = either(_parent2.genes.size[0], _parent2.genes.size[1])&gt;&gt;
 
-/* Apply mutations */
-&lt;&lt;set _colorGene1 = applyMutation(_colorGene1, _chosenTemplate, &quot;color&quot;, $playerRank)&gt;&gt;
-&lt;&lt;set _colorGene2 = applyMutation(_colorGene2, _chosenTemplate, &quot;color&quot;, $playerRank)&gt;&gt;
+      /* Sanitize color alleles for the chosen species */
+      &lt;&lt;set _template1 to setup.creatureTemplates[_parent1.name]&gt;&gt;
+      &lt;&lt;set _template2 to setup.creatureTemplates[_parent2.name]&gt;&gt;
 
-&lt;&lt;set _patternGene1 = applyMutation(_patternGene1, _chosenTemplate, &quot;pattern&quot;)&gt;&gt;
-&lt;&lt;set _patternGene2 = applyMutation(_patternGene2, _chosenTemplate, &quot;pattern&quot;)&gt;&gt;
+      &lt;&lt;set _sanitized1 to sanitizeColorAllele(_colorGene1, _chosenTemplate, _parent1.name === _chosenSpecies ? null : _template1)&gt;&gt;
+      &lt;&lt;set _sanitized2 to sanitizeColorAllele(_colorGene2, _chosenTemplate, _parent2.name === _chosenSpecies ? null : _template2)&gt;&gt;
 
-&lt;&lt;set _sizeGene1 = applyMutation(_sizeGene1, _chosenTemplate, &quot;size&quot;)&gt;&gt;
-&lt;&lt;set _sizeGene2 = applyMutation(_sizeGene2, _chosenTemplate, &quot;size&quot;)&gt;&gt;
+      &lt;&lt;set _colorGene1 to _sanitized1.allele&gt;&gt;
+      &lt;&lt;set _colorGene2 to _sanitized2.allele&gt;&gt;
 
-/* Track which traits mutated */
-&lt;&lt;set _mutated = []&gt;&gt;
-&lt;&lt;if _colorGene1 !== _origColor1 || _colorGene2 !== _origColor2&gt;&gt;
-   &lt;&lt;run _mutated.push(&quot;color&quot;)&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-      
+      /* Store original genes for mutation tracking */
+      &lt;&lt;set _origColor1 = _colorGene1&gt;&gt;
+      &lt;&lt;set _origColor2 = _colorGene2&gt;&gt;
+
+      /* Apply mutations — skip if allele is already exotic from inheritance */
+      &lt;&lt;if !_sanitized1.wasExotic &amp;&amp; !_sanitized2.wasExotic&gt;&gt;
+         &lt;&lt;set _colorResult = applyMutation(_colorGene1, _colorGene2, _chosenTemplate, &quot;color&quot;, $playerRank)&gt;&gt;
+         &lt;&lt;set _colorGene1 = _colorResult[0]&gt;&gt;
+         &lt;&lt;set _colorGene2 = _colorResult[1]&gt;&gt;
+      &lt;&lt;elseif _sanitized1.wasExotic &amp;&amp; _sanitized2.wasExotic&gt;&gt;
+         /* Both exotic from inheritance — keep both, no mutation roll */
+      &lt;&lt;elseif _sanitized1.wasExotic&gt;&gt;
+         &lt;&lt;set _colorResult = applyMutation(_colorGene1, _colorGene2, _chosenTemplate, &quot;color&quot;, $playerRank)&gt;&gt;
+         &lt;&lt;set _colorGene1 = _colorResult[0]&gt;&gt;
+         &lt;&lt;set _colorGene2 = _colorResult[1]&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+         &lt;&lt;set _colorResult = applyMutation(_colorGene1, _colorGene2, _chosenTemplate, &quot;color&quot;, $playerRank)&gt;&gt;
+         &lt;&lt;set _colorGene1 = _colorResult[0]&gt;&gt;
+         &lt;&lt;set _colorGene2 = _colorResult[1]&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+
+      &lt;&lt;set _patternResult = applyMutation(_patternGene1, _patternGene2, _chosenTemplate, &quot;pattern&quot;)&gt;&gt;
+      &lt;&lt;set _patternGene1 = _patternResult[0]&gt;&gt;
+      &lt;&lt;set _patternGene2 = _patternResult[1]&gt;&gt;
+
+      &lt;&lt;set _sizeResult = applyMutation(_sizeGene1, _sizeGene2, _chosenTemplate, &quot;size&quot;)&gt;&gt;
+      &lt;&lt;set _sizeGene1 = _sizeResult[0]&gt;&gt;
+      &lt;&lt;set _sizeGene2 = _sizeResult[1]&gt;&gt;
+
+      /* Track which traits mutated */
+      &lt;&lt;set _mutated = []&gt;&gt;
+      &lt;&lt;if _colorGene1 !== _origColor1 || _colorGene2 !== _origColor2&gt;&gt;
+         &lt;&lt;run _mutated.push(&quot;color&quot;)&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+
       /* Calculate displayed traits */
-      &lt;&lt;set _displayColor to getDisplayedTrait(_colorGene1, _colorGene2, _chosenTemplate.colorDominance)&gt;&gt;
+      &lt;&lt;set _displayColor to getDisplayedTrait(_colorGene1, _colorGene2, _chosenTemplate.colorDominance, _mutated.includes(&quot;color&quot;))&gt;&gt;
       &lt;&lt;set _displayPattern to getDisplayedTrait(_patternGene1, _patternGene2, _chosenTemplate.patternDominance)&gt;&gt;
       &lt;&lt;set _displaySize to getBlendedSize(_sizeGene1, _sizeGene2, _chosenTemplate.possibleSizes)&gt;&gt;
-      
+
       /* Create egg */
       &lt;&lt;set _newEgg to {
          speciesName: _chosenSpecies,
@@ -7719,14 +8588,14 @@ setup.showLoginRewardDialog = function() {
          gender: either(&quot;Male&quot;, &quot;Female&quot;),
          age: 0,
          stage: &quot;egg&quot;,
-      hatchSteps: $steps + setup.HATCH_STEPS[_chosenTemplate.rarity] || 500,
+         hatchSteps: $steps + setup.HATCH_STEPS[_chosenTemplate.rarity] || 500,
          generation: Math.max(_parent1.generation, _parent2.generation) + 1,
          parents: {
-    motherId: _parent1.gender === &quot;Female&quot; ? _parent1.id : _parent2.id,
-    fatherId: _parent1.gender === &quot;Male&quot; ? _parent1.id : _parent2.id,
-    motherName: _parent1.gender === &quot;Female&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name),
-    fatherName: _parent1.gender === &quot;Male&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name)
-},
+            motherId: _parent1.gender === &quot;Female&quot; ? _parent1.id : _parent2.id,
+            fatherId: _parent1.gender === &quot;Male&quot; ? _parent1.id : _parent2.id,
+            motherName: _parent1.gender === &quot;Female&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name),
+            fatherName: _parent1.gender === &quot;Male&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name)
+         },
          genes: {
             color: [_colorGene1, _colorGene2],
             pattern: [_patternGene1, _patternGene2],
@@ -7747,55 +8616,52 @@ setup.showLoginRewardDialog = function() {
          rarity: _chosenTemplate.rarity,
       }&gt;&gt;
       &lt;&lt;if _newEgg.displayTraits.size === &quot;large&quot;&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur to 60&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax to 120&gt;&gt;
-&lt;&lt;elseif _newEgg.displayTraits.size === &quot;medium&quot;&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur to 50&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax to 100&gt;&gt;
-&lt;&lt;else&gt;&gt;
-&lt;&lt;set _newEgg.hungerCur to 40&gt;&gt;
-&lt;&lt;set _newEgg.hungerMax to 80&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;&lt;set _newEgg.geneticTestingDone to false&gt;&gt;
-&lt;&lt;set _newEgg.flavorText to _chosenTemplate.flavorText&gt;&gt;
-&lt;&lt;set _newEgg.mutations to _mutated&gt;&gt;
-&lt;&lt;run _newEgg.fertilityOffset = Date.now()&gt;&gt;
-&lt;&lt;run _newEgg.lastAgeDay = Date.now()&gt;&gt;
-&lt;&lt;run _newEgg.lastHungerDrain = Date.now()&gt;&gt;
-&lt;&lt;run _newEgg.lastCareDrain = Date.now()&gt;&gt;
-&lt;&lt;run _newEgg.lastStaminaRegen = Date.now()&gt;&gt;
-&lt;&lt;run _newEgg.wasHappy = false&gt;&gt;
-&lt;&lt;set _newEgg.immortal = false&gt;&gt;
+         &lt;&lt;set _newEgg.hungerCur to 60&gt;&gt;
+         &lt;&lt;set _newEgg.hungerMax to 120&gt;&gt;
+      &lt;&lt;elseif _newEgg.displayTraits.size === &quot;medium&quot;&gt;&gt;
+         &lt;&lt;set _newEgg.hungerCur to 50&gt;&gt;
+         &lt;&lt;set _newEgg.hungerMax to 100&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+         &lt;&lt;set _newEgg.hungerCur to 40&gt;&gt;
+         &lt;&lt;set _newEgg.hungerMax to 80&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      &lt;&lt;set _newEgg.geneticTestingDone to false&gt;&gt;
+      &lt;&lt;set _newEgg.flavorText to _chosenTemplate.flavorText&gt;&gt;
+      &lt;&lt;set _newEgg.mutations to _mutated&gt;&gt;
+      &lt;&lt;run _newEgg.fertilityOffset = Date.now()&gt;&gt;
+      &lt;&lt;run _newEgg.lastAgeDay = Date.now()&gt;&gt;
+      &lt;&lt;run _newEgg.lastHungerDrain = Date.now()&gt;&gt;
+      &lt;&lt;run _newEgg.lastCareDrain = Date.now()&gt;&gt;
+      &lt;&lt;run _newEgg.lastStaminaRegen = Date.now()&gt;&gt;
+      &lt;&lt;run _newEgg.wasHappy = false&gt;&gt;
+      &lt;&lt;set _newEgg.immortal = false&gt;&gt;
 
-&lt;&lt;run finalizeDisplayTraits(_newEgg)&gt;&gt;
+      &lt;&lt;run finalizeDisplayTraits(_newEgg)&gt;&gt;
 
       &lt;&lt;run $playerCreatures.push(_newEgg)&gt;&gt;
       &lt;&lt;run $lastBreedingResults.push(_newEgg)&gt;&gt;
-      
+
       /* Achievement triggers - per egg */
-&lt;&lt;run window.updateAchievementProgress(&quot;tenEggs&quot;, 1)&gt;&gt;
-&lt;&lt;run window.updateAchievementProgress(&quot;fiftyEggs&quot;, 1)&gt;&gt;
-&lt;&lt;run window.updateAchievementProgress(&quot;hundredEggs&quot;, 1)&gt;&gt;
+      &lt;&lt;run window.updateAchievementProgress(&quot;tenEggs&quot;, 1)&gt;&gt;
+      &lt;&lt;run window.updateAchievementProgress(&quot;fiftyEggs&quot;, 1)&gt;&gt;
+      &lt;&lt;run window.updateAchievementProgress(&quot;hundredEggs&quot;, 1)&gt;&gt;
 
-/* Creature count achievements - check current total */
-&lt;&lt;if $playerCreatures.length &gt;= 5&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;fiveCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
-&lt;&lt;if $playerCreatures.length &gt;= 10&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;tenCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
-&lt;&lt;if $playerCreatures.length &gt;= 20&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;twentyCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+      &lt;&lt;if $playerCreatures.length &gt;= 5&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;fiveCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+      &lt;&lt;if $playerCreatures.length &gt;= 10&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;tenCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+      &lt;&lt;if $playerCreatures.length &gt;= 20&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;twentyCreatures&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
 
-/* Generation achievements */
-&lt;&lt;if _newEgg.generation &gt;= 3&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;thirdGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
-&lt;&lt;if _newEgg.generation &gt;= 5&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;fifthGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
-&lt;&lt;if _newEgg.generation &gt;= 10&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;tenthGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
-      
+      &lt;&lt;if _newEgg.generation &gt;= 3&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;thirdGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+      &lt;&lt;if _newEgg.generation &gt;= 5&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;fifthGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+      &lt;&lt;if _newEgg.generation &gt;= 10&gt;&gt;&lt;&lt;run window.unlockAchievement(&quot;tenthGeneration&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+
    &lt;&lt;/for&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
 &lt;&lt;if _breedingSuccess&gt;&gt;
-  &lt;&lt;run window.unlockAchievement(&quot;firstBreeding&quot;)&gt;&gt;
+   &lt;&lt;run window.unlockAchievement(&quot;firstBreeding&quot;)&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 
 &lt;&lt;/widget&gt;&gt;
-
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="ViewCreature" tags="creature-profile" position="900,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _creature = $playerCreatures[$currentCreature]&gt;&gt;
 
@@ -7805,7 +8671,7 @@ setup.showLoginRewardDialog = function() {
   &lt;div class=&quot;profile-name-row&quot;&gt;
     &lt;h4 style=&quot;margin:0;&quot;&gt;
       &lt;&lt;if _creature.stage === &quot;baby&quot;&gt;&gt;🍼 &lt;&lt;elseif _creature.stage === &quot;egg&quot;&gt;&gt;🥚 &lt;&lt;/if&gt;&gt;&lt;&lt;creatureName _creature&gt;&gt;
-    &lt;/h4&gt;
+    &lt;/h4&gt; 
     &lt;&lt;button &quot;✏️&quot;&gt;&gt;
       &lt;&lt;set _newName = prompt(&quot;Enter a new name for your critter:&quot;, _creature.petName)&gt;&gt;
       &lt;&lt;if _newName and _newName.trim() !== &quot;&quot;&gt;&gt;
@@ -7818,8 +8684,20 @@ setup.showLoginRewardDialog = function() {
 
   /* ── SPRITE + FLAVOR TEXT ── */
   &lt;div class=&quot;profile-hero&quot;&gt;
+  
+  &lt;div class=&quot;mimikin-button&quot;&gt;
+  &lt;&lt;link &quot;𐔌՞. .՞𐦯 mimikins&quot; &quot;MimikinModal&quot;&gt;&gt;
+  
+  &lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
 
     &lt;div class=&quot;creature-profile-container&quot; @style=&quot;&#39;background-image: url(&#39; + setup.typeBackgrounds[_creature.type] + &#39;);&#39;&quot;&gt;
+    &lt;&lt;if _creature.mimikin !== null&gt;&gt;
+  &lt;div class=&quot;mimikin-display&quot;&gt;
+    [img[_creature.mimikin.image]]
+  &lt;/div&gt;
+  &lt;&lt;else&gt;&gt;
+&lt;&lt;/if&gt;&gt;
       &lt;div class=&quot;creature-display&quot;&gt;
         &lt;&lt;set _template to setup.creatureTemplates[_creature.name]&gt;&gt;
         &lt;&lt;set _size to _creature.displayTraits.size&gt;&gt;
@@ -7867,13 +8745,6 @@ setup.showLoginRewardDialog = function() {
             &lt;div class=&quot;creature-sprite-pattern&quot;
                  @style=&quot;&#39;background-image:url(&#39; + _spriteSheet + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
             &lt;/div&gt;
-            &lt;&lt;if _creature.equippedAccessory&gt;&gt;
-    &lt;&lt;set _accessoryItem to setup.items[_creature.equippedAccessory]&gt;&gt;
-    &lt;&lt;set _accessoryOffset to _template.accessoryOffsets[_creature.equippedAccessory][_gender][_size]&gt;&gt;
-    &lt;img class=&quot;creature-accessory&quot;
-         @src=&quot;_accessoryItem.images[_size]&quot;
-         @style=&quot;&#39;position:absolute;top:&#39; + _accessoryOffset.top + &#39;px;left:&#39; + _accessoryOffset.left + &#39;px;&#39;&quot;&gt;
-  &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
         &lt;&lt;/if&gt;&gt;
 
@@ -8450,12 +9321,16 @@ setup.showLoginRewardDialog = function() {
       &lt;p class=&quot;info&quot;&gt;Mutations introduce new genetic variation from the species&#39; trait pool. Rarer species have higher mutation rates.&lt;/p&gt;
    &lt;&lt;/if&gt;&gt;
    
+   &lt;&lt;elseif $oneParentFertile &amp;&amp; !$breedingSuccessful&gt;&gt;
+   
+      &lt;p class=&quot;breeding-failure&quot;&gt;Breeding was unsuccessful. A parent was in a fertile window, but luck wasn&#39;t on your side this time. Try again?&lt;/p&gt;
+   
 &lt;&lt;else&gt;&gt;
    &lt;p class=&quot;breeding-failure&quot;&gt;Breeding was unsuccessful. Neither parent was in their fertile window, and luck wasn&#39;t on your side this time. Try again when they&#39;re more fertile!&lt;/p&gt;
 &lt;&lt;/if&gt;&gt;
 
-&lt;p&gt;Egg Slots: &lt;&lt;= setup.countEggs()&gt;&gt; / $maxEggSlots &lt;/p&gt;
-&lt;br&gt;
+&lt;p style=&quot;text-align: center; font-family:&#39;Quicksand&#39;, sans-serif; font-size:16px; font-weight:bold; color:var(--mid-text);&quot;&gt;Egg Slots: &lt;&lt;= setup.countEggs()&gt;&gt; / $maxEggSlots &lt;/p&gt;
+
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
 &lt;div class=&quot;back-button&quot;&gt;
 &lt;&lt;link &quot;Breed Again&quot; &quot;Breeding&quot;&gt;&gt;
@@ -8490,11 +9365,13 @@ setup.showLoginRewardDialog = function() {
             &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _egg.speciesName&gt;&gt; Egg&lt;/div&gt;
             &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= Math.max(0, _egg.hatchSteps - $steps)&gt;&gt; steps left&lt;/div&gt;
           &lt;/div&gt;
+          &lt;&lt;capture _egg&gt;&gt;
                       &lt;&lt;button &quot;🐣 Hatch&quot;&gt;&gt;
   &lt;&lt;set _egg.hatchSteps = 0&gt;&gt;
   &lt;&lt;run setup.checkStepEvents()&gt;&gt;
   &lt;&lt;goto &quot;ViewEggs&quot;&gt;&gt;
 &lt;&lt;/button&gt;&gt;
+&lt;&lt;/capture&gt;&gt;
         &lt;&lt;/capture&gt;&gt;
       &lt;&lt;/for&gt;&gt;
     &lt;&lt;/if&gt;&gt;
@@ -8509,13 +9386,14 @@ setup.showLoginRewardDialog = function() {
     &lt;&lt;link &quot;Buy Slots&quot; &quot;RealEstate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Shop" tags="" position="150,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Shop" tags="" position="150,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if !$shopCart&gt;&gt;&lt;&lt;set $shopCart = []&gt;&gt;&lt;&lt;/if&gt;&gt;
 
 /* ── BANNER ── */
 &lt;div class=&quot;shop-banner&quot;&gt;
   &lt;h5 style=&quot;margin: 0 0 6px 0;&quot;&gt;🏪 Critter Center&lt;/h5&gt;
   &lt;p style=&quot;margin: 0; opacity: 0.9;&quot;&gt;Your Money: &lt;strong&gt;💰 $money g&lt;/strong&gt;&lt;/p&gt;
+  &lt;&lt;run setup.checkDailyFeatured()&gt;&gt;
   &lt;&lt;set _featured = setup.items[$featuredItemId]&gt;&gt;
   &lt;div class=&quot;shop-featured&quot;&gt;
     ✨ &lt;strong&gt;Daily Featured:&lt;/strong&gt; _featured.name —
@@ -8524,6 +9402,8 @@ setup.showLoginRewardDialog = function() {
   &lt;/div&gt;
                 &lt;div class=&quot;shop-list-add&quot;&gt;Tap image to add to cart&lt;/div&gt;
 &lt;/div&gt;
+
+&lt;div class=&quot;gogogacha-links&quot;&gt;&lt;&lt;link &quot;✨Check out the gacha machines✨&quot; &quot;GachaMachines&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 
 /* ── CATEGORY PILLS ── */
 &lt;div class=&quot;shop-categories-scroll&quot;&gt;
@@ -8714,7 +9594,7 @@ setup.showLoginRewardDialog = function() {
 
 &lt;button class=&quot;scroll-top-btn&quot; onclick=&quot;window.scrollTo({top: 0, behavior: &#39;smooth&#39;})&quot;&gt;↑ Back to Top&lt;/button&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="ItemDetail" tags="" position="150,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="ItemDetail" tags="" position="250,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if !$selectedGender&gt;&gt;&lt;&lt;set $selectedGender = &quot;Female&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;div class=&quot;modal-overlay&quot;&gt;
   
@@ -8846,7 +9726,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
   
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="PurchaseComplete" tags="" position="200,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="PurchaseComplete" tags="" position="250,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
   
@@ -8866,7 +9746,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="11" name="Inventory" tags="" position="900,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="11" name="Inventory" tags="" position="1000,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $selectedCategory = $selectedCategory || &quot;Consumables&quot;&gt;&gt;
 &lt;&lt;set _categories = [&quot;Consumables&quot;, &quot;Meals&quot;, &quot;Fish&quot;, &quot;Ingredients&quot;, &quot;Seeds&quot;, &quot;Items&quot;, &quot;Fishing&quot;]&gt;&gt;
 
@@ -8910,7 +9790,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="12" name="InventoryItemDisplay" tags="" position="900,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="12" name="InventoryItemDisplay" tags="" position="1000,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _itemsInCategory = []&gt;&gt;
 &lt;&lt;for _itemId, _item range setup.items&gt;&gt;
   &lt;&lt;if _item.category === $selectedCategory &amp;&amp; $inventory[_item.id] &gt; 0&gt;&gt;
@@ -8980,7 +9860,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;&lt;/for&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="13" name="CreatureSelectModal" tags="" position="900,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="13" name="CreatureSelectModal" tags="" position="1000,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _itemToUse = _currentItem&gt;&gt;
 
 &lt;div class=&quot;cart-modal&quot; id=&quot;creature-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
@@ -9009,11 +9889,18 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 
           &lt;&lt;if _itemToUse.id === &quot;CarePotion&quot;&gt;&gt;
             &lt;&lt;if _creature.care &gt;= 100&gt;&gt;
-              &lt;&lt;set _canUse = false&gt;&gt;
-              &lt;&lt;set _disabledReason = &quot;Already at full care&quot;&gt;&gt;
+              &lt;&lt;set _canUse to false&gt;&gt;
+              &lt;&lt;set _disabledReason to &quot;Already at full care&quot;&gt;&gt;
             &lt;&lt;/if&gt;&gt;
           &lt;&lt;/if&gt;&gt;
-
+          
+          &lt;&lt;if _itemToUse.id === &quot;ScrollFertility&quot;&gt;&gt;
+          &lt;&lt;if isCreatureFertile(_creature)&gt;&gt;
+          &lt;&lt;set _canUse to false&gt;&gt;
+          &lt;&lt;set _disabledReason to &quot;Already fertile&quot;&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+          
           &lt;&lt;capture _i, _creature&gt;&gt;
 
             /* ── SPRITE SETUP ── */
@@ -9149,7 +10036,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
 })&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="14" name="TheLake" tags="" position="700,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="14" name="TheLake" tags="" position="800,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $selectedBait = null&gt;&gt;
 
 &lt;&lt;if !$weatherChecked&gt;&gt;
@@ -9440,7 +10327,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
     &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="17" name="SellCreatures" tags="" position="300,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="17" name="SellCreatures" tags="" position="400,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Sell Creatures&lt;/h2&gt;
 
 &lt;div class=&quot;info-box&quot;&gt;
@@ -9562,7 +10449,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="18" name="ConfirmSell" tags="" position="300,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="18" name="ConfirmSell" tags="" position="400,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Confirm Sale&lt;/h2&gt;
 
 &lt;&lt;set _template to setup.creatureTemplates[$confirmSellCreature.name]&gt;&gt;
@@ -9606,7 +10493,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
     &lt;&lt;goto &quot;SellCreatures&quot;&gt;&gt;
   &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="19" name="SaleConfirmed" tags="" position="300,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="19" name="SaleConfirmed" tags="" position="400,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Creature Sent to Market&lt;/h2&gt;
 
 &lt;div class=&quot;success&quot;&gt;
@@ -9776,7 +10663,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
   &lt;b&gt;+$5 earned&lt;/b&gt;&lt;br&gt;
 &lt;&lt;/if&gt;&gt;
 [[OK|Composition]]
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="Achievements" tags="" position="1200,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="25" name="Achievements" tags="" position="1400,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;for _ach, _achData range $achievements&gt;&gt;
   &lt;&lt;if _achData.goal !== undefined &amp;&amp; !_achData.unlocked &amp;&amp; _ach.startsWith(&quot;first&quot;) &amp;&amp; _ach.endsWith(&quot;Steps&quot;)&gt;&gt;
     &lt;&lt;set $achievements[_ach].progress = Math.min($steps, _achData.goal)&gt;&gt;
@@ -9941,7 +10828,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="27" name="Kitchen" tags="" position="1050,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="27" name="Kitchen" tags="" position="1200,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;if !$kitchenRenovated&gt;&gt;
   &lt;div class=&quot;re-banner&quot; style=&quot;text-align:center;&quot;&gt;
@@ -10102,7 +10989,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
 &lt;/div&gt;
 
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="28" name="RequestBoard" tags="" position="300,925" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="28" name="RequestBoard" tags="" position="400,950" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;checkExpiredRequests&gt;&gt;
 
 &lt;h style=&quot;display: block; font-family: &#39;Fontdiner Swanky&#39;, serif; color: var(--coral); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;📋 Request Board&lt;/h&gt;
@@ -10209,7 +11096,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="FulfillRequest" tags="" position="300,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="29" name="FulfillRequest" tags="" position="400,1050" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h style=&quot;font-family: &#39;Chewy&#39;, cursive; color: var(--coral); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;Select a Creature&lt;/h&gt;
 
 &lt;div style=&quot;background-color: var(--tangerine); padding: 1.5em; border-radius: 10px; margin-bottom: 1.5em; border: 3px solid var(--coral);&quot;&gt;
@@ -10471,7 +11358,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="RequestComplete" tags="" position="300,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="30" name="RequestComplete" tags="" position="400,1150" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h style=&quot;font-family: &#39;Chewy&#39;, cursive; color: var(--teal); text-align: center; font-size: 2.5em; margin-bottom: 0.5em;&quot;&gt;✓ Request Complete!&lt;/h&gt;
 
 &lt;&lt;if $tutorialQuests.quests.fulfillRequest.accepted &amp;&amp; !$tutorialQuests.quests.fulfillRequest.complete&gt;&gt;
@@ -10517,7 +11404,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="VetClinic" tags="" position="450,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="31" name="VetClinic" tags="" position="550,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── HEADER ── */
 &lt;div class=&quot;vet-banner&quot;&gt;
@@ -10611,7 +11498,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="VetSelectCreature" tags="" position="450,900" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="32" name="VetSelectCreature" tags="" position="550,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── SERVICE BANNER ── */
 &lt;div class=&quot;vet-select-banner&quot;&gt;
@@ -10646,36 +11533,58 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
       &lt;&lt;if _creature.stage === &quot;adult&quot;&gt;&gt;
         &lt;&lt;capture _i, _creature&gt;&gt;
 
-          /* ── SPRITE SETUP ── */
-          &lt;&lt;set _template = setup.creatureTemplates[_creature.name]&gt;&gt;
-          &lt;&lt;set _size = _creature.displayTraits.size&gt;&gt;
-          &lt;&lt;set _color = _creature.displayTraits.color&gt;&gt;
-          &lt;&lt;set _pattern = _creature.displayTraits.pattern&gt;&gt;
-          &lt;&lt;set _gender = _creature.gender.toLowerCase()&gt;&gt;
-          &lt;&lt;set _colorPattern = setup.getSpriteKey(_creature.name, _color, _pattern)&gt;&gt;
-          &lt;&lt;set _col = _template.spriteColumns[_colorPattern]&gt;&gt;
-          &lt;&lt;if _col === undefined&gt;&gt;
-            &lt;&lt;set _col = _template.spriteColumns[_template.colorDominance[0] + &quot;_&quot; + _template.patternDominance[0]]&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
-          &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-            &lt;&lt;set _xPos = _col * -240&gt;&gt;&lt;&lt;set _dim = &quot;240px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.4)&quot;&gt;&gt;
-          &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-            &lt;&lt;set _xPos = _col * -160&gt;&gt;&lt;&lt;set _dim = &quot;160px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.5)&quot;&gt;&gt;
-          &lt;&lt;else&gt;&gt;
-            &lt;&lt;set _xPos = _col * -80&gt;&gt;&lt;&lt;set _dim = &quot;80px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.9)&quot;&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
+         &lt;&lt;if !_creature.isBaby&gt;&gt;
+              &lt;&lt;set _template = setup.creatureTemplates[_creature.name]&gt;&gt;
+              &lt;&lt;set _size = _creature.displayTraits.size&gt;&gt;
+              &lt;&lt;set _pattern = _creature.displayTraits.pattern&gt;&gt;
+              &lt;&lt;set _color = _creature.displayTraits.color&gt;&gt;
+              &lt;&lt;set _gender = _creature.gender.toLowerCase()&gt;&gt;
+              &lt;&lt;set _colorPattern = setup.getSpriteKey(_creature.name, _color, _pattern)&gt;&gt;
+              &lt;&lt;set _col = _template.spriteColumns[_colorPattern]&gt;&gt;
+              &lt;&lt;if _col === undefined&gt;&gt;
+                &lt;&lt;set _col = _template.spriteColumns[_template.colorDominance[0] + &quot;_&quot; + _template.patternDominance[0]]&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+              &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+                &lt;&lt;set _xPos = _col * -240&gt;&gt;&lt;&lt;set _dim = &quot;240px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.4)&quot;&gt;&gt;
+              &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+                &lt;&lt;set _xPos = _col * -160&gt;&gt;&lt;&lt;set _dim = &quot;160px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.5)&quot;&gt;&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;set _xPos = _col * -80&gt;&gt;&lt;&lt;set _dim = &quot;80px&quot;&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.9)&quot;&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
 
-          /* ── CARD ── */
-          &lt;div class=&quot;vet-creature-card&quot;&gt;
+            /* ── CARD ── */
+            &lt;div class=&quot;vet-creature-card &lt;&lt;if !_canUse&gt;&gt;vet-creature-card--disabled&lt;&lt;/if&gt;&gt;&quot;&gt;
 
-            /* Sprite */
-            &lt;div class=&quot;vet-sprite-wrap&quot;&gt;
-              &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;transform:&#39; + _scale + &#39;;transform-origin:top left;&#39;&quot;&gt;
-                &lt;div class=&quot;creature-sprite-pattern&quot;
-                     @style=&quot;&#39;background-image:url(&#39; + _template.avatars[_gender].patternSpriteSheets[_size] + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;&#39;&quot;&gt;
-                &lt;/div&gt;
+              /* Sprite */
+              &lt;div class=&quot;vet-sprite-wrap&quot;&gt;
+                &lt;&lt;if _creature.isBaby&gt;&gt;
+                  &lt;span style=&quot;font-size:2em;&quot;&gt;🥚&lt;/span&gt;
+                &lt;&lt;else&gt;&gt;
+                  &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _xPos = _col * -240&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;240px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;120px&quot;&gt;&gt;
+    &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _xPos = _col * -160&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;160px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;80px&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _xPos = _col * -80&gt;&gt;
+      &lt;&lt;set _dimensions = &quot;80px&quot;&gt;&gt;
+      &lt;&lt;set _scaledDimensions = &quot;40px&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;div @style=&quot;&#39;width:&#39; + _scaledDimensions + &#39;;height:&#39; + _scaledDimensions + &#39;;overflow:hidden;flex-shrink:0;&#39;&quot;&gt;
+      &lt;div style=&quot;transform:scale(0.5);transform-origin:top left;&quot;&gt;
+        &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+          &lt;div class=&quot;creature-sprite-pattern&quot;
+               @style=&quot;&#39;background-image:url(&#39; + _template.avatars[_gender].patternSpriteSheets[_size] + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+                &lt;&lt;/if&gt;&gt;
               &lt;/div&gt;
-            &lt;/div&gt;
 
             /* Info */
             &lt;div class=&quot;vet-creature-body&quot;&gt;
@@ -10687,7 +11596,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
                 &lt;&lt;/if&gt;&gt;
                 &lt;&lt;if _creature.gender === &quot;Male&quot;&gt;&gt;♂️&lt;&lt;else&gt;&gt;♀️&lt;&lt;/if&gt;&gt;
               &lt;/div&gt;
-              &lt;div class=&quot;vet-creature-age&quot;&gt;Age: _creature.age days&lt;/div&gt;
+              &lt;div class=&quot;vet-creature-age&quot;&gt;Age: &lt;&lt;= setup.getAgeDisplay(_creature)&gt;&gt;&lt;/div&gt;
 
               /* Action button */
               &lt;&lt;if $vetService === &quot;surgery&quot;&gt;&gt;
@@ -10761,7 +11670,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="VetServiceComplete" tags="" position="450,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="33" name="VetServiceComplete" tags="" position="550,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;vet-complete-wrap&quot;&gt;
 
@@ -10788,7 +11697,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="VetShop" tags="" position="450,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="34" name="VetShop" tags="" position="550,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── HEADER ── */
 &lt;div class=&quot;vet-banner&quot;&gt;
@@ -10832,7 +11741,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="35" name="VetItemDetail" tags="" position="450,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="35" name="VetItemDetail" tags="" position="550,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
   &lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
 
@@ -12268,12 +13177,13 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;set $creature1.stage to &quot;adult&quot;&gt;&gt;
 &lt;&lt;run $creature1.bornAt = Date.now() - (random(1, 3) * 24 * 60 * 60 * 1000)&gt;&gt;
-&lt;&lt;set $creature1.elderAt to null&gt;&gt;
+&lt;&lt;set $creature1.elderAt to []&gt;&gt;
 &lt;&lt;set $creature1.hadSurgery = false&gt;&gt;
 &lt;&lt;set $creature1.geneticTestingDone = false&gt;&gt;
 &lt;&lt;set $creature1.generation to 1&gt;&gt;
 &lt;&lt;set $creature1.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature1.caredCount to 0&gt;&gt;
+&lt;&lt;set $creature1.mimikin to null&gt;&gt;
 &lt;&lt;run $creature1.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature1.rarity) - 1)&gt;&gt;
 &lt;&lt;run $creature1.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastHungerDrain = Date.now()&gt;&gt;
@@ -12318,6 +13228,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;set $creature2.generation to 1&gt;&gt;
 &lt;&lt;set $creature2.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature2.caredCount to 0&gt;&gt;
+&lt;&lt;set $creature2.mimikin to []&gt;&gt;
 &lt;&lt;run $creature2.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature2.rarity) - 1) - Math.floor(getFertilityCycleLength($creature2.rarity) / 2)&gt;&gt;
 &lt;&lt;run $creature2.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastHungerDrain = Date.now()&gt;&gt;
@@ -12538,7 +13449,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
     basePrice: 100,
     baseSell: 50,
     image: &quot;https://i.imgur.com/mWbF7UO.png&quot;,
-    description: &quot;An ancient scroll that grants fertility to a creature. Increases fertility by 25% for one day.&quot;,
+    description: &quot;An ancient scroll that grants fertility to a creature for three days.&quot;,
     rarity: &quot;Common&quot;,
     isConsumable: true,
     requiresMonster: true
@@ -13200,8 +14111,8 @@ Cilantro: 0,
 
 &lt;&lt;set setup.creatureFoods = [&quot;CreatureChow&quot;]&gt;&gt;
 
-/* Featured item (changes daily) */
-&lt;&lt;set $featuredItemId = either(&quot;CarePotion&quot;, &quot;EnergyDrink&quot;, &quot;CreatureChow&quot;, &quot;ScrollFertility&quot;, &quot;ScrollImmortality&quot;, &quot;WheatSeeds&quot;, &quot;CornSeeds&quot;, &quot;PotatoSeeds&quot;, &quot;CarrotSeeds&quot;, &quot;TomatoSeeds&quot;, &quot;OnionSeeds&quot;, &quot;LettuceSeeds&quot;, &quot;RiceSeeds&quot;, &quot;GarlicSeeds&quot;, &quot;BasilSeeds&quot;, &quot;ParsleySeeds&quot;, &quot;CilantroSeeds&quot;, &quot;CookingOil&quot;, &quot;Herbs&quot;, &quot;Berries&quot;, &quot;Flour&quot;, &quot;Sugar&quot;, &quot;Wheat&quot;, &quot;Corn&quot;, &quot;Potato&quot;, &quot;Carrot&quot;, &quot;Tomato&quot;, &quot;Onion&quot;, &quot;Lettuce&quot;, &quot;Rice&quot;, &quot;Garlic&quot;, &quot;Basil&quot;, &quot;Parsley&quot;, &quot;Cilantro&quot;, &quot;Pasta&quot;, &quot;Coconut&quot;, &quot;PickledVeggies&quot;, &quot;Saffron&quot;)&gt;&gt;</tw-passagedata><tw-passagedata pid="41" name="InitFreelanceComp" tags="" position="100,100" size="100,100">&lt;&lt;set $maxFreelancingAttempts to 2&gt;&gt;
+&lt;&lt;set $featuredItemId = &quot;&quot;&gt;&gt;
+&lt;&lt;set $featuredDayKey = &quot;&quot;&gt;&gt;</tw-passagedata><tw-passagedata pid="41" name="InitFreelanceComp" tags="" position="100,100" size="100,100">&lt;&lt;set $maxFreelancingAttempts to 2&gt;&gt;
 &lt;&lt;set $freelancingAttempts to 0&gt;&gt;
 &lt;&lt;set $activeGig to &quot;&quot;&gt;&gt;
 
@@ -14292,7 +15203,7 @@ first10000Steps:{ id: &quot;first10000Steps&quot;,name: &quot;10,000 Steps&quot;
       stage4: &quot;https://i.imgur.com/PLACEHOLDER4.png&quot;
     }
   }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="Farm" tags="" position="600,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="44" name="Farm" tags="" position="700,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;updateSeason&gt;&gt;
 
 &lt;div class=&quot;farm-title&quot;&gt;🌾 Your Farm&lt;/div&gt;
@@ -14694,7 +15605,7 @@ setup.nightEnvironmentalCues = [
 &lt;&lt;set $weatherChecked to false&gt;&gt;
 &lt;&lt;set $weatherCode to 0&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="46" name="ProcessCast" tags="" position="700,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="46" name="ProcessCast" tags="" position="800,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set $fishingAttempts += 1&gt;&gt;
 
 &lt;!-- Determine what was caught --&gt;
@@ -14788,7 +15699,7 @@ setup.nightEnvironmentalCues = [
     &lt;&lt;/button&gt;&gt;
   &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="47" name="TensionGame" tags="" position="700,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="47" name="TensionGame" tags="" position="800,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;!-- Initialize tension game on first visit --&gt;
 &lt;&lt;if !$tensionGame&gt;&gt;
@@ -14909,7 +15820,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 });
 &lt;&lt;/script&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="48" name="TensionResult" tags="" position="700,900" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="48" name="TensionResult" tags="" position="800,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;if $chosenCastIsNight&gt;&gt;
   &lt;img src=&quot;https://i.imgur.com/MH9qcEf.png&quot; class=&quot;lake-image&quot;&gt;
@@ -15327,7 +16238,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
 
 &lt;&lt;set $cookingQueue = []&gt;&gt;
 
-&lt;&lt;run setup.startCookingPoller()&gt;&gt;</tw-passagedata><tw-passagedata pid="50" name="CookingResult" tags="" position="1050,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;run setup.startCookingPoller()&gt;&gt;</tw-passagedata><tw-passagedata pid="50" name="CookingResult" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;set _ing1 = $cookingSelection[0]&gt;&gt;
 &lt;&lt;set _ing2 = $cookingSelection[1]&gt;&gt;
 &lt;&lt;set _ing3 = $cookingSelection[2]&gt;&gt;
@@ -15516,7 +16427,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;div class=&quot;back-button&quot;&gt;&lt;&lt;link &quot;Keep Cooking&quot; &quot;Kitchen&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
   &lt;div class=&quot;forth-button&quot;&gt;&lt;&lt;link &quot;Go Home&quot; &quot;Home&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="51" name="Cookbook" tags="" position="1050,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="51" name="Cookbook" tags="" position="1200,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;div class=&quot;re-banner&quot; style=&quot;text-align:center;&quot;&gt;
   &lt;div style=&quot;font-size:2em;&quot;&gt;📖&lt;/div&gt;
@@ -15643,7 +16554,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   requiredRankName: &quot;Rank 1&quot;,
   description: &quot;Purchase additional egg slots for your hatchery. +6 slots per upgrade.&quot;
 }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="53" name="RealEstate" tags="" position="150,925" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="53" name="RealEstate" tags="" position="200,1000" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── BANNER ── */
 &lt;div class=&quot;re-banner&quot;&gt;
@@ -15783,7 +16694,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="54" name="BuildDetail" tags="" position="150,1025" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="54" name="BuildDetail" tags="" position="200,1100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;modal-overlay&quot;&gt;
   
   &lt;div class=&quot;detail-card1&quot;&gt;
@@ -15844,7 +16755,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
   
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="BuildComplete" tags="" position="150,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="55" name="BuildComplete" tags="" position="200,1200" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
   
@@ -15862,7 +16773,7 @@ $(document).one(&#39;:passageend&#39;, function (ev) {
   &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="Introduction" tags="" position="600,200" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="56" name="Introduction" tags="" position="650,200" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if Save.browser.auto.has(0)&gt;&gt;
     &lt;button id=&quot;btn-continue&quot;&gt;Continue&lt;/button&gt;
 &lt;&lt;/if&gt;&gt;
@@ -15984,7 +16895,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="57" name="LoadingLicense" tags="" position="600,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="57" name="LoadingLicense" tags="" position="650,300" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;span class=&quot;printLicense&quot;&gt;
 
@@ -16115,7 +17026,7 @@ ERROR: Please finish filling out your personal info before continuing.
     breeding:       { label: &quot;Breed Your Creatures&quot;,   desc: &quot;Tap the map on the bottom toolbar and visit the Breeding Barn. Breed a male and female creature.&quot;,     accepted: false, complete: false, xp: 40,  money: 100 },
     fulfillRequest: { label: &quot;Fulfill a Request&quot;,      desc: &quot;Head to the map in the bottom toolbar and check out the Request Board. Fulfill a request.&quot;,                  accepted: false, complete: false, xp: 60,  money: 150 }
   }
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="59" name="Mailbox" tags="" position="700,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="59" name="Mailbox" tags="" position="750,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $mailbox.length &gt; 0&gt;&gt;
   &lt;&lt;for _i = 0; _i &lt; $mailbox.length; _i++&gt;&gt;
   &lt;&lt;capture _i&gt;&gt;
@@ -16154,7 +17065,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="60" name="StoryDisplayTitle" tags="" position="0,1400" size="100,100">&lt;center&gt;&lt;div class=&quot;story-icon&quot;&gt;&lt;img src=&quot;https://i.imgur.com/30UEn7N.png&quot;&gt;&lt;/div&gt;&lt;/center&gt;</tw-passagedata><tw-passagedata pid="61" name="Locations" tags="" position="225,500" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="60" name="StoryDisplayTitle" tags="" position="0,1400" size="100,100">&lt;center&gt;&lt;div class=&quot;story-icon&quot;&gt;&lt;img src=&quot;https://i.imgur.com/30UEn7N.png&quot;&gt;&lt;/div&gt;&lt;/center&gt;</tw-passagedata><tw-passagedata pid="61" name="Locations" tags="" position="300,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 /* ── THE PLAZA ── */
 &lt;div class=&quot;locations-banner&quot;&gt;
@@ -16320,7 +17231,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="62" name="CartCheckoutComplete" tags="" position="100,800" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="62" name="CartCheckoutComplete" tags="" position="150,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Purchase Complete!&lt;/h1&gt;
 
@@ -16345,7 +17256,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="63" name="PawnShop" tags="" position="25,600" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="63" name="PawnShop" tags="" position="0,800" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $pawnCategory == undefined&gt;&gt;&lt;&lt;set $pawnCategory = &quot;All&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;&lt;if !$shopCart&gt;&gt;&lt;&lt;set $shopCart = []&gt;&gt;&lt;&lt;/if&gt;&gt;
 
@@ -16536,7 +17447,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;&lt;run setup.recordCombo(_args[0])&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="CollectionMenu" tags="" position="1200,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="65" name="CollectionMenu" tags="" position="1400,700" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
     &lt;&lt;for _species, _data range setup.creatureTemplates&gt;&gt;
         &lt;&lt;if $activeSpecies is &quot;&quot;&gt;&gt;
@@ -16798,7 +17709,7 @@ ERROR: Please finish filling out your personal info before continuing.
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SellCheckoutComplete" tags="" position="25,700" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="69" name="SellCheckoutComplete" tags="" position="0,900" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div style=&quot;text-align: center; padding: 50px;&quot;&gt;
   &lt;h1 style=&quot;color: green;&quot;&gt;✅ Sale Complete!&lt;/h1&gt;
   &lt;p style=&quot;font-size: 1.1em; margin: 20px 0; color: var(--dark-text);&quot;&gt;You sold:&lt;/p&gt;
@@ -17172,7 +18083,7 @@ ERROR: Please finish filling out your personal info before continuing.
     &lt;button id=&quot;btn-locations&quot;&gt;🗺️&lt;/button&gt;
     &lt;button id=&quot;btn-devtools&quot;&gt;🛠️&lt;/button&gt;
   &lt;/nav&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="FeaturedCreatureModal" tags="" position="500,400" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="FeaturedCreatureModal" tags="" position="550,400" size="100,100">&lt;&lt;nobr&gt;&gt;
 
   &lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
 
@@ -17318,6 +18229,203 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;/div&gt;
 &lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
   $(&#39;#devtools-bg&#39;).html(State.variables.devtoolsBg);
+})&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="81" name="InitMimikins" tags="" position="100,500" size="100,100">&lt;&lt;set setup.slotSymbols to [
+  { emoji: &quot;🌸&quot;, rarity: &quot;Common&quot;,   weight: 65, consolation: 10 },
+  { emoji: &quot;⭐&quot;, rarity: &quot;Common&quot;,   weight: 65, consolation: 10 },
+  { emoji: &quot;🐾&quot;, rarity: &quot;Uncommon&quot;, weight: 35, consolation: 25 },
+  { emoji: &quot;💎&quot;, rarity: &quot;Uncommon&quot;, weight: 35, consolation: 25 },
+  { emoji: &quot;🍄&quot;, rarity: &quot;Rare&quot;,     weight: 30, consolation: 60 },
+  { emoji: &quot;💨&quot;, rarity: null,        weight: 20, consolation: 0  }
+]&gt;&gt;
+
+&lt;&lt;set $playerMimikins to []&gt;&gt;
+
+&lt;&lt;set setup.mimikins = {
+  
+  /* MIMIKINS */
+  
+  &quot;Borb&quot;: {
+    id: &quot;Borb&quot;,
+    name: &quot;Borb&quot;,
+    mimikinsType: &quot;Forest&quot;,
+    image: &quot;https://i.imgur.com/IKgtJdF.png&quot;,
+    description: &quot;A Forest-type mimikin.&quot;,
+    rarity: &quot;Common&quot;,
+    gachaWeight: 60
+  },
+  &quot;Muumu&quot;: {
+    id: &quot;Muumu&quot;,
+    name: &quot;Muumu&quot;,
+    mimikinsType: &quot;Mountain&quot;,
+    image: &quot;https://i.imgur.com/tm1IN2R.png&quot;,
+    description: &quot;A Mountain-type mimikin.&quot;,
+    rarity: &quot;Common&quot;,
+    gachaWeight: 60
+  },
+    &quot;Spipup&quot;: {
+    id: &quot;Spipup&quot;,
+    name: &quot;Spipup&quot;,
+    mimikinsType: &quot;Desert&quot;,
+    image: &quot;https://i.imgur.com/yad86HC.png&quot;,
+    description: &quot;A Desert-type mimikin.&quot;,
+    rarity: &quot;Uncommon&quot;,
+    gachaWeight: 45
+  },
+  &quot;Arobus&quot;: {
+    id: &quot;Arobus&quot;,
+    name: &quot;Arobus&quot;,
+    mimikinsType: &quot;Aether&quot;,
+    image: &quot;https://i.imgur.com/7dZjw4D.png&quot;,
+    description: &quot;An Aether-type mimikin.&quot;,
+    rarity: &quot;Rare&quot;,
+    gachaWeight: 30
+  },
+    &quot;Blepin&quot;: {
+    id: &quot;Blepin&quot;,
+    name: &quot;Blepin&quot;,
+    mimikinsType: &quot;Volcano&quot;,
+    image: &quot;https://i.imgur.com/UWs1PHb.png&quot;,
+    description: &quot;An Volcano-type mimikin.&quot;,
+    rarity: &quot;Rare&quot;,
+    gachaWeight: 30
+  }
+  }&gt;&gt;</tw-passagedata><tw-passagedata pid="82" name="GachaSteady" tags="" position="150,675" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;steady-machine&quot;&gt;
+  &lt;div class=&quot;steady-machine-title&quot;&gt;✦ MimiMax ✦&lt;/div&gt;
+
+  &lt;div class=&quot;capsule-chute&quot;&gt;
+    &lt;div class=&quot;capsule&quot; id=&quot;capsule&quot;&gt;🫧&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;crank-wrapper&quot;&gt;
+    &lt;span class=&quot;crank-handle&quot; id=&quot;crank-handle&quot;&gt;🍀&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div id=&quot;steady-result&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;steady-final&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;&lt;if $money &lt; 150&gt;&gt;
+  &lt;p style=&quot;text-align:center; font-family:&#39;Quicksand&#39;,sans-serif;&quot;&gt;
+    You need 150 coins to play!
+  &lt;/p&gt;
+  &lt;&lt;link &quot;Back&quot; &quot;GachaMachines&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;div style=&quot;text-align:center;&quot;&gt;
+    &lt;button class=&quot;crank-btn&quot; id=&quot;crank-btn&quot;&gt;150 🪙&lt;/button&gt;
+  &lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="83" name="GachaLucky" tags="" position="250,675" size="100,100">&lt;&lt;nobr&gt;&gt;
+
+&lt;div class=&quot;slot-machine&quot;&gt;
+  &lt;div class=&quot;slot-machine-title&quot;&gt;✦ Luckykin ✦&lt;/div&gt;
+
+  &lt;div class=&quot;slot-reels&quot;&gt;
+    &lt;div class=&quot;slot-reel spinning&quot; id=&quot;reel-1&quot;&gt;〜&lt;/div&gt;
+    &lt;div class=&quot;slot-reel spinning&quot; id=&quot;reel-2&quot;&gt;〜&lt;/div&gt;
+    &lt;div class=&quot;slot-reel spinning&quot; id=&quot;reel-3&quot;&gt;〜&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div id=&quot;slot-result&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;slot-final&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;&lt;if $money &lt; 50&gt;&gt;
+  &lt;p style=&quot;text-align:center; font-family:&#39;Quicksand&#39;,sans-serif;&quot;&gt;
+    You need 50 coins to play!
+  &lt;/p&gt;
+  &lt;&lt;link &quot;Back&quot; &quot;GachaMachines&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;div style=&quot;text-align:center;&quot;&gt;
+    &lt;button class=&quot;slot-lever-btn&quot; id=&quot;lever-btn&quot;&gt;Pull! (50 🪙)&lt;/button&gt;
+  &lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;div class=&quot;paytable&quot;&gt;
+  &lt;p&gt;✦ Paytable ✦&lt;/p&gt;
+  &lt;&lt;for _sym range setup.slotSymbols&gt;&gt;
+    &lt;&lt;if _sym.rarity !== null&gt;&gt;
+      &lt;div class=&quot;paytable-row&quot;&gt;
+        &lt;span&gt;&lt;&lt;= _sym.emoji &gt;&gt; &lt;&lt;= _sym.emoji &gt;&gt; &lt;&lt;= _sym.emoji &gt;&gt;&lt;/span&gt;
+        &lt;span&gt;&lt;&lt;= _sym.rarity &gt;&gt; Mimikin&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paytable-row&quot;&gt;
+        &lt;span&gt;&lt;&lt;= _sym.emoji &gt;&gt; &lt;&lt;= _sym.emoji &gt;&gt; ✦&lt;/span&gt;
+        &lt;span&gt;+&lt;&lt;= _sym.consolation &gt;&gt; 🪙&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/for&gt;&gt;
+  &lt;div class=&quot;paytable-row&quot;&gt;
+    &lt;span&gt;No match&lt;/span&gt;
+    &lt;span&gt;No prize&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="84" name="GachaMachines" tags="" position="200,575" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div style=&quot;text-align:center; font-family:&#39;Chewy&#39;, cursive; color:#f4d35e; font-size:1.1em; margin-bottom:12px;&quot;&gt;
+  🪙 &lt;&lt;= $money&gt;&gt; coins
+&lt;/div&gt;
+
+&lt;div class=&quot;gacha-machines-grid&quot;&gt;
+
+  &lt;div class=&quot;gacha-machine-card steady-card&quot;&gt;
+    &lt;div class=&quot;gacha-machine-card-title&quot;&gt;✦ MimiMax ✦&lt;/div&gt;
+    &lt;div class=&quot;gacha-machine-card-cost&quot;&gt;150 🪙&lt;/div&gt;
+    &lt;&lt;link &quot;Crank!&quot; &quot;GachaSteady&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;gacha-machine-card lucky-card&quot;&gt;
+    &lt;div class=&quot;gacha-machine-card-title&quot;&gt;✦ Luckykin ✦&lt;/div&gt;
+    &lt;div class=&quot;gacha-machine-card-cost&quot;&gt;50 🪙&lt;/div&gt;
+    &lt;&lt;link &quot;Pull!&quot; &quot;GachaLucky&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&quot;back-forth-buttons&quot;&gt;
+  &lt;&lt;link &quot;Back&quot; &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="85" name="MimikinModal" tags="" position="1225,1050" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;cart-modal&quot; id=&quot;creature-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
+  &lt;div class=&quot;cart-modal-content&quot;&gt;
+
+    &lt;div class=&quot;cart-modal-header&quot;&gt;
+      &lt;h3&gt;Select a Mimikin&lt;/h3&gt;
+      &lt;&lt;link &quot;✕&quot; &quot;ViewCreature&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;/div&gt;
+
+    &lt;&lt;if !$playerMimikins || $playerMimikins.length === 0&gt;&gt;
+      &lt;div class=&quot;vet-no-creatures&quot;&gt;You don&#39;t have any mimikins yet!&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;div class=&quot;vet-creature-list&quot;&gt;
+        &lt;&lt;for _mimikinId range $playerMimikins&gt;&gt;
+  &lt;&lt;set _mimi to setup.mimikins[_mimikinId]&gt;&gt;
+  &lt;&lt;set _inUse to $playerCreatures.some(function(c) { return c.mimikin &amp;&amp; c.mimikin.id === _mimi.id; })&gt;&gt;
+  &lt;&lt;if !_inUse&gt;&gt;
+          &lt;&lt;capture _mimi&gt;&gt;
+            &lt;div class=&quot;vet-creature-card&quot;&gt;
+              [img[_mimi.image]]
+            &lt;/div&gt;
+            &lt;div class=&quot;vet-creature-name&quot;&gt;
+              &lt;&lt;= _mimi.name&gt;&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;creature-action&quot;&gt;
+              &lt;&lt;link &quot;Give&quot;&gt;&gt;
+                &lt;&lt;set $playerCreatures[$currentCreature].mimikin to _mimi&gt;&gt;
+                &lt;&lt;goto &quot;ViewCreature&quot;&gt;&gt;
+              &lt;&lt;/link&gt;&gt;
+            &lt;/div&gt;
+          &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
+  $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
 })&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
