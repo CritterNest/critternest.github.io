@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -2616,23 +2610,23 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 
 .rarity-common1 {
   background-color: #95a5a6;
-  padding: 5px 15px;
+  padding: 8px;
   border-radius: 20px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 .rarity-uncommon1 {
   background-color: #1bd602;
-  padding: 5px 15px;
+  padding: 8px;
   border-radius: 20px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 .rarity-rare1 {
   background-color: #0070dd;
-  padding: 5px 15px;
+  padding: 8px;
   border-radius: 20px;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 .price-display1 {
@@ -5455,7 +5449,7 @@ font-family: 'Hachi Maru Pop', cursive;
 
 .mimikin-button a {
   font-family: 'Hachi Maru Pop', cursive;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--coral);
   background-color: var(--lightyellow);
@@ -5485,12 +5479,20 @@ font-family: 'Hachi Maru Pop', cursive;
   right: 0;
   width: 50px;
   height: 50px;
+  z-index: 2000;
 }
 
 .mimikin-display img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.mimikin-rarity-badge {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px !important;
+  font-weight: bold;
+  color: white;
 }
 
 /* ── Slot Machine Container ── */
@@ -7231,11 +7233,12 @@ $(document).on('click', '#btn-locations', function() {
   btn.disabled = true;
 
   State.variables.money -= 150;
-  var mimikinId = pullMimikin();
-  State.variables.gachaResult = mimikinId;
-  if (State.variables.playerMimikins.indexOf(mimikinId) === -1) {
-    State.variables.playerMimikins.push(mimikinId);
-  }
+var mimikinId = pullMimikin();
+State.variables.gachaResult = mimikinId;
+var mimikinInstance = Object.assign({}, setup.mimikins[mimikinId], {
+    instanceId: Date.now() + Math.random()
+});
+State.variables.playerMimikins.push(mimikinInstance);
 
   // Crank spin
   var handle = document.getElementById('crank-handle');
@@ -7294,8 +7297,11 @@ setTimeout(function() {
   State.variables.slotConsolation = 0;
 
   if (result.matchThree) {
-    State.variables.gachaResult = pullMimikinByRarity(result.matchedSymbol.rarity);
-    State.variables.playerMimikins.push(State.variables.gachaResult);
+State.variables.gachaResult = pullMimikinByRarity(result.matchedSymbol.rarity);
+var mimikinInstance = Object.assign({}, setup.mimikins[State.variables.gachaResult], {
+    instanceId: Date.now() + Math.random()
+});
+State.variables.playerMimikins.push(mimikinInstance);
   } else if (result.matchTwo) {
     State.variables.slotConsolation = result.matchedSymbol.consolation;
     State.variables.money += result.matchedSymbol.consolation;
@@ -7937,6 +7943,7 @@ setup.claimLoginReward = function() {
             creature.lastStaminaRegen = Date.now();
             creature.wasHappy = false;
             creature.lastAffectionBonus = Date.now();
+            creature.mimikin = null;
             creature.genes = {
                 color: [possibleColors[Math.floor(Math.random() * possibleColors.length)], possibleColors[Math.floor(Math.random() * possibleColors.length)]],
                 pattern: [template.possiblePatterns[Math.floor(Math.random() * template.possiblePatterns.length)], template.possiblePatterns[Math.floor(Math.random() * template.possiblePatterns.length)]],
@@ -8228,7 +8235,7 @@ window.pullMimikinByRarity = function(rarity) {
   &lt;div class=&quot;featured-critter&quot;&gt;
     &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;margin:0 auto;&#39;&quot;&gt;
     
-                &lt;&lt;if def _fc.mimikin&gt;&gt;
+                &lt;&lt;if _fc.mimikin !== null&gt;&gt;
       
       &lt;&lt;if _fcSize is &quot;small&quot;&gt;&gt;
       
@@ -8250,8 +8257,6 @@ window.pullMimikinByRarity = function(rarity) {
   &lt;/div&gt;
 
 &lt;&lt;/if&gt;&gt;
-  &lt;&lt;elseif ndef _fc.mimikin&gt;&gt;
-
 
 &lt;&lt;/if&gt;&gt;
     
@@ -8634,6 +8639,7 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;&lt;set _newEgg.geneticTestingDone to false&gt;&gt;
       &lt;&lt;set _newEgg.flavorText to _chosenTemplate.flavorText&gt;&gt;
       &lt;&lt;set _newEgg.mutations to _mutated&gt;&gt;
+      &lt;&lt;set _newEgg.mimikin to null&gt;&gt;
       &lt;&lt;run _newEgg.fertilityOffset = Date.now()&gt;&gt;
       &lt;&lt;run _newEgg.lastAgeDay = Date.now()&gt;&gt;
       &lt;&lt;run _newEgg.lastHungerDrain = Date.now()&gt;&gt;
@@ -9701,6 +9707,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _purchasedCreature.generation to 1&gt;&gt;
 &lt;&lt;set _purchasedCreature.fedCount to 0&gt;&gt;
 &lt;&lt;set _purchasedCreature.caredCount to 0&gt;&gt;
+&lt;&lt;set _purchasedCreature.mimikin to null&gt;&gt;
 &lt;&lt;run _purchasedCreature.fertilityOffset = Date.now() - random(0, getFertilityCycleLength(_purchasedCreature.rarity) - 1)&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastHungerDrain = Date.now()&gt;&gt;
@@ -10804,7 +10811,7 @@ Beautiful styling, but this product needed a different treatment. &lt;&lt;print 
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Memorial" tags="" position="1300,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="26" name="Memorial" tags="" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;p6&gt;Memorial&lt;/p6&gt;
 
 &lt;&lt;if $deadCreatures === undefined || $deadCreatures.length === 0&gt;&gt;
@@ -13234,7 +13241,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;set $creature2.generation to 1&gt;&gt;
 &lt;&lt;set $creature2.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature2.caredCount to 0&gt;&gt;
-&lt;&lt;set $creature2.mimikin to []&gt;&gt;
+&lt;&lt;set $creature2.mimikin to null&gt;&gt;
 &lt;&lt;run $creature2.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature2.rarity) - 1) - Math.floor(getFertilityCycleLength($creature2.rarity) / 2)&gt;&gt;
 &lt;&lt;run $creature2.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastHungerDrain = Date.now()&gt;&gt;
@@ -18391,7 +18398,7 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
   &lt;&lt;link &quot;Back&quot; &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="85" name="MimikinModal" tags="" position="1225,1050" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="85" name="MimikinModal" tags="" position="900,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;modal-bg-snapshot&quot; id=&quot;modal-bg&quot;&gt;&lt;/div&gt;
 &lt;div class=&quot;cart-modal&quot; id=&quot;creature-modal-overlay&quot; style=&quot;display:flex;&quot;&gt;
   &lt;div class=&quot;cart-modal-content&quot;&gt;
@@ -18400,34 +18407,78 @@ ERROR: Please finish filling out your personal info before continuing.
       &lt;h3&gt;Select a Mimikin&lt;/h3&gt;
       &lt;&lt;link &quot;✕&quot; &quot;ViewCreature&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
+    
+    &lt;&lt;if $playerCreatures[$currentCreature].mimikin !== null&gt;&gt;
+    
+    &lt;div class=&quot;vet-creature-list&quot;&gt;
+    
+ &lt;div class=&quot;vet-creature-card&quot;&gt;
+ &lt;div class=&quot;vet-sprite-wrap&quot;&gt;
+ [img[$playerCreatures[$currentCreature].mimikin.image]]
+ &lt;/div&gt;
 
-    &lt;&lt;if !$playerMimikins || $playerMimikins.length === 0&gt;&gt;
-      &lt;div class=&quot;vet-no-creatures&quot;&gt;You don&#39;t have any mimikins yet!&lt;/div&gt;
+ &lt;div class=&quot;vet-creature-body&quot;&gt;
+            &lt;div class=&quot;vet-creature-name&quot;&gt;
+              &lt;&lt;= $playerCreatures[$currentCreature].mimikin.name&gt;&gt;
+ &lt;/div&gt;
+ &lt;/div&gt;
+ &lt;div class=&quot;creature-action&quot;&gt;
+              &lt;&lt;link &quot;Remove&quot;&gt;&gt;
+&lt;&lt;set $playerCreatures[$currentCreature].mimikin to null&gt;&gt;
+                &lt;&lt;goto &quot;ViewCreature&quot;&gt;&gt;
+              &lt;&lt;/link&gt;&gt;
+            &lt;/div&gt;
+  &lt;/div&gt;
+ &lt;/div&gt;
+    
+&lt;&lt;else&gt;&gt;
+
+    &lt;&lt;set _availableMimikins to $playerMimikins.filter(function(m) { return !$playerCreatures.some(function(c) { return c.mimikin &amp;&amp; c.mimikin.instanceId === m.instanceId; }); })&gt;&gt;
+&lt;&lt;if !$playerMimikins || _availableMimikins.length === 0&gt;&gt;
+      &lt;div class=&quot;vet-no-creatures&quot;&gt;You don&#39;t have any mimikins!&lt;/div&gt;
     &lt;&lt;else&gt;&gt;
       &lt;div class=&quot;vet-creature-list&quot;&gt;
-        &lt;&lt;for _mimikinId range $playerMimikins&gt;&gt;
-  &lt;&lt;set _mimi to setup.mimikins[_mimikinId]&gt;&gt;
-  &lt;&lt;set _inUse to $playerCreatures.some(function(c) { return c.mimikin &amp;&amp; c.mimikin.id === _mimi.id; })&gt;&gt;
+        &lt;&lt;for _mimi range $playerMimikins&gt;&gt;
+  &lt;&lt;set _inUse to $playerCreatures.some(function(c) { return c.mimikin &amp;&amp; c.mimikin.instanceId === _mimi.instanceId; })&gt;&gt;
   &lt;&lt;if !_inUse&gt;&gt;
-          &lt;&lt;capture _mimi&gt;&gt;
-            &lt;div class=&quot;vet-creature-card&quot;&gt;
+    &lt;&lt;capture _mimi&gt;&gt;
+      &lt;&lt;set _totalOwned to $playerMimikins.filter(function(m) { return m.id === _mimi.id; }).length&gt;&gt;
+      &lt;&lt;set _totalInUse to $playerCreatures.filter(function(c) { return c.mimikin &amp;&amp; c.mimikin.id === _mimi.id; }).length&gt;&gt;
+      &lt;&lt;set _totalAvailable to _totalOwned - _totalInUse&gt;&gt;
+      &lt;div class=&quot;vet-creature-card&quot;&gt;
+             &lt;div class=&quot;vet-sprite-wrap&quot;&gt;
               [img[_mimi.image]]
             &lt;/div&gt;
+             &lt;div class=&quot;vet-creature-body&quot;&gt;
             &lt;div class=&quot;vet-creature-name&quot;&gt;
               &lt;&lt;= _mimi.name&gt;&gt;
             &lt;/div&gt;
+    &lt;div class=&quot;mimikin-rarity&quot;&gt;
+      &lt;&lt;if _mimi.rarity === &quot;Common&quot;&gt;&gt;
+        &lt;span class=&quot;mimikin-rarity-badge rarity-common1&quot;&gt;Common&lt;/span&gt;
+      &lt;&lt;elseif _mimi.rarity === &quot;Uncommon&quot;&gt;&gt;
+        &lt;span class=&quot;mimikin-rarity-badge rarity-uncommon1&quot;&gt;Uncommon&lt;/span&gt;
+      &lt;&lt;elseif _mimi.rarity === &quot;Rare&quot;&gt;&gt;
+        &lt;span class=&quot;mimikin-rarity-badge rarity-rare1&quot;&gt;Rare&lt;/span&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;/div&gt;
+            &lt;div class=&quot;vet-creature-desc&quot;&gt;
+             &lt;&lt;= _totalAvailable&gt;&gt; / &lt;&lt;= _totalOwned&gt;&gt; available
+            &lt;/div&gt;
+            &lt;/div&gt;
             &lt;div class=&quot;creature-action&quot;&gt;
               &lt;&lt;link &quot;Give&quot;&gt;&gt;
-                &lt;&lt;set $playerCreatures[$currentCreature].mimikin to _mimi&gt;&gt;
+&lt;&lt;set $playerCreatures[$currentCreature].mimikin to clone(_mimi)&gt;&gt;
                 &lt;&lt;goto &quot;ViewCreature&quot;&gt;&gt;
               &lt;&lt;/link&gt;&gt;
+            &lt;/div&gt;
             &lt;/div&gt;
           &lt;&lt;/capture&gt;&gt;
           &lt;&lt;/if&gt;&gt;
         &lt;&lt;/for&gt;&gt;
       &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
-
+    &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
