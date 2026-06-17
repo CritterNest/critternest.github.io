@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -8358,74 +8352,77 @@ window.pullMimikinByRarity = function(rarity) {
 
 /* ── FEATURED CRITTER ── */
 &lt;&lt;if ndef $featuredCreatureIndex&gt;&gt;&lt;&lt;set $featuredCreatureIndex = -1&gt;&gt;&lt;&lt;/if&gt;&gt;
-
 &lt;&lt;set _featuredIndex = -1&gt;&gt;
-&lt;&lt;if $featuredCreatureIndex &gt;= 0 &amp;&amp; $playerCreatures[$featuredCreatureIndex] &amp;&amp; !$playerCreatures[$featuredCreatureIndex].isBaby&gt;&gt;
+&lt;&lt;if $featuredCreatureIndex &gt;= 0 &amp;&amp; $playerCreatures[$featuredCreatureIndex] &amp;&amp; $playerCreatures[$featuredCreatureIndex].stage !== &quot;egg&quot;&gt;&gt;
   &lt;&lt;set _featuredIndex = $featuredCreatureIndex&gt;&gt;
 &lt;&lt;else&gt;&gt;
   &lt;&lt;for _i = 0; _i &lt; $playerCreatures.length; _i++&gt;&gt;
-    &lt;&lt;if !$playerCreatures[_i].isBaby &amp;&amp; _featuredIndex === -1&gt;&gt;
+    &lt;&lt;if $playerCreatures[_i].stage !== &quot;egg&quot; &amp;&amp; _featuredIndex === -1&gt;&gt;
       &lt;&lt;set _featuredIndex = _i&gt;&gt;
     &lt;&lt;/if&gt;&gt;
   &lt;&lt;/for&gt;&gt;
 &lt;&lt;/if&gt;&gt;
-
-
 &lt;&lt;if _featuredIndex &gt;= 0&gt;&gt;
   &lt;&lt;set _fc = $playerCreatures[_featuredIndex]&gt;&gt;
   &lt;&lt;set _fcName = (ndef _fc.petName || _fc.petName === &quot;&quot;) ? _fc.name : _fc.petName&gt;&gt;
-  &lt;&lt;set _fcTemplate = setup.creatureTemplates[_fc.name]&gt;&gt;
+&lt;&lt;if _fc.stage === &quot;baby&quot;&gt;&gt;
+  &lt;&lt;set _fcTemplate = setup.creatureTemplates[_fc.speciesName]&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;set _fcTemplate = setup.creatureTemplates[_fc.species]&gt;&gt;
+&lt;&lt;/if&gt;&gt;
   &lt;&lt;set _fcSize = _fc.displayTraits.size&gt;&gt;
   &lt;&lt;set _fcColor = _fc.displayTraits.color&gt;&gt;
   &lt;&lt;set _fcPattern = _fc.displayTraits.pattern&gt;&gt;
   &lt;&lt;set _fcGender = _fc.gender.toLowerCase()&gt;&gt;
-  &lt;&lt;set _fcColorPattern = setup.getSpriteKey(_fc.name, _fcColor, _fcPattern)&gt;&gt;
-  &lt;&lt;set _fcCol = _fcTemplate.spriteColumns[_fcColorPattern]&gt;&gt;
-  &lt;&lt;if _fcCol === undefined&gt;&gt;
-    &lt;&lt;set _fcCol = _fcTemplate.spriteColumns[_fcTemplate.colorDominance[0] + &quot;_&quot; + _fcTemplate.patternDominance[0]]&gt;&gt;
-  &lt;&lt;/if&gt;&gt;
-  &lt;&lt;if _fcSize === &quot;large&quot;&gt;&gt;
-    &lt;&lt;set _fcXPos = _fcCol * -240&gt;&gt;&lt;&lt;set _fcDim = &quot;240px&quot;&gt;&gt;
-  &lt;&lt;elseif _fcSize === &quot;medium&quot;&gt;&gt;
-    &lt;&lt;set _fcXPos = _fcCol * -160&gt;&gt;&lt;&lt;set _fcDim = &quot;160px&quot;&gt;&gt;
+
+  &lt;&lt;if _fc.stage === &quot;baby&quot;&gt;&gt;
+    /* ── baby sprite ── */
+    &lt;&lt;if _fcTemplate.babySpriteColumns[_fcColor] !== undefined&gt;&gt;
+      &lt;&lt;set _fcCol = _fcTemplate.babySpriteColumns[_fcColor]&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _fcCol = _fcTemplate.babySpriteColumns[_fcTemplate.colorDominance[0]]&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set _fcSpriteSheet = _fcTemplate.avatars[_fcGender].babySpriteSheets[_fcSize]&gt;&gt;
+    &lt;&lt;if _fcSize === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -180&gt;&gt;&lt;&lt;set _fcDim = &quot;180px&quot;&gt;&gt;
+    &lt;&lt;elseif _fcSize === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -120&gt;&gt;&lt;&lt;set _fcDim = &quot;120px&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -60&gt;&gt;&lt;&lt;set _fcDim = &quot;60px&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;&lt;else&gt;&gt;
-    &lt;&lt;set _fcXPos = _fcCol * -80&gt;&gt;&lt;&lt;set _fcDim = &quot;80px&quot;&gt;&gt;
+    /* ── adult sprite ── */
+    &lt;&lt;set _fcColorPattern = setup.getSpriteKey(_fc.name, _fcColor, _fcPattern)&gt;&gt;
+    &lt;&lt;set _fcCol = _fcTemplate.spriteColumns[_fcColorPattern]&gt;&gt;
+    &lt;&lt;if _fcCol === undefined&gt;&gt;
+      &lt;&lt;set _fcCol = _fcTemplate.spriteColumns[_fcTemplate.colorDominance[0] + &quot;_&quot; + _fcTemplate.patternDominance[0]]&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set _fcSpriteSheet = _fcTemplate.avatars[_fcGender].patternSpriteSheets[_fcSize]&gt;&gt;
+    &lt;&lt;if _fcSize === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -240&gt;&gt;&lt;&lt;set _fcDim = &quot;240px&quot;&gt;&gt;
+    &lt;&lt;elseif _fcSize === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -160&gt;&gt;&lt;&lt;set _fcDim = &quot;160px&quot;&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _fcXPos = _fcCol * -80&gt;&gt;&lt;&lt;set _fcDim = &quot;80px&quot;&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;&lt;/if&gt;&gt;
-
-
 
   &lt;div class=&quot;featured-critter&quot;&gt;
     &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;margin:0 auto;&#39;&quot;&gt;
-    
-                &lt;&lt;if _fc.mimikin !== null&gt;&gt;
-      
-      &lt;&lt;if _fcSize is &quot;small&quot;&gt;&gt;
-      
 
-  &lt;div class=&quot;mimikin-small-display&quot;&gt;
-    [img[_fc.mimikin.image]]
-  &lt;/div&gt;
-      
-     &lt;&lt;elseif _fcSize is &quot;medium&quot;&gt;&gt;
+      &lt;&lt;if _fc.mimikin !== null&gt;&gt;
+        &lt;&lt;if _fcSize is &quot;small&quot;&gt;&gt;
+          &lt;div class=&quot;mimikin-small-display&quot;&gt;[img[_fc.mimikin.image]]&lt;/div&gt;
+        &lt;&lt;elseif _fcSize is &quot;medium&quot;&gt;&gt;
+          &lt;div class=&quot;mimikin-medium-display&quot;&gt;[img[_fc.mimikin.image]]&lt;/div&gt;
+        &lt;&lt;else&gt;&gt;
+          &lt;div class=&quot;mimikin-large-display&quot;&gt;[img[_fc.mimikin.image]]&lt;/div&gt;
+        &lt;&lt;/if&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
 
-  &lt;div class=&quot;mimikin-medium-display&quot;&gt;
-    [img[_fc.mimikin.image]]
-  &lt;/div&gt;
-  
-  &lt;&lt;else&gt;&gt;
-  
-    &lt;div class=&quot;mimikin-large-display&quot;&gt;
-    [img[_fc.mimikin.image]]
-  &lt;/div&gt;
-
-&lt;&lt;/if&gt;&gt;
-
-&lt;&lt;/if&gt;&gt;
-    
       &lt;div class=&quot;creature-sprite-pattern&quot;
-           @style=&quot;&#39;background-image:url(&#39; + _fcTemplate.avatars[_fcGender].patternSpriteSheets[_fcSize] + &#39;);background-position:&#39; + _fcXPos + &#39;px 0px;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;&#39;&quot;&gt;
+           @style=&quot;&#39;background-image:url(&#39; + _fcSpriteSheet + &#39;);background-position:&#39; + _fcXPos + &#39;px 0px;width:&#39; + _fcDim + &#39;;height:&#39; + _fcDim + &#39;;&#39;&quot;&gt;
       &lt;/div&gt;
-     
 
     &lt;/div&gt;
     &lt;div class=&quot;featured-critter-name&quot;&gt;
@@ -8433,7 +8430,7 @@ window.pullMimikinByRarity = function(rarity) {
         &lt;&lt;set $currentCreature = _featuredIndex&gt;&gt;
       &lt;&lt;/link&gt;&gt;
       &lt;&lt;if _fc.gender === &quot;Male&quot;&gt;&gt;♂️&lt;&lt;else&gt;&gt;♀️&lt;&lt;/if&gt;&gt;
-&lt;&lt;link &quot;✎&quot; &quot;FeaturedCreatureModal&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;link &quot;✎&quot; &quot;FeaturedCreatureModal&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
@@ -18487,7 +18484,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
     &lt;&lt;set _nonEggs = []&gt;&gt;
     &lt;&lt;for _i = 0; _i &lt; $playerCreatures.length; _i++&gt;&gt;
-      &lt;&lt;if !$playerCreatures[_i].isBaby&gt;&gt;
+      &lt;&lt;if $playerCreatures[_i].stage !== &quot;egg&quot;&gt;&gt;
         &lt;&lt;run _nonEggs.push(_i)&gt;&gt;
       &lt;&lt;/if&gt;&gt;
     &lt;&lt;/for&gt;&gt;
@@ -18499,56 +18496,60 @@ ERROR: Please finish filling out your personal info before continuing.
         &lt;&lt;for _j = 0; _j &lt; _nonEggs.length; _j++&gt;&gt;
           &lt;&lt;set _idx = _nonEggs[_j]&gt;&gt;
           &lt;&lt;set _creature = $playerCreatures[_idx]&gt;&gt;
-          &lt;&lt;set _template = setup.creatureTemplates[_creature.name]&gt;&gt;
+          &lt;&lt;if _creature.stage === &quot;baby&quot;&gt;&gt;
+  &lt;&lt;set _template = setup.creatureTemplates[_creature.speciesName]&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;set _template = setup.creatureTemplates[_creature.species]&gt;&gt;
+&lt;&lt;/if&gt;&gt;
           &lt;&lt;set _size = _creature.displayTraits.size&gt;&gt;
           &lt;&lt;set _color = _creature.displayTraits.color&gt;&gt;
           &lt;&lt;set _pattern = _creature.displayTraits.pattern&gt;&gt;
           &lt;&lt;set _gender = _creature.gender.toLowerCase()&gt;&gt;
-          &lt;&lt;set _colorPattern = setup.getSpriteKey(_creature.name, _color, _pattern)&gt;&gt;
-          &lt;&lt;set _col = _template.spriteColumns[_colorPattern]&gt;&gt;
-          &lt;&lt;if _col === undefined&gt;&gt;
-            &lt;&lt;set _col = _template.spriteColumns[_template.colorDominance[0] + &quot;_&quot; + _template.patternDominance[0]]&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
-          &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-            &lt;&lt;set _xPos = _col * -240&gt;&gt;&lt;&lt;set _scale = &quot;scale(1)&quot;&gt;&gt;
-          &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-            &lt;&lt;set _xPos = _col * -160&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.667)&quot;&gt;&gt;
-          &lt;&lt;else&gt;&gt;
-            &lt;&lt;set _xPos = _col * -80&gt;&gt;&lt;&lt;set _scale = &quot;scale(0.333)&quot;&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
           &lt;&lt;set _isSelected = ($featuredCreatureIndex === _idx)&gt;&gt;
 
           &lt;&lt;capture _idx, _creature&gt;&gt;
             &lt;div class=&quot;vet-creature-card &lt;&lt;if _isSelected&gt;&gt;vet-creature-card--selected&lt;&lt;/if&gt;&gt;&quot;&gt;
 
               &lt;div class=&quot;vet-sprite-wrap&quot;&gt;
-  &lt;&lt;if _creature.isBaby&gt;&gt;
-    &lt;span style=&quot;font-size:2em;&quot;&gt;🥚&lt;/span&gt;
-  &lt;&lt;else&gt;&gt;
-    &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-      &lt;&lt;set _xPos = _col * -240&gt;&gt;
-      &lt;&lt;set _dimensions = &quot;240px&quot;&gt;&gt;
-      &lt;&lt;set _scaledDimensions = &quot;120px&quot;&gt;&gt;
-    &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-      &lt;&lt;set _xPos = _col * -160&gt;&gt;
-      &lt;&lt;set _dimensions = &quot;160px&quot;&gt;&gt;
-      &lt;&lt;set _scaledDimensions = &quot;80px&quot;&gt;&gt;
-    &lt;&lt;else&gt;&gt;
-      &lt;&lt;set _xPos = _col * -80&gt;&gt;
-      &lt;&lt;set _dimensions = &quot;80px&quot;&gt;&gt;
-      &lt;&lt;set _scaledDimensions = &quot;40px&quot;&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    &lt;div @style=&quot;&#39;width:&#39; + _scaledDimensions + &#39;;height:&#39; + _scaledDimensions + &#39;;overflow:hidden;flex-shrink:0;&#39;&quot;&gt;
-      &lt;div style=&quot;transform:scale(0.5);transform-origin:top left;&quot;&gt;
-        &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
-          &lt;div class=&quot;creature-sprite-pattern&quot;
-               @style=&quot;&#39;background-image:url(&#39; + _template.avatars[_gender].patternSpriteSheets[_size] + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;&lt;/if&gt;&gt;
-&lt;/div&gt;
+                &lt;&lt;if _creature.stage === &quot;baby&quot;&gt;&gt;
+                  &lt;&lt;if _template.babySpriteColumns[_color] !== undefined&gt;&gt;
+                    &lt;&lt;set _col = _template.babySpriteColumns[_color]&gt;&gt;
+                  &lt;&lt;else&gt;&gt;
+                    &lt;&lt;set _col = _template.babySpriteColumns[_template.colorDominance[0]]&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                  &lt;&lt;set _spriteSheet = _template.avatars[_gender].babySpriteSheets[_size]&gt;&gt;
+                  &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -180&gt;&gt;&lt;&lt;set _dimensions = &quot;180px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;90px&quot;&gt;&gt;
+                  &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -120&gt;&gt;&lt;&lt;set _dimensions = &quot;120px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;60px&quot;&gt;&gt;
+                  &lt;&lt;else&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -60&gt;&gt;&lt;&lt;set _dimensions = &quot;60px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;30px&quot;&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                &lt;&lt;else&gt;&gt;
+                  &lt;&lt;set _colorPattern = setup.getSpriteKey(_creature.name, _color, _pattern)&gt;&gt;
+                  &lt;&lt;set _col = _template.spriteColumns[_colorPattern]&gt;&gt;
+                  &lt;&lt;if _col === undefined&gt;&gt;
+                    &lt;&lt;set _col = _template.spriteColumns[_template.colorDominance[0] + &quot;_&quot; + _template.patternDominance[0]]&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                  &lt;&lt;set _spriteSheet = _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
+                  &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -240&gt;&gt;&lt;&lt;set _dimensions = &quot;240px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;120px&quot;&gt;&gt;
+                  &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -160&gt;&gt;&lt;&lt;set _dimensions = &quot;160px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;80px&quot;&gt;&gt;
+                  &lt;&lt;else&gt;&gt;
+                    &lt;&lt;set _xPos = _col * -80&gt;&gt;&lt;&lt;set _dimensions = &quot;80px&quot;&gt;&gt;&lt;&lt;set _scaledDimensions = &quot;40px&quot;&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                &lt;&lt;/if&gt;&gt;
+                &lt;div @style=&quot;&#39;width:&#39; + _scaledDimensions + &#39;;height:&#39; + _scaledDimensions + &#39;;overflow:hidden;flex-shrink:0;&#39;&quot;&gt;
+                  &lt;div style=&quot;transform:scale(0.5);transform-origin:top left;&quot;&gt;
+                    &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+                      &lt;div class=&quot;creature-sprite-pattern&quot;
+                           @style=&quot;&#39;background-image:url(&#39; + _spriteSheet + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dimensions + &#39;;height:&#39; + _dimensions + &#39;;&#39;&quot;&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
 
               &lt;div class=&quot;vet-creature-body&quot;&gt;
                 &lt;div class=&quot;vet-creature-name&quot;&gt;
