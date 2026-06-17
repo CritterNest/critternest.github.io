@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-		<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -4684,9 +4678,143 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
 
 
 /* ==============================================
-   CREATURE PROFILE PAGE
-   All styles specific to creature profile pages
+   Adult filter CSS
    ============================================== */
+
+.filter-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px 0;
+}
+
+.filter-toggle-row a {
+  display: inline-block;
+  background: #f5a45a;
+  color: #fff;
+  border: 2px solid #d4763a;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.85em;
+  text-decoration: none;
+}
+
+.filter-toggle-row a:first-child:active {
+  background: #d4763a;
+}
+
+.filter-badge {
+  display: inline-block;
+  background: #fff;
+  color: #d4763a;
+  font-size: 0.75em;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 0 6px;
+  line-height: 1.6;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filter-clear-btn {
+  background: none;
+  border: none;
+  color: #a05030;
+  font-size: 0.82em;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.filter-panel {
+  background: rgba(255, 220, 180, 0.45);
+  border: 1.5px solid #e8b07a;
+  border-radius: 10px;
+  padding: 10px 10px 6px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-panel--hidden {
+  display: none;
+}
+
+.filter-search-row {
+  width: 100%;
+}
+
+.filter-search-row .macro-textbox {
+  width: 90%;
+  box-sizing: border-box;
+  border: 1.5px solid #d4a070;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.88em;
+  font-family: inherit;
+  background: #fff8f0;
+  color: #5a3010;
+  outline: none;
+}
+
+.filter-search-row .macro-textbox:focus {
+  border-color: #f5a45a;
+  background: #fff;
+}
+
+.filter-search:focus {
+  border-color: #f5a45a;
+  background: #fff;
+}
+
+.filter-pill-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-pill-label {
+  font-size: 0.72em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a06040;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-pills a {
+  display: inline-block;
+  background: #fff8f0;
+  color: #7a4020;
+  border: 1.5px solid #d4a070;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.8em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.filter-pills-active a {
+  background: #f5a45a;
+  color: #fff;
+  border-color: #d4763a;
+}
+
+.filter-result-count {
+  font-size: 0.78em;
+  color: #a06040;
+  text-align: right;
+  margin: -4px 0 4px;
+  font-style: italic;
+}
+
 
 /* ==============================================
    CREATURE PROFILE
@@ -7383,6 +7511,28 @@ html += '<a onclick="SugarCube.Engine.play(\'GachaMachines\')">Back to machines<
   
 });
 
+// Filter and search adults
+
+$(document).on('tw:passageend', function () {
+  if (passage() !== 'ViewAdults') return;
+
+  var searchInput = document.getElementById("filter-search");
+  if (searchInput) {
+    var debounceTimer;
+    searchInput.addEventListener("input", function () {
+      clearTimeout(debounceTimer);
+      var val = this.value;
+      debounceTimer = setTimeout(function () {
+        State.variables.filter.search = val;
+        $(".passage").empty().wiki(Story.get(passage()).processText());
+      }, 300);
+    });
+    searchInput.focus();
+    var len = searchInput.value.length;
+    searchInput.setSelectionRange(len, len);
+  }
+});
+
 // freelancing stuff
 
 window.goFreelancing = function() {
@@ -9425,13 +9575,13 @@ window.pullMimikinByRarity = function(rarity) {
 
 /* ── CATEGORY PILLS ── */
 &lt;div class=&quot;shop-categories-scroll&quot;&gt;
-  &lt;&lt;link &quot;All&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;All&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Creatures&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;span id=&quot;shop-tab-consumables&quot;&gt;&lt;&lt;link &quot;Consumables&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Consumables&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
-  &lt;&lt;link &quot;Ingredients&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Ingredients&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Seeds&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Seeds&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Items&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Items&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;&lt;link &quot;Fishing&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Fishing&quot;&gt;&gt;&lt;&lt;goto &quot;Shop&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;&lt;link &quot;All&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;All&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;&lt;link &quot;Creatures&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Creatures&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;span id=&quot;shop-tab-consumables&quot;&gt;&lt;&lt;link &quot;Consumables&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Consumables&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+  &lt;&lt;link &quot;Ingredients&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Ingredients&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;&lt;link &quot;Seeds&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Seeds&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;&lt;link &quot;Items&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Items&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;&lt;link &quot;Fishing&quot;&gt;&gt;&lt;&lt;set $shopCategory = &quot;Fishing&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 
 /* ── ITEM LIST ── */
@@ -10292,34 +10442,228 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="16" name="ViewAdults" tags="" position="1200,0" size="100,100">&lt;&lt;nobr&gt;&gt;
+
+&lt;&lt;if not $filter&gt;&gt;
+  &lt;&lt;set $filter to {
+    open:    false,
+    search:  &quot;&quot;,
+    species: [],
+    gender:  [],
+    size:    [],
+    color:   [],
+    pattern: []
+  }&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
 &lt;&lt;set _adults to $playerCreatures.filter(function(c) {
   return c.stage === &quot;adult&quot;;
 })&gt;&gt;
+
+&lt;&lt;set _optSpecies  to []&gt;&gt;
+&lt;&lt;set _optGender   to []&gt;&gt;
+&lt;&lt;set _optSize     to []&gt;&gt;
+&lt;&lt;set _optColor    to []&gt;&gt;
+&lt;&lt;set _optPattern  to []&gt;&gt;
+
+&lt;&lt;for _i = 0; _i &lt; _adults.length; _i++&gt;&gt;
+  &lt;&lt;set _a    to _adults[_i]&gt;&gt;
+  &lt;&lt;set _tmpl to setup.creatureTemplates[_a.name]&gt;&gt;
+  &lt;&lt;set _sp   to (_tmpl.species ? _tmpl.species : _a.name)&gt;&gt;
+  &lt;&lt;if not _optSpecies.includes(_sp)&gt;&gt;            &lt;&lt;run _optSpecies.push(_sp)&gt;&gt;             &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not _optGender.includes(_a.gender)&gt;&gt;       &lt;&lt;run _optGender.push(_a.gender)&gt;&gt;        &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not _optSize.includes(_a.displayTraits.size)&gt;&gt;       &lt;&lt;run _optSize.push(_a.displayTraits.size)&gt;&gt;       &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not _optColor.includes(_a.displayTraits.color)&gt;&gt;     &lt;&lt;run _optColor.push(_a.displayTraits.color)&gt;&gt;     &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not _optPattern.includes(_a.displayTraits.pattern)&gt;&gt; &lt;&lt;run _optPattern.push(_a.displayTraits.pattern)&gt;&gt; &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+
+&lt;&lt;set _searchLower to $filter.search.toLowerCase().trim()&gt;&gt;
+
+&lt;&lt;set _filtered to _adults.filter(function(a) {
+  var tmpl    = setup.creatureTemplates[a.name];
+  var rawName = (a.petName ? a.petName : a.name).toLowerCase();
+  var sp      = (tmpl.species ? tmpl.species : a.name).toLowerCase();
+
+  if (_searchLower !== &quot;&quot; &amp;&amp; rawName.indexOf(_searchLower) === -1 &amp;&amp; sp.indexOf(_searchLower) === -1) return false;
+  if ($filter.species.length &gt; 0 &amp;&amp; !$filter.species.includes(sp))                      return false;
+  if ($filter.gender.length  &gt; 0 &amp;&amp; !$filter.gender.includes(a.gender))                 return false;
+  if ($filter.size.length    &gt; 0 &amp;&amp; !$filter.size.includes(a.displayTraits.size))        return false;
+  if ($filter.color.length   &gt; 0 &amp;&amp; !$filter.color.includes(a.displayTraits.color))      return false;
+  if ($filter.pattern.length &gt; 0 &amp;&amp; !$filter.pattern.includes(a.displayTraits.pattern))  return false;
+  return true;
+})&gt;&gt;
+
+&lt;&lt;set _activeCount to
+  ($filter.search.trim() !== &quot;&quot; ? 1 : 0) +
+  $filter.species.length +
+  $filter.gender.length  +
+  $filter.size.length    +
+  $filter.color.length   +
+  $filter.pattern.length
+&gt;&gt;
+
 &lt;div class=&quot;view-grid-panel&quot;&gt;
+
   &lt;h2&gt;Adults&lt;/h2&gt;
-  &lt;div class=&quot;view-grid&quot;&gt;
-    &lt;&lt;if _adults.length === 0&gt;&gt;
-      &lt;div class=&quot;view-grid-empty&quot;&gt;No adults yet!&lt;/div&gt;
+
+
+  &lt;div class=&quot;filter-toggle-row&quot;&gt;
+    &lt;&lt;if $filter.open&gt;&gt;
+      &lt;&lt;link &quot;☰ Filter&quot;&gt;&gt;&lt;&lt;set $filter.open = false&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;&lt;else&gt;&gt;
-      &lt;&lt;for _i = 0; _i &lt; _adults.length; _i++&gt;&gt;
+      &lt;&lt;if _activeCount &gt; 0&gt;&gt;
+        &lt;&lt;link `&quot;☰ Filter (&quot; + _activeCount + &quot;)&quot;`&gt;&gt;&lt;&lt;set $filter.open = true&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;link &quot;☰ Filter&quot;&gt;&gt;&lt;&lt;set $filter.open = true&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;if _activeCount &gt; 0&gt;&gt;
+      &lt;&lt;link &quot;Clear&quot;&gt;&gt;
+        &lt;&lt;set $filter.search  = &quot;&quot;&gt;&gt;
+        &lt;&lt;set $filter.species = []&gt;&gt;
+        &lt;&lt;set $filter.gender  = []&gt;&gt;
+        &lt;&lt;set $filter.size    = []&gt;&gt;
+        &lt;&lt;set $filter.color   = []&gt;&gt;
+        &lt;&lt;set $filter.pattern = []&gt;&gt;
+        &lt;&lt;refresh&gt;&gt;
+      &lt;&lt;/link&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;/div&gt;
+
+
+  &lt;&lt;if $filter.open&gt;&gt;
+  &lt;div class=&quot;filter-panel&quot;&gt;
+
+&lt;div class=&quot;filter-search-row&quot;&gt;
+  &lt;&lt;textbox &quot;$filter.search&quot; $filter.search autofocus&gt;&gt;
+  &lt;&lt;link &quot;🔎&quot;&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+
+    &lt;&lt;if _optSpecies.length &gt; 1&gt;&gt;
+    &lt;div class=&quot;filter-pill-row&quot;&gt;
+      &lt;span class=&quot;filter-pill-label&quot;&gt;Species&lt;/span&gt;
+      &lt;div class=&quot;filter-pills&quot;&gt;
+        &lt;&lt;for _pi = 0; _pi &lt; _optSpecies.length; _pi++&gt;&gt;
+          &lt;&lt;capture _pi&gt;&gt;
+            &lt;&lt;set _val to _optSpecies[_pi]&gt;&gt;
+            &lt;&lt;capture _val&gt;&gt;
+              &lt;&lt;if $filter.species.includes(_val)&gt;&gt;
+                &lt;span class=&quot;filter-pills-active&quot;&gt;&lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.species.splice($filter.species.indexOf(_val), 1)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.species.push(_val)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/capture&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
+
+    &lt;div class=&quot;filter-pill-row&quot;&gt;
+      &lt;span class=&quot;filter-pill-label&quot;&gt;Gender&lt;/span&gt;
+      &lt;div class=&quot;filter-pills&quot;&gt;
+        &lt;&lt;for _pi = 0; _pi &lt; _optGender.length; _pi++&gt;&gt;
+          &lt;&lt;capture _pi&gt;&gt;
+            &lt;&lt;set _val to _optGender[_pi]&gt;&gt;
+            &lt;&lt;capture _val&gt;&gt;
+              &lt;&lt;if $filter.gender.includes(_val)&gt;&gt;
+                &lt;span class=&quot;filter-pills-active&quot;&gt;&lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.gender.splice($filter.gender.indexOf(_val), 1)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.gender.push(_val)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/capture&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;filter-pill-row&quot;&gt;
+      &lt;span class=&quot;filter-pill-label&quot;&gt;Size&lt;/span&gt;
+      &lt;div class=&quot;filter-pills&quot;&gt;
+        &lt;&lt;for _pi = 0; _pi &lt; _optSize.length; _pi++&gt;&gt;
+          &lt;&lt;capture _pi&gt;&gt;
+            &lt;&lt;set _val to _optSize[_pi]&gt;&gt;
+            &lt;&lt;capture _val&gt;&gt;
+              &lt;&lt;if $filter.size.includes(_val)&gt;&gt;
+                &lt;span class=&quot;filter-pills-active&quot;&gt;&lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.size.splice($filter.size.indexOf(_val), 1)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.size.push(_val)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/capture&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;filter-pill-row&quot;&gt;
+      &lt;span class=&quot;filter-pill-label&quot;&gt;Color&lt;/span&gt;
+      &lt;div class=&quot;filter-pills&quot;&gt;
+        &lt;&lt;for _pi = 0; _pi &lt; _optColor.length; _pi++&gt;&gt;
+          &lt;&lt;capture _pi&gt;&gt;
+            &lt;&lt;set _val to _optColor[_pi]&gt;&gt;
+            &lt;&lt;capture _val&gt;&gt;
+              &lt;&lt;if $filter.color.includes(_val)&gt;&gt;
+                &lt;span class=&quot;filter-pills-active&quot;&gt;&lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.color.splice($filter.color.indexOf(_val), 1)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.color.push(_val)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/capture&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;filter-pill-row&quot;&gt;
+      &lt;span class=&quot;filter-pill-label&quot;&gt;Pattern&lt;/span&gt;
+      &lt;div class=&quot;filter-pills&quot;&gt;
+        &lt;&lt;for _pi = 0; _pi &lt; _optPattern.length; _pi++&gt;&gt;
+          &lt;&lt;capture _pi&gt;&gt;
+            &lt;&lt;set _val to _optPattern[_pi]&gt;&gt;
+            &lt;&lt;capture _val&gt;&gt;
+              &lt;&lt;if $filter.pattern.includes(_val)&gt;&gt;
+                &lt;span class=&quot;filter-pills-active&quot;&gt;&lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.pattern.splice($filter.pattern.indexOf(_val), 1)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+              &lt;&lt;else&gt;&gt;
+                &lt;&lt;link `_val`&gt;&gt;&lt;&lt;run $filter.pattern.push(_val)&gt;&gt;&lt;&lt;refresh&gt;&gt;&lt;&lt;/link&gt;&gt;
+              &lt;&lt;/if&gt;&gt;
+            &lt;&lt;/capture&gt;&gt;
+          &lt;&lt;/capture&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+  &lt;&lt;/if&gt;&gt;
+
+  &lt;&lt;if _activeCount &gt; 0&gt;&gt;
+    &lt;div class=&quot;filter-result-count&quot;&gt;Showing &lt;&lt;= _filtered.length&gt;&gt; of &lt;&lt;= _adults.length&gt;&gt;&lt;/div&gt;
+  &lt;&lt;/if&gt;&gt;
+
+  &lt;div class=&quot;view-grid&quot;&gt;
+    &lt;&lt;if _filtered.length === 0&gt;&gt;
+      &lt;div class=&quot;view-grid-empty&quot;&gt;
+        &lt;&lt;if _adults.length === 0&gt;&gt;No adults yet!
+        &lt;&lt;else&gt;&gt;No adults match those filters.
+        &lt;&lt;/if&gt;&gt;
+      &lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;for _i = 0; _i &lt; _filtered.length; _i++&gt;&gt;
         &lt;&lt;capture _i&gt;&gt;
-          &lt;&lt;set _adult = _adults[_i]&gt;&gt;
+          &lt;&lt;set _adult    to _filtered[_i]&gt;&gt;
           &lt;&lt;set _template to setup.creatureTemplates[_adult.name]&gt;&gt;
-          &lt;&lt;set _gender to _adult.gender.toLowerCase()&gt;&gt;
-          &lt;&lt;set _size to _adult.displayTraits.size&gt;&gt;
-          &lt;&lt;set _color to _adult.displayTraits.color&gt;&gt;
-          &lt;&lt;set _pattern to _adult.displayTraits.pattern&gt;&gt;
-          &lt;&lt;set _spriteSheet to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
+          &lt;&lt;set _gender   to _adult.gender.toLowerCase()&gt;&gt;
+          &lt;&lt;set _size     to _adult.displayTraits.size&gt;&gt;
+          &lt;&lt;set _color    to _adult.displayTraits.color&gt;&gt;
+          &lt;&lt;set _pattern  to _adult.displayTraits.pattern&gt;&gt;
+          &lt;&lt;set _spriteSheet  to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
           &lt;&lt;set _colorPattern to _color + &quot;_&quot; + _pattern&gt;&gt;
-          &lt;&lt;set _col to _template.spriteColumns[_colorPattern]&gt;&gt;
+          &lt;&lt;set _col      to _template.spriteColumns[_colorPattern]&gt;&gt;
           &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
-            &lt;&lt;set _xPos to _col * -240&gt;&gt;
+            &lt;&lt;set _xPos       to _col * -240&gt;&gt;
             &lt;&lt;set _dimensions to &quot;240px&quot;&gt;&gt;
           &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
-            &lt;&lt;set _xPos to _col * -160&gt;&gt;
+            &lt;&lt;set _xPos       to _col * -160&gt;&gt;
             &lt;&lt;set _dimensions to &quot;160px&quot;&gt;&gt;
           &lt;&lt;else&gt;&gt;
-            &lt;&lt;set _xPos to _col * -80&gt;&gt;
+            &lt;&lt;set _xPos       to _col * -80&gt;&gt;
             &lt;&lt;set _dimensions to &quot;80px&quot;&gt;&gt;
           &lt;&lt;/if&gt;&gt;
           &lt;div class=&quot;view-grid-card&quot;&gt;
@@ -10340,12 +10684,16 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
       &lt;&lt;/for&gt;&gt;
     &lt;&lt;/if&gt;&gt;
   &lt;/div&gt;
+
 &lt;/div&gt;
+
 &lt;div class=&quot;back-forth-buttons&quot;&gt;
   &lt;div class=&quot;back-button&quot;&gt;
     &lt;&lt;link &quot;Go Back&quot; `previous()`&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
+
+
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="17" name="SellCreatures" tags="" position="400,600" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Sell Creatures&lt;/h2&gt;
 
@@ -12204,6 +12552,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="39" name="InitCreatureSetup" tags="" position="0,100" size="100,100">&lt;&lt;set setup.creatureTemplates = {
 	&quot;Caervira&quot;: {
 	name: &quot;Caervira&quot;,
+    species: &quot;Caervira&quot;,
 	type: &quot;Forest&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12290,6 +12639,7 @@ silhouettes: {
 	},
   &quot;Noctulo&quot;: {
    name: &quot;Noctulo&quot;,
+   species: &quot;Noctulo&quot;,
    type: &quot;Forest&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12379,6 +12729,7 @@ affectionMax: 100,
    },
 	&quot;Urcanis&quot;: {
     name: &quot;Urcanis&quot;,
+    species: &quot;Urcanis&quot;,
     type: &quot;Mountain&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12468,6 +12819,7 @@ affectionMax: 100,
     },
  	&quot;Capranis&quot;: {
     name: &quot;Capranis&quot;,
+    species: &quot;Capranis&quot;,
     type: &quot;Mountain&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12558,6 +12910,7 @@ affectionMax: 100,
     },
     &quot;Chiroden&quot;: {
     name: &quot;Chiroden&quot;,
+    species: &quot;Chiroden&quot;,
     type: &quot;Mountain&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12647,6 +13000,7 @@ affectionMax: 100,
     },
     &quot;Cetium&quot;: {
     name: &quot;Cetium&quot;,
+    species: &quot;Cetium&quot;,
     type: &quot;Aether&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12728,6 +13082,7 @@ affectionMax: 100,
     },
     &quot;Zerdasus&quot;: {
   name: &quot;Zerdasus&quot;,
+  species: &quot;Zerdasus&quot;,
   type: &quot;Desert&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12773,8 +13128,11 @@ affectionMax: 100,
       white_solid: 12,
       white_stripes: 13,
       white_spots: 14,
-      rose_solid: 15,
-      retro_solid: 16
+      yellow_solid: 15,
+      yellow_stripes: 16,
+      yellow_spots: 17,
+      rose_solid: 18,
+      retro_solid: 19
    },
    babySpriteColumns: {
    orange: 0,
@@ -12813,6 +13171,7 @@ affectionMax: 100,
   },
   &quot;Dipothio&quot;: {
   name: &quot;Dipothio&quot;,
+  species: &quot;Dipothio&quot;,
   type: &quot;Desert&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12894,6 +13253,7 @@ affectionMax: 100,
   },
   &quot;Amphorea&quot;: {
   name: &quot;Amphorea&quot;,
+  species: &quot;Amphorea&quot;,
   type: &quot;River&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -12980,6 +13340,7 @@ affectionMax: 100,
   },
   &quot;Tiadylus&quot;: {
   name: &quot;Tiadylus&quot;,
+  species: &quot;Tiadylus&quot;,
   type: &quot;Jungle&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -13061,6 +13422,7 @@ affectionMax: 100,
   },
   &quot;Falciphus&quot;: {
   name: &quot;Falciphus&quot;,
+  species: &quot;Falciphus&quot;,
   type: &quot;Volcano&quot;,
     staminaCur: 3,
     staminaMax: 3,
@@ -13079,9 +13441,9 @@ affectionMax: 100,
   },
   female: {
   patternSpriteSheets: {
-  small: &quot;https://i.imgur.com/qLRFY3g.png&quot;,
-  medium: &quot;https://i.imgur.com/1n13rxB.png&quot;,
-  large: &quot;https://i.imgur.com/kFGxIDL.png&quot;
+  small: &quot;https://i.imgur.com/iVOP93S.png&quot;,
+  medium: &quot;https://i.imgur.com/qVOZc57.png&quot;,
+  large: &quot;https://i.imgur.com/lABZTmn.png&quot;
   },
   babySpriteSheets: {
   small: &quot;https://i.imgur.com/IZBEduB.png&quot;,
@@ -13126,9 +13488,9 @@ affectionMax: 100,
         large:  &quot;https://i.imgur.com/0jF9R9c.png&quot;
     },
     female: {
-        small:  &quot;&quot;,
-        medium: &quot;&quot;,
-        large:  &quot;&quot;
+        small:  &quot;https://i.imgur.com/JE8qGgU.png&quot;,
+        medium: &quot;https://i.imgur.com/JE8qGgU.png&quot;,
+        large:  &quot;https://i.imgur.com/JE8qGgU.png&quot;
     }
 },
   rarity: &quot;Rare&quot;,
