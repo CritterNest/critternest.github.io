@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -6245,15 +6239,15 @@ window.isCreatureFertile = function(creature) {
     const now         = Date.now();
     const msInCycle   = (now - creature.fertilityOffset) % cycleLength;
 
-    // Fertile window = first 3 real days of the cycle
-    const fertileWindow = 3 * 24 * 60 * 60 * 1000;
+    // Fertile window = first 1 real day of the cycle
+    const fertileWindow = 1 * 24 * 60 * 60 * 1000;
     return msInCycle >= 0 && msInCycle < fertileWindow;
 };
 
 window.getDaysUntilFertile = function(creature) {
     const template      = setup.creatureTemplates[creature.name];
     const cycleLength   = getFertilityCycleLength(template.rarity);
-    const fertileWindow = 3 * 24 * 60 * 60 * 1000;
+    const fertileWindow = 1 * 24 * 60 * 60 * 1000;
 
     const now       = Date.now();
     const msInCycle = (now - creature.fertilityOffset) % cycleLength;
@@ -9881,7 +9875,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _purchasedCreature.fedCount to 0&gt;&gt;
 &lt;&lt;set _purchasedCreature.caredCount to 0&gt;&gt;
 &lt;&lt;set _purchasedCreature.mimikin to null&gt;&gt;
-&lt;&lt;run _purchasedCreature.fertilityOffset = Date.now() - random(0, getFertilityCycleLength(_purchasedCreature.rarity) - 1)&gt;&gt;
+&lt;&lt;run _purchasedCreature.fertilityOffset = Date.now() - Math.floor(Math.random() * getFertilityCycleLength(_purchasedCreature.rarity))&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run _purchasedCreature.lastCareDrain = Date.now()&gt;&gt;
@@ -13585,7 +13579,7 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;set $creature1.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature1.caredCount to 0&gt;&gt;
 &lt;&lt;set $creature1.mimikin to null&gt;&gt;
-&lt;&lt;run $creature1.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature1.rarity) - 1)&gt;&gt;
+&lt;&lt;run $creature1.fertilityOffset = Date.now() - Math.floor(Math.random() * getFertilityCycleLength(_randomCreature1.rarity))&gt;&gt;
 &lt;&lt;run $creature1.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature1.lastCareDrain = Date.now()&gt;&gt;
@@ -13630,7 +13624,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
 &lt;&lt;set $creature2.fedCount to 0&gt;&gt;
 &lt;&lt;set $creature2.caredCount to 0&gt;&gt;
 &lt;&lt;set $creature2.mimikin to null&gt;&gt;
-&lt;&lt;run $creature2.fertilityOffset = Date.now() - random(1 * 24 * 60 * 60 * 1000, getFertilityCycleLength($creature2.rarity) - 1) - Math.floor(getFertilityCycleLength($creature2.rarity) / 2)&gt;&gt;
+&lt;&lt;run $creature2.fertilityOffset = Date.now() - Math.floor(Math.random() * getFertilityCycleLength(_randomCreature2.rarity))&gt;&gt;
 &lt;&lt;run $creature2.lastAffectionBonus = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastHungerDrain = Date.now()&gt;&gt;
 &lt;&lt;run $creature2.lastCareDrain = Date.now()&gt;&gt;
@@ -13850,7 +13844,7 @@ size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.r
     basePrice: 100,
     baseSell: 50,
     image: &quot;https://i.imgur.com/mWbF7UO.png&quot;,
-    description: &quot;An ancient scroll that grants fertility to a creature for three days.&quot;,
+    description: &quot;An ancient scroll that grants fertility to a creature for one day.&quot;,
     rarity: &quot;Common&quot;,
     isConsumable: true,
     requiresMonster: true
