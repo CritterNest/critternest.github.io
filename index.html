@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -1100,6 +1094,10 @@ hr {
   border: 3px solid var(--coralorange);
   border-radius: 12px;
   position: relative;
+      image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 .mimikin-small-display {
@@ -4883,6 +4881,10 @@ body[data-tags~="creature-profile"] h4 {
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
+      image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 .profile-flavor {
@@ -8651,8 +8653,8 @@ window.pullMimikinByRarity = function(rarity) {
 &lt;&lt;set _parent2 to $args[1]&gt;&gt;
 
 /* Check fertility status of both parents */
-&lt;&lt;set _parent1Fertile to isCreatureFertile(_parent1, $currentDay)&gt;&gt;
-&lt;&lt;set _parent2Fertile to isCreatureFertile(_parent2, $currentDay)&gt;&gt;
+&lt;&lt;set _parent1Fertile to isCreatureFertile(_parent1)&gt;&gt;
+&lt;&lt;set _parent2Fertile to isCreatureFertile(_parent2)&gt;&gt;
 
 /* Determine breeding success and egg count based on fertility */
 &lt;&lt;if _parent1Fertile &amp;&amp; _parent2Fertile&gt;&gt;
@@ -9258,8 +9260,8 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;p class=&quot;warning&quot;&gt;No adult male creatures available for breeding.&lt;/p&gt;
     &lt;&lt;else&gt;&gt;
       &lt;&lt;for _i to 0; _i &lt; _maleCreatures.length; _i++&gt;&gt;
+      &lt;&lt;set _c to _maleCreatures[_i]&gt;&gt;
         &lt;&lt;capture _i, _c&gt;&gt;
-          &lt;&lt;set _c to _maleCreatures[_i]&gt;&gt;
           &lt;&lt;set _template to setup.creatureTemplates[_c.name]&gt;&gt;
           &lt;&lt;set _gender to _c.gender.toLowerCase()&gt;&gt;
           
@@ -9338,8 +9340,8 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;p class=&quot;warning&quot;&gt;No adult female creatures available for breeding.&lt;/p&gt;
     &lt;&lt;else&gt;&gt;
       &lt;&lt;for _j to 0; _j &lt; _femaleCreatures.length; _j++&gt;&gt;
+      &lt;&lt;set _c to _femaleCreatures[_j]&gt;&gt;
         &lt;&lt;capture _j, _c&gt;&gt;
-          &lt;&lt;set _c to _femaleCreatures[_j]&gt;&gt;
           &lt;&lt;set _template to setup.creatureTemplates[_c.name]&gt;&gt;
           &lt;&lt;set _gender to _c.gender.toLowerCase()&gt;&gt;
           
@@ -9372,7 +9374,7 @@ window.pullMimikinByRarity = function(rarity) {
             
             &lt;div class=&quot;creature-info&quot;&gt;
               &lt;strong&gt;_c.name&lt;/strong&gt; (♀)
-              &lt;&lt;if isCreatureFertile(_c, $currentDay)&gt;&gt;
+              &lt;&lt;if isCreatureFertile(_c)&gt;&gt;
               &lt;br&gt;
   &lt;span style=&quot;color: var(--coral); font-size: 1.2em;&quot;&gt;✨Fertile✨&lt;/span&gt;
 &lt;&lt;/if&gt;&gt;&lt;br&gt;
@@ -10174,8 +10176,8 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
     &lt;&lt;elseif _itemToUse.id === &quot;ScrollFertility&quot;&gt;&gt;
       &lt;&lt;capture _i, _itemToUse&gt;&gt;
         &lt;&lt;link &quot;Use&quot;&gt;&gt;
-          &lt;&lt;run _creature.fertilityOffset = Date.now()&gt;&gt;
-          &lt;&lt;set $inventory.ScrollFertility -= 1&gt;&gt;
+  &lt;&lt;run $playerCreatures[_i].fertilityOffset = Date.now()&gt;&gt;
+  &lt;&lt;set $inventory.ScrollFertility -= 1&gt;&gt;
           &lt;&lt;set _resultMessage = `Used Scroll of Fertility on ${_creature.name}! They are now fertile for the next 3 days.`&gt;&gt;
           &lt;&lt;replace &quot;#creature-select-modal&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
           &lt;&lt;replace &quot;#inventory-items&quot;&gt;&gt;&lt;&lt;include &quot;InventoryItemDisplay&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;
@@ -12573,21 +12575,21 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
     large: &quot;https://i.imgur.com/idrBn5N.png&quot;
     },
     babySpriteSheets: {
-    small: &quot;https://i.imgur.com/gh5YEjh.png&quot;,
-    medium: &quot;https://i.imgur.com/B6WO2bm.png&quot;,
-    large: &quot;https://i.imgur.com/KVeSUKe.png&quot;
+    small: &quot;https://i.imgur.com/pydO04l.png&quot;,
+    medium: &quot;https://i.imgur.com/4UqukjT.png&quot;,
+    large: &quot;https://i.imgur.com/5uYBnT2.png&quot;
     }
     },
     female: {
     patternSpriteSheets: {
-    small: &quot;https://i.imgur.com/lPYTn0U.png&quot;,
-    medium: &quot;https://i.imgur.com/isgtykc.png&quot;,
-    large: &quot;https://i.imgur.com/At1cocH.png&quot;
+    small: &quot;https://i.imgur.com/MplrXpf.png&quot;,
+    medium: &quot;https://i.imgur.com/DCzjsyX.png&quot;,
+    large: &quot;https://i.imgur.com/nhlXUEV.png&quot;
     },
     babySpriteSheets: {
-    small: &quot;https://i.imgur.com/gh5YEjh.png&quot;,
-    medium: &quot;https://i.imgur.com/B6WO2bm.png&quot;,
-    large: &quot;https://i.imgur.com/KVeSUKe.png&quot;
+    small: &quot;https://i.imgur.com/QfcTgsT.png&quot;,
+    medium: &quot;https://i.imgur.com/HW3YS0k.png&quot;,
+    large: &quot;https://i.imgur.com/DQIc15J.png&quot;
     }
     }
     },
@@ -12618,7 +12620,10 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
    beige: 1,
    tan: 2,
    black: 3,
-   white: 4
+   white: 4,
+   red: 5,
+   pink: 6,
+   blue: 7
    },
 silhouettes: {
     male: {
