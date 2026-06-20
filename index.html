@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -8640,6 +8634,12 @@ window.pullMimikinByRarity = function(rarity) {
   &lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
 
+/* ── DEBUG CODE ── */
+
+&lt;&lt;for _creature range $playerCreatures&gt;&gt;
+    &lt;&lt;= _creature.name&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+
 /* ── FEATURED CRITTER ── */
 &lt;&lt;if ndef $featuredCreatureIndex&gt;&gt;&lt;&lt;set $featuredCreatureIndex = -1&gt;&gt;&lt;&lt;/if&gt;&gt;
 &lt;&lt;set _featuredIndex = -1&gt;&gt;
@@ -10819,6 +10819,8 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="16" name="ViewAdults" tags="" position="1200,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
+
+
 &lt;&lt;if not $filter&gt;&gt;
   &lt;&lt;set $filter to {
     open:    false,
@@ -10844,7 +10846,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;for _i = 0; _i &lt; _adults.length; _i++&gt;&gt;
   &lt;&lt;set _a    to _adults[_i]&gt;&gt;
   &lt;&lt;set _tmpl to setup.creatureTemplates[_a.name]&gt;&gt;
-  &lt;&lt;set _sp   to (_tmpl.species ? _tmpl.species : _a.name)&gt;&gt;
+  &lt;&lt;set _sp   to (_tmpl.species ? _tmpl.species : _a.species)&gt;&gt;
   &lt;&lt;if not _optSpecies.includes(_sp)&gt;&gt;            &lt;&lt;run _optSpecies.push(_sp)&gt;&gt;             &lt;&lt;/if&gt;&gt;
   &lt;&lt;if not _optGender.includes(_a.gender)&gt;&gt;       &lt;&lt;run _optGender.push(_a.gender)&gt;&gt;        &lt;&lt;/if&gt;&gt;
   &lt;&lt;if not _optSize.includes(_a.displayTraits.size)&gt;&gt;       &lt;&lt;run _optSize.push(_a.displayTraits.size)&gt;&gt;       &lt;&lt;/if&gt;&gt;
@@ -10857,7 +10859,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _filtered to _adults.filter(function(a) {
   var tmpl    = setup.creatureTemplates[a.name];
   var rawName = (a.petName ? a.petName : a.name).toLowerCase();
-  var sp      = (tmpl.species ? tmpl.species : a.name).toLowerCase();
+  var sp      = (tmpl.species ? tmpl.species : a.species).toLowerCase();
 
   if (_searchLower !== &quot;&quot; &amp;&amp; rawName.indexOf(_searchLower) === -1 &amp;&amp; sp.indexOf(_searchLower) === -1) return false;
   if ($filter.species.length &gt; 0 &amp;&amp; !$filter.species.includes(sp))                      return false;
