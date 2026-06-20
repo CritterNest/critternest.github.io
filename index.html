@@ -2,12 +2,6 @@
 <html data-init="no-js">
 <head>
 <meta charset="UTF-8" />
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CritterNest">
-<link rel="apple-touch-icon" href="appicon.png">
-<link rel="shortcut icon" type="image/x-icon" href="cnicon.ico?">
 <title>CritterNest v3</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
@@ -2959,6 +2953,10 @@ background-color: var(--paleyellow); border: 4px solid var(--tangerine); padding
   align-items: center;
   gap: 8px;
     position: relative;
+        image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 .view-grid-card:hover,
@@ -6081,6 +6079,181 @@ font-family: 'Hachi Maru Pop', cursive;
 .gogogacha-links a:hover {
   color: var(--coral);
   text-decoration: none;
+}
+
+/* ==============================================
+   LINEAGE PASSAGE
+   ============================================== */
+
+/* Viewed creature at top */
+.lineage-subject {
+  text-align: center;
+  margin-bottom: 20px;
+  image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  background: var(--paleyellow);
+  border-radius: 16px;
+  padding-top: 15px;
+}
+
+.lineage-subject-name {
+  font-family: 'Chewy', cursive;
+  font-size: 1.4em;
+  color: var(--coral);
+  margin-top: 5px;
+}
+
+.lineage-subject-species {
+  font-size: 0.85em;
+  color: var(--mid-text);
+}
+
+/* Tabs */
+.lineage-tabs {
+  display: flex;
+  gap: 0.5em;
+  margin-bottom: 1.2em;
+}
+
+.lineage-tabs a {
+  flex: 1;
+  text-align: center;
+  padding: 0.5em 0;
+  border-radius: 10px;
+  background-color: var(--lightpeach);
+  border: 2px solid var(--tangerine);
+  color: var(--mid-text);
+  font-family: 'Chewy', cursive;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.lineage-tabs a:hover {
+  background-color: var(--peach);
+  color: var(--dark-text);
+}
+
+/* Tree container */
+.lineage-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+/* Generation label */
+.lineage-gen-label {
+  font-family: 'Chewy', cursive;
+  font-size: 1.1em;
+  color: var(--coralorange);
+  text-align: center;
+  border-bottom: 2px dashed var(--lighttangerine);
+  padding-bottom: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+/* Row of nodes */
+.lineage-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6em;
+}
+
+/* Individual node */
+.lineage-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--paleyellow);
+  border: 2px solid var(--tangerine);
+  border-radius: 12px;
+  padding: 0;
+  min-width: 190px;
+  max-width: 190px;
+  text-align: center;
+    justify-content: center;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.lineage-node .creature-layers {
+  image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  margin-bottom: calc(-65% + 8px);
+}
+
+.lineage-node--live {
+  border-color: var(--coral);
+  background-color: var(--lightyellow);
+}
+
+.lineage-node--dead {
+  border-color: var(--brown);
+  background-color: #f5ead8;
+  opacity: 0.85;
+}
+
+.lineage-node--gone {
+  border-color: var(--tangerine);
+  background-color: var(--lightpeach);
+  opacity: 0.75;
+}
+
+.lineage-node--unknown {
+  border-color: #ccc;
+  background-color: #f5f5f5;
+  opacity: 0.5;
+}
+
+/* Node name */
+.lineage-node-name {
+  font-family: 'Chewy', cursive;
+  font-size: 0.9em;
+  color: var(--dark-text);
+  word-break: break-word;
+}
+
+.lineage-node-name a {
+  color: var(--coral);
+  text-decoration: none;
+}
+
+.lineage-node-name a:hover {
+  color: var(--darkcoral);
+  text-decoration: underline;
+}
+
+/* Node species */
+.lineage-node-species {
+  font-size: 0.75em;
+  color: var(--mid-text);
+  font-style: italic;
+}
+
+/* Silhouette */
+.lineage-silhouette {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Status icons */
+.lineage-status {
+  font-size: 0.85em;
+}
+
+/* Empty state */
+.lineage-empty {
+  text-align: center;
+  color: var(--mid-text);
+  font-style: italic;
+  padding: 1.5em 0;
+  font-size: 0.95em;
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">$(document).one(':storyready', function() {
     Config.saves.maxAutoSaves = 1;
     Config.saves.isAllowed = function() { return true; };
@@ -6125,6 +6298,7 @@ window.getBlendedSize = function(allele1, allele2, sizeScale) {
    const position2 = sizeScale.indexOf(allele2);
    return sizeScale[Math.round((position1 + position2) / 2)];
 };
+
 
 setup.globalColors = ["brown", "black", "beige", "white"];
 
@@ -6223,6 +6397,62 @@ window.sanitizeColorAllele = function(allele, chosenTemplate, parentTemplate) {
     return { allele: chosenTemplate.colorDominance[0], wasExotic: false };
 };
 
+window.getGrandparentIds = function(creature, allCreatures) {
+    if (!creature.parents) return [];
+    const ids = [];
+    const mother = allCreatures.find(c => c.id === creature.parents.motherId);
+    const father = allCreatures.find(c => c.id === creature.parents.fatherId);
+    if (mother && mother.parents) {
+        if (mother.parents.motherId) ids.push(mother.parents.motherId);
+        if (mother.parents.fatherId) ids.push(mother.parents.fatherId);
+    }
+    if (father && father.parents) {
+        if (father.parents.motherId) ids.push(father.parents.motherId);
+        if (father.parents.fatherId) ids.push(father.parents.fatherId);
+    }
+    return ids;
+};
+
+
+
+window.checkInbreeding = function(creature1, creature2, allCreatures) {
+    
+    const c1ParentIds = [creature1.parents?.motherId, creature1.parents?.fatherId].filter(Boolean);
+    const c2ParentIds = [creature2.parents?.motherId, creature2.parents?.fatherId].filter(Boolean);
+
+    const sharedParent = c1ParentIds.some(id => c2ParentIds.includes(id));
+    if (sharedParent) return "siblings";
+
+    const creature1IsParentOfCreature2 = c2ParentIds.includes(creature1.id);
+    const creature2IsParentOfCreature1 = c1ParentIds.includes(creature2.id);
+    if (creature1IsParentOfCreature2 || creature2IsParentOfCreature1) return "parent-child";
+
+    const c1GrandparentIds = getGrandparentIds(creature1, allCreatures);
+    const c2GrandparentIds = getGrandparentIds(creature2, allCreatures);
+
+    if (c1GrandparentIds.includes(creature2.id) || c2GrandparentIds.includes(creature1.id)) return "grandparent-grandchild";
+
+    const sharedGrandparent = c1GrandparentIds.some(id => c2GrandparentIds.includes(id));
+    if (sharedGrandparent) return "cousins";
+
+    const c1ParentIsC2Grandparent = c1ParentIds.some(id => c2GrandparentIds.includes(id));
+    const c2ParentIsC1Grandparent = c2ParentIds.some(id => c1GrandparentIds.includes(id));
+    if (c1ParentIsC2Grandparent || c2ParentIsC1Grandparent) return "aunt-nephew";
+
+    return null;
+};
+
+window.getInbreedingMessage = function(relationship) {
+    switch(relationship) {
+        case "siblings": return "These creatures are siblings.";
+        case "parent-child": return "One of these creatures is the parent of the other.";
+        case "grandparent-grandchild": return "One of these creatures is the grandparent of the other.";
+        case "cousins": return "These creatures share a grandparent.";
+        case "aunt-nephew": return "One of these creatures is the aunt/uncle of the other.";
+        default: return null;
+    }
+};
+
 // Fertility
 window.getFertilityCycleLength = function(rarity) {
     const cycleLengths = {
@@ -6232,6 +6462,12 @@ window.getFertilityCycleLength = function(rarity) {
         "Legendary": 14 * 24 * 60 * 60 * 1000  // not yet implemented
     };
     return cycleLengths[rarity] || cycleLengths["Common"];
+};
+
+window.ensureSpeciesGene = function(creature) {
+    if (!creature.genes.species) {
+        creature.genes.species = [creature.species, creature.species];
+    }
 };
 
 window.isCreatureFertile = function(creature) {
@@ -7694,6 +7930,32 @@ setup.checkDailyEscape = function() {
     }
 };
 
+// lineage stuff
+
+window.findCreatureAnywhere = function(id) {
+    const all = [
+        ...State.variables.playerCreatures,
+        ...(State.variables.deadCreatures || []),
+        ...(State.variables.escapedCreatures || []),
+        ...(State.variables.departedCreatures || [])
+    ];
+    return all.find(function(c) { return c.id === id; }) || null;
+};
+
+window.findCreatureIndexInPlayerCreatures = function(id) {
+    return State.variables.playerCreatures.findIndex(function(c) { return c.id === id; });
+};
+
+window.getDescendants = function(creatureId, allCreatures) {
+    var results = [];
+    allCreatures.forEach(function(c) {
+        if (c.parents && (c.parents.motherId === creatureId || c.parents.fatherId === creatureId)) {
+            results.push(c);
+        }
+    });
+    return results;
+};
+
 // collection menu record combo function
 
 setup.recordCombo = function(c) {
@@ -7850,8 +8112,16 @@ if (c.hungerCur >= c.hungerMax && c.careCur >= c.careMax) {
         for (var j = escaped.length - 1; j >= 0; j--) {
             var daysGone = State.variables.currentDay - escaped[j].escapeDay;
             var eName    = escaped[j].petName || escaped[j].name;
-            if (daysGone > 28) {
-                escaped.splice(j, 1);
+            if (daysGone > 3) {
+                State.variables.departedCreatures.push({
+    id: escaped[j].id,
+    name: escaped[j].petName || escaped[j].species,
+    species: escaped[j].species,
+    gender: escaped[j].gender,
+    parents: escaped[j].parents,
+    reason: "lost"
+});
+escaped.splice(j, 1);
                 State.variables.notificationQueue.push({
                     icon: "💔",
                     title: "Lost Forever",
@@ -8379,11 +8649,9 @@ window.pullMimikinByRarity = function(rarity) {
 &lt;&lt;if _featuredIndex &gt;= 0&gt;&gt;
   &lt;&lt;set _fc = $playerCreatures[_featuredIndex]&gt;&gt;
   &lt;&lt;set _fcName = (ndef _fc.petName || _fc.petName === &quot;&quot;) ? _fc.name : _fc.petName&gt;&gt;
-&lt;&lt;if _fc.stage === &quot;baby&quot;&gt;&gt;
-  &lt;&lt;set _fcTemplate = setup.creatureTemplates[_fc.speciesName]&gt;&gt;
-&lt;&lt;else&gt;&gt;
+  
   &lt;&lt;set _fcTemplate = setup.creatureTemplates[_fc.species]&gt;&gt;
-&lt;&lt;/if&gt;&gt;
+  
   &lt;&lt;set _fcSize = _fc.displayTraits.size&gt;&gt;
   &lt;&lt;set _fcColor = _fc.displayTraits.color&gt;&gt;
   &lt;&lt;set _fcPattern = _fc.displayTraits.pattern&gt;&gt;
@@ -8683,26 +8951,58 @@ window.pullMimikinByRarity = function(rarity) {
 
 &lt;&lt;set $lastBreedingResults to []&gt;&gt;
 &lt;&lt;set $breedingSuccessful to _breedingSuccess&gt;&gt;
+&lt;&lt;set $inbreedingPenalty to checkInbreeding(_parent1, _parent2, $playerCreatures) !== null&gt;&gt;
 &lt;&lt;set $bothParentsFertile to (_parent1Fertile &amp;&amp; _parent2Fertile)&gt;&gt;
 &lt;&lt;set $oneParentFertile to ((_parent1Fertile || _parent2Fertile) &amp;&amp; !(_parent1Fertile &amp;&amp; _parent2Fertile))&gt;&gt;
 
 &lt;&lt;if _breedingSuccess&gt;&gt;
    &lt;&lt;for _e to 0; _e &lt; _numEggs; _e++&gt;&gt;
-      /* Choose species based on rarity weights */
-      &lt;&lt;set _template1 to setup.creatureTemplates[_parent1.name]&gt;&gt;
-      &lt;&lt;set _template2 to setup.creatureTemplates[_parent2.name]&gt;&gt;
-      
-      &lt;&lt;set _weight1 to setup.rarityWeights[_template1.rarity]&gt;&gt;
-      &lt;&lt;set _weight2 to setup.rarityWeights[_template2.rarity]&gt;&gt;
-      &lt;&lt;set _totalWeight to _weight1 + _weight2&gt;&gt;
-      
-      &lt;&lt;set _roll to random(1, _totalWeight)&gt;&gt;
-      &lt;&lt;if _roll &lt;= _weight1&gt;&gt;
-         &lt;&lt;set _chosenSpecies to _parent1.name&gt;&gt;
+      /* Inherit species alleles from parents */
+
+&lt;&lt;set _template1 to setup.creatureTemplates[_parent1.name]&gt;&gt;
+&lt;&lt;set _template2 to setup.creatureTemplates[_parent2.name]&gt;&gt;
+
+/* Each parent contributes their dominant allele as primary, recessive as secondary */
+&lt;&lt;set _parent1DominantSpecies to _parent1.genes.species[0]&gt;&gt;
+&lt;&lt;set _parent1RecessiveSpecies to _parent1.genes.species[1]&gt;&gt;
+&lt;&lt;set _parent2DominantSpecies to _parent2.genes.species[0]&gt;&gt;
+&lt;&lt;set _parent2RecessiveSpecies to _parent2.genes.species[1]&gt;&gt;
+
+/* Each parent randomly passes either their dominant or recessive allele */
+&lt;&lt;set _inheritedFromParent1 to random(1, 100) &lt;= 50 ? _parent1DominantSpecies : _parent1RecessiveSpecies&gt;&gt;
+&lt;&lt;set _inheritedFromParent2 to random(1, 100) &lt;= 50 ? _parent2DominantSpecies : _parent2RecessiveSpecies&gt;&gt;
+
+/* If both parents passed the same allele, it&#39;s homozygous */
+&lt;&lt;if _inheritedFromParent1 === _inheritedFromParent2&gt;&gt;
+   &lt;&lt;set _speciesGene1 to _inheritedFromParent1&gt;&gt;
+   &lt;&lt;set _speciesGene2 to _inheritedFromParent1&gt;&gt;
+&lt;&lt;else&gt;&gt;
+   /* Determine which is dominant based on rarity */
+   &lt;&lt;set _inheritedWeight1 to setup.rarityWeights[setup.creatureTemplates[_inheritedFromParent1].rarity]&gt;&gt;
+   &lt;&lt;set _inheritedWeight2 to setup.rarityWeights[setup.creatureTemplates[_inheritedFromParent2].rarity]&gt;&gt;
+   &lt;&lt;if _inheritedWeight1 &gt; _inheritedWeight2&gt;&gt;
+      /* Parent1&#39;s allele is more common, so it&#39;s dominant */
+      &lt;&lt;set _speciesGene1 to _inheritedFromParent1&gt;&gt;
+      &lt;&lt;set _speciesGene2 to _inheritedFromParent2&gt;&gt;
+   &lt;&lt;elseif _inheritedWeight2 &gt; _inheritedWeight1&gt;&gt;
+      /* Parent2&#39;s allele is more common, so it&#39;s dominant */
+      &lt;&lt;set _speciesGene1 to _inheritedFromParent2&gt;&gt;
+      &lt;&lt;set _speciesGene2 to _inheritedFromParent1&gt;&gt;
+   &lt;&lt;else&gt;&gt;
+      /* Same rarity — coin flip for dominant */
+      &lt;&lt;if random(1, 100) &lt;= 50&gt;&gt;
+         &lt;&lt;set _speciesGene1 to _inheritedFromParent1&gt;&gt;
+         &lt;&lt;set _speciesGene2 to _inheritedFromParent2&gt;&gt;
       &lt;&lt;else&gt;&gt;
-         &lt;&lt;set _chosenSpecies to _parent2.name&gt;&gt;
+         &lt;&lt;set _speciesGene1 to _inheritedFromParent2&gt;&gt;
+         &lt;&lt;set _speciesGene2 to _inheritedFromParent1&gt;&gt;
       &lt;&lt;/if&gt;&gt;
-      &lt;&lt;set _chosenTemplate to setup.creatureTemplates[_chosenSpecies]&gt;&gt;
+   &lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+/* Expressed species is always slot 0 */
+&lt;&lt;set _chosenSpecies to _speciesGene1&gt;&gt;
+&lt;&lt;set _chosenTemplate to setup.creatureTemplates[_chosenSpecies]&gt;&gt;
 
       /* Inherit genes from parents */
       &lt;&lt;set _colorGene1 = either(_parent1.genes.color[0], _parent1.genes.color[1])&gt;&gt;
@@ -8718,8 +9018,8 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;&lt;set _template1 to setup.creatureTemplates[_parent1.name]&gt;&gt;
       &lt;&lt;set _template2 to setup.creatureTemplates[_parent2.name]&gt;&gt;
 
-      &lt;&lt;set _sanitized1 to sanitizeColorAllele(_colorGene1, _chosenTemplate, _parent1.name === _chosenSpecies ? null : _template1)&gt;&gt;
-      &lt;&lt;set _sanitized2 to sanitizeColorAllele(_colorGene2, _chosenTemplate, _parent2.name === _chosenSpecies ? null : _template2)&gt;&gt;
+      &lt;&lt;set _sanitized1 to sanitizeColorAllele(_colorGene1, _chosenTemplate, _parent1.species === _chosenSpecies ? null : _template1)&gt;&gt;
+&lt;&lt;set _sanitized2 to sanitizeColorAllele(_colorGene2, _chosenTemplate, _parent2.species === _chosenSpecies ? null : _template2)&gt;&gt;
 
       &lt;&lt;set _colorGene1 to _sanitized1.allele&gt;&gt;
       &lt;&lt;set _colorGene2 to _sanitized2.allele&gt;&gt;
@@ -8763,10 +9063,13 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;&lt;set _displayColor to getDisplayedTrait(_colorGene1, _colorGene2, _chosenTemplate.colorDominance, _mutated.includes(&quot;color&quot;))&gt;&gt;
       &lt;&lt;set _displayPattern to getDisplayedTrait(_patternGene1, _patternGene2, _chosenTemplate.patternDominance)&gt;&gt;
       &lt;&lt;set _displaySize to getBlendedSize(_sizeGene1, _sizeGene2, _chosenTemplate.possibleSizes)&gt;&gt;
+      
+      &lt;&lt;set _mother to _parent1.gender === &quot;Female&quot; ? _parent1 : _parent2&gt;&gt;
+&lt;&lt;set _father to _parent1.gender === &quot;Male&quot; ? _parent1 : _parent2&gt;&gt;
 
       /* Create egg */
       &lt;&lt;set _newEgg to {
-         speciesName: _chosenSpecies,
+         species: _chosenSpecies,
          name: _chosenSpecies,
          id: random(100000, 999999),
          gender: either(&quot;Male&quot;, &quot;Female&quot;),
@@ -8774,17 +9077,34 @@ window.pullMimikinByRarity = function(rarity) {
          stage: &quot;egg&quot;,
          hatchSteps: $steps + setup.HATCH_STEPS[_chosenTemplate.rarity] || 500,
          generation: Math.max(_parent1.generation, _parent2.generation) + 1,
-         parents: {
-            motherId: _parent1.gender === &quot;Female&quot; ? _parent1.id : _parent2.id,
-            fatherId: _parent1.gender === &quot;Male&quot; ? _parent1.id : _parent2.id,
-            motherName: _parent1.gender === &quot;Female&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name),
-            fatherName: _parent1.gender === &quot;Male&quot; ? (_parent1.petName || _parent1.name) : (_parent2.petName || _parent2.name)
-         },
+parents: {
+   motherId: _mother.id,
+   fatherId: _father.id,
+   motherName: _mother.petName || _mother.species,
+   fatherName: _father.petName || _father.species,
+   motherSpecies: _mother.species,
+   fatherSpecies: _father.species
+},
+grandparents: {
+   maternalGrandmotherId: _mother.parents ? _mother.parents.motherId : null,
+   maternalGrandfatherId: _mother.parents ? _mother.parents.fatherId : null,
+   paternalGrandmotherId: _father.parents ? _father.parents.motherId : null,
+   paternalGrandfatherId: _father.parents ? _father.parents.fatherId : null,
+   maternalGrandmotherName: _mother.parents ? _mother.parents.motherName : null,
+   maternalGrandfatherName: _mother.parents ? _mother.parents.fatherName : null,
+   paternalGrandmotherName: _father.parents ? _father.parents.motherName : null,
+   paternalGrandfatherName: _father.parents ? _father.parents.fatherName : null,
+   maternalGrandmotherSpecies: (_mother.parents &amp;&amp; _mother.parents.motherSpecies) ? _mother.parents.motherSpecies : null,
+   maternalGrandfatherSpecies: (_mother.parents &amp;&amp; _mother.parents.fatherSpecies) ? _mother.parents.fatherSpecies : null,
+   paternalGrandmotherSpecies: (_father.parents &amp;&amp; _father.parents.motherSpecies) ? _father.parents.motherSpecies : null,
+   paternalGrandfatherSpecies: (_father.parents &amp;&amp; _father.parents.fatherSpecies) ? _father.parents.fatherSpecies : null
+},
          genes: {
-            color: [_colorGene1, _colorGene2],
-            pattern: [_patternGene1, _patternGene2],
-            size: [_sizeGene1, _sizeGene2]
-         },
+   color: [_colorGene1, _colorGene2],
+   pattern: [_patternGene1, _patternGene2],
+   size: [_sizeGene1, _sizeGene2],
+   species: [_speciesGene1, _speciesGene2]
+},
          displayTraits: {
             color: _displayColor,
             pattern: _displayPattern,
@@ -8795,7 +9115,7 @@ window.pullMimikinByRarity = function(rarity) {
          affectionCur: 70,
          affectionMax: 100,
          staminaCur: 3,
-         staminaMax: 3,
+         staminaMax: $inbreedingPenalty ? 2 : 3,
          type: _chosenTemplate.type,
          rarity: _chosenTemplate.rarity,
       }&gt;&gt;
@@ -8892,7 +9212,7 @@ window.pullMimikinByRarity = function(rarity) {
           &lt;div class=&quot;egg-placeholder&quot; @style=&quot;&#39;font-size: &#39; + (_size === &#39;large&#39; ? &#39;120px&#39; : _size === &#39;medium&#39; ? &#39;80px&#39; : &#39;60px&#39;)&quot;&gt;🥚&lt;/div&gt;
 
         &lt;&lt;elseif _creature.stage === &quot;baby&quot;&gt;&gt;
-          &lt;&lt;set _template to setup.creatureTemplates[_creature.speciesName]&gt;&gt;
+          &lt;&lt;set _template to setup.creatureTemplates[_creature.species]&gt;&gt;
           &lt;&lt;set _color to _creature.displayTraits.color&gt;&gt;
           &lt;&lt;if _template.babySpriteColumns[_color] !== undefined&gt;&gt;
             &lt;&lt;set _col to _template.babySpriteColumns[_color]&gt;&gt;
@@ -9065,6 +9385,14 @@ window.pullMimikinByRarity = function(rarity) {
   &lt;&lt;else&gt;&gt;
     &lt;div class=&quot;column&quot;&gt;
       &lt;div class=&quot;trait-display&quot;&gt;
+      
+      &lt;&lt;link &quot;View Family Tree&quot;&gt;&gt;
+      
+      &lt;&lt;set $lineageCreatureId to _creature.id&gt;&gt;
+      
+      &lt;&lt;goto &quot;CreatureLineage&quot;&gt;&gt;
+      
+      &lt;&lt;/link&gt;&gt;
 
         &lt;div class=&quot;trait-row&quot;&gt;
           &lt;span class=&quot;trait-label&quot;&gt;Color:&lt;/span&gt;
@@ -9111,6 +9439,21 @@ window.pullMimikinByRarity = function(rarity) {
             &lt;&lt;/if&gt;&gt;
           &lt;/div&gt;
         &lt;/div&gt;
+        
+                &lt;div class=&quot;trait-row&quot;&gt;
+  &lt;span class=&quot;trait-label&quot;&gt;Species:&lt;/span&gt;
+  &lt;div class=&quot;gene-pair&quot;&gt;
+    &lt;&lt;if _creature.geneticTestingDone&gt;&gt;
+  &lt;&lt;set _speciesGene1 to _creature.genes.species[0]&gt;&gt;
+  &lt;&lt;set _speciesGene2 to _creature.genes.species[1]&gt;&gt;
+  &lt;span class=&quot;gene-box&quot; data-dominant=&quot;true&quot;&gt;_speciesGene1&lt;/span&gt;
+  &lt;span class=&quot;gene-box&quot; data-dominant=&quot;false&quot;&gt;_speciesGene2&lt;/span&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;span class=&quot;gene-box size-gene&quot;&gt;_creature.species&lt;/span&gt;
+  &lt;span class=&quot;gene-box-hidden&quot;&gt;?&lt;/span&gt;
+&lt;&lt;/if&gt;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
         &lt;&lt;if !_creature.geneticTestingDone&gt;&gt;
           &lt;div class=&quot;genetic-testing&quot;&gt;Unlock full genetics at vet&lt;/div&gt;
@@ -9224,6 +9567,7 @@ window.pullMimikinByRarity = function(rarity) {
 &lt;&lt;/if&gt;&gt;
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Breeding" tags="" position="1100,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;run $playerCreatures.forEach(function(c) { ensureSpeciesGene(c); })&gt;&gt;
 &lt;&lt;set _availableEggSlots to $maxEggSlots - setup.countEggs()&gt;&gt;
 &lt;&lt;if _availableEggSlots &lt;= 0&gt;&gt;
   &lt;h2&gt;Creature Breeding&lt;/h2&gt;
@@ -9443,9 +9787,16 @@ window.pullMimikinByRarity = function(rarity) {
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
   
-  &lt;div class=&quot;breeding-confirm&quot;&gt;
-    &lt;h3&gt;Ready to Breed!&lt;/h3&gt;
-    &lt;p&gt;&lt;strong&gt;Parents:&lt;/strong&gt; _selectedMale.name (♂) + _selectedFemale.name (♀)&lt;/p&gt;
+  &lt;&lt;set _inbreedingRelationship to checkInbreeding(_selectedMale, _selectedFemale, $playerCreatures)&gt;&gt;
+
+&lt;div class=&quot;breeding-confirm &lt;&lt;if _inbreedingRelationship&gt;&gt;breeding-warning&lt;&lt;/if&gt;&gt;&quot;&gt;
+    &lt;&lt;if _inbreedingRelationship&gt;&gt;
+        &lt;h3&gt;⚠️ Warning! ⚠️&lt;/h3&gt;
+        &lt;p class=&quot;warning&quot;&gt;&lt;&lt;= getInbreedingMessage(_inbreedingRelationship) &gt;&gt; Offspring will have a reduced stamina max of 2.&lt;/p&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;h3&gt;Ready to Breed!&lt;/h3&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;p&gt;&lt;strong&gt;Parents:&lt;/strong&gt; _selectedMale.species (♂) + _selectedFemale.species (♀)&lt;/p&gt;
     &lt;p&gt;&lt;strong&gt;Possible Species:&lt;/strong&gt; _selectedMale.name (_selectedMale.rarity) or _selectedFemale.name (_selectedFemale.rarity)&lt;/p&gt;
     &lt;p class=&quot;info&quot;&gt;More common species have higher chance of being selected. Will produce 1-4 eggs.&lt;/p&gt;
     
@@ -9491,7 +9842,7 @@ window.pullMimikinByRarity = function(rarity) {
       &lt;&lt;set _egg to $lastBreedingResults[_i]&gt;&gt;
       &lt;div class=&quot;egg-result&quot;&gt;
          &lt;strong&gt;Egg #&lt;&lt;print _i + 1&gt;&gt;&lt;/strong&gt;&lt;br&gt;
-         Species: _egg.speciesName (_egg.rarity)&lt;br&gt;
+         Species: _egg.species (_egg.rarity)&lt;br&gt;
          Gender: _egg.gender&lt;br&gt;
          Generation: _egg.generation&lt;br&gt;
          Will hatch in: &lt;&lt;print Math.max(0, _egg.hatchSteps - $steps)&gt;&gt; steps&lt;br&gt;
@@ -9547,7 +9898,7 @@ window.pullMimikinByRarity = function(rarity) {
               &lt;&lt;/link&gt;&gt;
             &lt;&lt;/capture&gt;&gt;
             &lt;div style=&quot;font-size: 3em; line-height: 1;&quot;&gt;🥚&lt;/div&gt;
-            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _egg.speciesName&gt;&gt; Egg&lt;/div&gt;
+            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _egg.species&gt;&gt; Egg&lt;/div&gt;
             &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= Math.max(0, _egg.hatchSteps - $steps)&gt;&gt; steps left&lt;/div&gt;
           &lt;/div&gt;
           &lt;&lt;capture _egg&gt;&gt;
@@ -9859,7 +10210,9 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
 &lt;&lt;set _purchasedCreature.displayTraits = {
    color: getDisplayedTrait(_purchasedCreature.genes.color[0], _purchasedCreature.genes.color[1], _purchasedCreature.colorDominance),
    pattern: getDisplayedTrait(_purchasedCreature.genes.pattern[0], _purchasedCreature.genes.pattern[1], _purchasedCreature.patternDominance),
-   size: getBlendedSize(_purchasedCreature.genes.size[0], _purchasedCreature.genes.size[1], _purchasedCreature.possibleSizes)
+   size: getBlendedSize(_purchasedCreature.genes.size[0], _purchasedCreature.genes.size[1], _purchasedCreature.possibleSizes),
+   species: [_purchasedCreature.species, _purchasedCreature.species]
+
 }&gt;&gt;
 &lt;&lt;run finalizeDisplayTraits(_purchasedCreature)&gt;&gt;
 &lt;&lt;if _purchasedCreature.displayTraits.size === &quot;large&quot;&gt;&gt;
@@ -10403,7 +10756,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
       &lt;&lt;for _i = 0; _i &lt; _babies.length; _i++&gt;&gt;
         &lt;&lt;capture _i&gt;&gt;
           &lt;&lt;set _baby = _babies[_i]&gt;&gt;
-          &lt;&lt;set _template to setup.creatureTemplates[_baby.speciesName]&gt;&gt;
+          &lt;&lt;set _template to setup.creatureTemplates[_baby.species]&gt;&gt;
           &lt;&lt;set _gender to _baby.gender.toLowerCase()&gt;&gt;
           &lt;&lt;set _size to _baby.displayTraits.size&gt;&gt;
           &lt;&lt;set _color to _baby.displayTraits.color&gt;&gt;
@@ -10438,7 +10791,7 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
                    @style=&quot;&#39;background-image: url(&#39; + _babySpriteSheet + &#39;); background-position: &#39; + _xPos + &#39;px 0px; width: &#39; + _dimensions + &#39;; height: &#39; + _dimensions + &#39;;&#39;&quot;&gt;
               &lt;/div&gt;
             &lt;/div&gt;
-            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _baby.speciesName&gt;&gt;&lt;&lt;if _baby.gender === &quot;Male&quot;&gt;&gt; ♂&lt;&lt;else&gt;&gt; ♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
+            &lt;div class=&quot;card-label&quot;&gt;&lt;&lt;= _baby.species&gt;&gt;&lt;&lt;if _baby.gender === &quot;Male&quot;&gt;&gt; ♂&lt;&lt;else&gt;&gt; ♀&lt;&lt;/if&gt;&gt;&lt;/div&gt;
             &lt;div class=&quot;card-sublabel&quot;&gt;&lt;&lt;= _baby.displayTraits.color&gt;&gt; · &lt;&lt;= _baby.displayTraits.size&gt;&gt;&lt;/div&gt;
           &lt;/div&gt;
           &lt;&lt;capture _baby&gt;&gt;
@@ -10856,6 +11209,14 @@ size: [_purchasedCreature.possibleSizes.random(), _purchasedCreature.possibleSiz
     
     &lt;&lt;set _creatureIndex to $playerCreatures.findIndex(function(c) {
       return c.id === $confirmSellCreature.id;
+    })&gt;&gt;
+    &lt;&lt;run $departedCreatures.push({
+        id: $confirmSellCreature.id,
+        name: $confirmSellCreature.petName || $confirmSellCreature.species,
+        species: $confirmSellCreature.species,
+        gender: $confirmSellCreature.gender,
+        parents: $confirmSellCreature.parents,
+        reason: &quot;sold&quot;
     })&gt;&gt;
     &lt;&lt;run $playerCreatures.splice(_creatureIndex, 1)&gt;&gt;
     
@@ -12200,7 +12561,7 @@ Reward: $&lt;&lt;print $viewingRequest.reward&gt;&gt;
   $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
 })&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="CreatureNameWidget" tags="widget" position="400,0" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="36" name="CreatureNameWidgets" tags="widget" position="400,0" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;creatureName&quot;&gt;&gt;
   &lt;&lt;set _creature to $args[0]&gt;&gt;
@@ -12807,9 +13168,9 @@ affectionMax: 100,
    beige: 2,
    black: 3,
    white: 4,
-   gray: 0,
-   candy: 5,
-   molten: 6
+   gray: 5,
+   candy: 6,
+   molten: 7
    },
   silhouettes: {
     male: {
@@ -13027,9 +13388,9 @@ affectionMax: 100,
     avatars: {
     male: {
     patternSpriteSheets: {
-    small: &quot;https://i.imgur.com/nwh4OXR.png&quot;,
-    medium: &quot;https://i.imgur.com/oHdgrol.png&quot;,
-    large: &quot;https://i.imgur.com/Y6FSOI8.png&quot;
+    small: &quot;https://i.imgur.com/tTdTWij.png&quot;,
+    medium: &quot;https://i.imgur.com/3qd4Ryf.png&quot;,
+    large: &quot;https://i.imgur.com/ZLLoDyz.png&quot;
     },
     babySpriteSheets: {
     small: &quot;https://i.imgur.com/oa2dKac.png&quot;,
@@ -13039,9 +13400,9 @@ affectionMax: 100,
     },
     female: {
     patternSpriteSheets: {
-    small: &quot;https://i.imgur.com/nwh4OXR.png&quot;,
-    medium: &quot;https://i.imgur.com/oHdgrol.png&quot;,
-    large: &quot;https://i.imgur.com/Y6FSOI8.png&quot;
+    small: &quot;https://i.imgur.com/o0cpko8.png&quot;,
+    medium: &quot;https://i.imgur.com/DnNrVCi.png&quot;,
+    large: &quot;https://i.imgur.com/n0q0U64.png&quot;
     },
     babySpriteSheets: {
     small: &quot;https://i.imgur.com/oa2dKac.png&quot;,
@@ -13069,8 +13430,8 @@ affectionMax: 100,
       white_solid: 15,
       white_stripes: 16,
       white_spots: 17,
-      pink_solid: 18,
-      red_solid: 19
+      y2k_solid: 18,
+      mystical_solid: 19
    },
    babySpriteColumns: {
    purple: 0,
@@ -13078,8 +13439,8 @@ affectionMax: 100,
    black: 2,
    brown: 3,
    white: 4,
-   pink: 6,
-   red: 7,
+   y2k: 6,
+   mystical: 7,
    },
 silhouettes: {
     male: {
@@ -13101,7 +13462,7 @@ affectionMax: 100,
     affectionCur: 30,
     fertility: 50,
     speciesColors: [&quot;purple&quot;, &quot;blue&quot;],
-    exoticColors: [&quot;pink&quot;, &quot;red&quot;],
+    exoticColors: [&quot;y2k&quot;, &quot;mystical&quot;],
     possiblePatterns: [&quot;solid&quot;, &quot;stripes&quot;, &quot;spots&quot;],
     possibleSizes: [&quot;small&quot;, &quot;medium&quot;, &quot;large&quot;],
     colorDominance: [&quot;purple&quot;, &quot;blue&quot;, &quot;black&quot;, &quot;brown&quot;, &quot;beige&quot;, &quot;white&quot;],
@@ -13570,15 +13931,17 @@ affectionMax: 100,
 &lt;&lt;set $eggSlotUpgradeCost to 200&gt;&gt;
 &lt;&lt;set $creaturesForSale to []&gt;&gt;
 &lt;&lt;set $pendingSales to []&gt;&gt;
-&lt;&lt;set $currentCreature = null&gt;&gt;
+&lt;&lt;set $departedCreatures to []&gt;&gt;
 &lt;&lt;set $escapedCreatures to []&gt;&gt;
 &lt;&lt;set $lastEscapeCheckDate to &quot;&quot;&gt;&gt;
 &lt;&lt;set $playerName to &quot;&quot;&gt;&gt;
 &lt;&lt;set $playerPronouns to &quot;&quot;&gt;&gt;
 &lt;&lt;set $breedingLicense to false&gt;&gt;
 &lt;&lt;set $playerBirthday to &quot;&quot;&gt;&gt;
-&lt;&lt;set $currentCreature = 0&gt;&gt;
+&lt;&lt;set $currentCreature to []&gt;&gt;
 &lt;&lt;set $activeSpecies to &quot;&quot;&gt;&gt;
+
+&lt;&lt;set $lineageTab to &quot;ancestors&quot;&gt;&gt;
 
 &lt;&lt;set _randomCreature1 to Object.values(setup.creatureTemplates).filter(function(c) { return c.rarity === &quot;Common&quot;; }).random()&gt;&gt;
 &lt;&lt;set $creature1 to clone(_randomCreature1)&gt;&gt;
@@ -13588,7 +13951,8 @@ affectionMax: 100,
 &lt;&lt;set $creature1.genes = {
 color: [_possibleColors.random(), _possibleColors.random()],
 pattern: [_randomCreature1.possiblePatterns.random(), _randomCreature1.possiblePatterns.random()],
-size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.random()]
+size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.random()],
+species: [_randomCreature1.species, _randomCreature1.species]
 }&gt;&gt;
 &lt;&lt;set $creature1.displayTraits to {
    color: getDisplayedTrait($creature1.genes.color[0], $creature1.genes.color[1], _randomCreature1.colorDominance),
@@ -13633,7 +13997,8 @@ size: [_randomCreature1.possibleSizes.random(), _randomCreature1.possibleSizes.r
 &lt;&lt;set $creature2.genes to {
 color: [_possibleColors.random(), _possibleColors.random()],
 pattern: [_randomCreature2.possiblePatterns.random(), _randomCreature2.possiblePatterns.random()],
-size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.random()]
+size: [_randomCreature2.possibleSizes.random(), _randomCreature2.possibleSizes.random()],
+species: [_randomCreature2.species, _randomCreature2.species]
 }&gt;&gt;
 &lt;&lt;set $creature2.displayTraits to {
    color: getDisplayedTrait($creature2.genes.color[0], $creature2.genes.color[1], _randomCreature2.colorDominance),
@@ -18439,7 +18804,7 @@ ERROR: Please finish filling out your personal info before continuing.
 
 &lt;&lt;set $hatchQueue to []&gt;&gt;
 
-&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="NotificationsWidget" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $notificationQueue to []&gt;&gt;</tw-passagedata><tw-passagedata pid="76" name="NotificationsWidgets" tags="widget" position="400,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 
 &lt;&lt;widget &quot;showHatchedEggs&quot;&gt;&gt;
 &lt;span id=&quot;hatch-wrapper&quot;&gt;
@@ -18543,11 +18908,9 @@ ERROR: Please finish filling out your personal info before continuing.
         &lt;&lt;for _j = 0; _j &lt; _nonEggs.length; _j++&gt;&gt;
           &lt;&lt;set _idx = _nonEggs[_j]&gt;&gt;
           &lt;&lt;set _creature = $playerCreatures[_idx]&gt;&gt;
-          &lt;&lt;if _creature.stage === &quot;baby&quot;&gt;&gt;
-  &lt;&lt;set _template = setup.creatureTemplates[_creature.speciesName]&gt;&gt;
-&lt;&lt;else&gt;&gt;
+          
   &lt;&lt;set _template = setup.creatureTemplates[_creature.species]&gt;&gt;
-&lt;&lt;/if&gt;&gt;
+
           &lt;&lt;set _size = _creature.displayTraits.size&gt;&gt;
           &lt;&lt;set _color = _creature.displayTraits.color&gt;&gt;
           &lt;&lt;set _pattern = _creature.displayTraits.pattern&gt;&gt;
@@ -18906,6 +19269,425 @@ ERROR: Please finish filling out your personal info before continuing.
 &lt;&lt;run $(document).one(&#39;:passageend&#39;, function() {
   $(&#39;#modal-bg&#39;).html(State.variables.modalBg);
 })&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="86" name="LineageWidgets" tags="widget" position="500,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+
+&lt;&lt;widget &quot;lineageNode&quot;&gt;&gt;
+&lt;&lt;set _nodeCreature to $args[0]&gt;&gt;
+&lt;&lt;set _nodeRole to $args[1]&gt;&gt;
+
+&lt;&lt;if _nodeCreature !== null&gt;&gt;
+   &lt;&lt;set _nodeTemplate to setup.creatureTemplates[_nodeCreature.species]&gt;&gt;
+   &lt;&lt;set _nodeLiveIndex to findCreatureIndexInPlayerCreatures(_nodeCreature.id)&gt;&gt;
+   &lt;&lt;set _nodeIsLive to _nodeLiveIndex &gt;= 0&gt;&gt;
+   &lt;&lt;set _nodeIsDead to false&gt;&gt;
+   &lt;&lt;for _di to 0; _di &lt; $deadCreatures.length; _di++&gt;&gt;
+      &lt;&lt;if $deadCreatures[_di].id === _nodeCreature.id&gt;&gt;
+         &lt;&lt;set _nodeIsDead to true&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+   &lt;&lt;/for&gt;&gt;
+
+   &lt;div class=&quot;lineage-node &lt;&lt;if _nodeIsLive&gt;&gt;lineage-node--live&lt;&lt;elseif _nodeIsDead&gt;&gt;lineage-node--dead&lt;&lt;else&gt;&gt;lineage-node--gone&lt;&lt;/if&gt;&gt;&quot;&gt;
+      &lt;&lt;if _nodeIsLive || _nodeIsDead&gt;&gt;
+   /* Show actual sprite */
+   &lt;&lt;if _nodeCreature.stage === &quot;egg&quot;&gt;&gt;
+      &lt;span style=&quot;font-size:2em;&quot;&gt;🥚&lt;/span&gt;
+   &lt;&lt;elseif _nodeCreature.stage === &quot;baby&quot;&gt;&gt;
+      &lt;&lt;set _nodeSize to _nodeCreature.displayTraits.size&gt;&gt;
+      &lt;&lt;set _nodeColor to _nodeCreature.displayTraits.color&gt;&gt;
+      &lt;&lt;set _nodeGender to _nodeCreature.gender.toLowerCase()&gt;&gt;
+      &lt;&lt;set _nodeCol to _nodeTemplate.babySpriteColumns[_nodeColor]&gt;&gt;
+      &lt;&lt;if _nodeCol === undefined&gt;&gt;
+         &lt;&lt;set _nodeCol to _nodeTemplate.babySpriteColumns[_nodeTemplate.colorDominance[0]]&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      &lt;&lt;set _nodeSpriteSheet to _nodeTemplate.avatars[_nodeGender].babySpriteSheets[_nodeSize]&gt;&gt;
+      &lt;&lt;if _nodeSize === &quot;large&quot;&gt;&gt;
+         &lt;&lt;set _nodeXPos to _nodeCol * -180&gt;&gt;&lt;&lt;set _nodeDim to &quot;180px&quot;&gt;&gt;
+      &lt;&lt;elseif _nodeSize === &quot;medium&quot;&gt;&gt;
+         &lt;&lt;set _nodeXPos to _nodeCol * -120&gt;&gt;&lt;&lt;set _nodeDim to &quot;120px&quot;&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+         &lt;&lt;set _nodeXPos to _nodeCol * -60&gt;&gt;&lt;&lt;set _nodeDim to &quot;60px&quot;&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _nodeDim + &#39;;height:&#39; + _nodeDim + &#39;;margin:0 auto;&#39;&quot;&gt;
+         &lt;div class=&quot;creature-sprite-pattern&quot;
+              @style=&quot;&#39;background-image:url(&#39; + _nodeSpriteSheet + &#39;);background-position:&#39; + _nodeXPos + &#39;px 0px;width:&#39; + _nodeDim + &#39;;height:&#39; + _nodeDim + &#39;;&#39;&quot;&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+   &lt;&lt;else&gt;&gt;
+      /* Adult sprite — existing code continues here unchanged */
+      &lt;&lt;set _nodeSize to _nodeCreature.displayTraits.size&gt;&gt;
+         &lt;&lt;set _nodeColor to _nodeCreature.displayTraits.color&gt;&gt;
+         &lt;&lt;set _nodePattern to _nodeCreature.displayTraits.pattern&gt;&gt;
+         &lt;&lt;set _nodeGender to _nodeCreature.gender.toLowerCase()&gt;&gt;
+         &lt;&lt;set _nodeColorPattern to setup.getSpriteKey(_nodeCreature.species, _nodeColor, _nodePattern)&gt;&gt;
+         &lt;&lt;set _nodeCol to _nodeTemplate.spriteColumns[_nodeColorPattern]&gt;&gt;
+         &lt;&lt;if _nodeCol === undefined&gt;&gt;
+            &lt;&lt;set _nodeCol to _nodeTemplate.spriteColumns[_nodeTemplate.colorDominance[0] + &quot;_&quot; + _nodeTemplate.patternDominance[0]]&gt;&gt;
+         &lt;&lt;/if&gt;&gt;
+         &lt;&lt;set _nodeSpriteSheet to _nodeTemplate.avatars[_nodeGender].patternSpriteSheets[_nodeSize]&gt;&gt;
+         &lt;&lt;if _nodeSize === &quot;large&quot;&gt;&gt;
+            &lt;&lt;set _nodeXPos to _nodeCol * -240&gt;&gt;&lt;&lt;set _nodeDim to &quot;240px&quot;&gt;&gt;
+         &lt;&lt;elseif _nodeSize === &quot;medium&quot;&gt;&gt;
+            &lt;&lt;set _nodeXPos to _nodeCol * -160&gt;&gt;&lt;&lt;set _nodeDim to &quot;160px&quot;&gt;&gt;
+         &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _nodeXPos to _nodeCol * -80&gt;&gt;&lt;&lt;set _nodeDim to &quot;80px&quot;&gt;&gt;
+         &lt;&lt;/if&gt;&gt;
+         &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _nodeDim + &#39;;height:&#39; + _nodeDim + &#39;;margin:0 auto;&#39;&quot;&gt;
+            &lt;div class=&quot;creature-sprite-pattern&quot;
+                 @style=&quot;&#39;background-image:url(&#39; + _nodeSpriteSheet + &#39;);background-position:&#39; + _nodeXPos + &#39;px 0px;width:&#39; + _nodeDim + &#39;;height:&#39; + _nodeDim + &#39;;&#39;&quot;&gt;
+            &lt;/div&gt;
+         &lt;/div&gt;
+         &lt;&lt;/if&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+         /* Show silhouette for sold/lost */
+         &lt;&lt;set _nodeGender to _nodeRole === &quot;mother&quot; ? &quot;female&quot; : &quot;male&quot;&gt;&gt;
+         &lt;&lt;set _nodeSilhouette to _nodeTemplate.silhouettes[_nodeGender].small&gt;&gt;
+         &lt;div class=&quot;lineage-silhouette&quot;&gt;
+            &lt;img @src=&quot;_nodeSilhouette&quot; style=&quot;width:80px;height:80px;opacity:0.6;&quot;&gt;
+         &lt;/div&gt;
+      &lt;&lt;/if&gt;&gt;
+
+      &lt;div class=&quot;lineage-node-name&quot;&gt;
+         &lt;&lt;if _nodeIsLive&gt;&gt;
+            &lt;&lt;set _nodeName to _nodeCreature.petName || _nodeCreature.species&gt;&gt;
+&lt;&lt;set _nodeId to _nodeCreature.id&gt;&gt;
+&lt;&lt;capture _nodeId, _nodeName&gt;&gt;
+   &lt;&lt;link _nodeName&gt;&gt;
+      &lt;&lt;set $lineageCreatureId to _nodeId&gt;&gt;
+      &lt;&lt;set $lineageTab to &quot;ancestors&quot;&gt;&gt;
+      &lt;&lt;goto &quot;CreatureLineage&quot;&gt;&gt;
+   &lt;&lt;/link&gt;&gt;
+&lt;&lt;/capture&gt;&gt;
+         &lt;&lt;else&gt;&gt;
+            &lt;&lt;set _nodeName to _nodeCreature.petName || _nodeCreature.species&gt;&gt;
+&lt;&lt;= _nodeName&gt;&gt;
+            &lt;&lt;if _nodeIsDead&gt;&gt; &lt;span class=&quot;lineage-status&quot;&gt;🕯️&lt;/span&gt;
+            &lt;&lt;else&gt;&gt; &lt;span class=&quot;lineage-status&quot;&gt;🚫&lt;/span&gt;
+            &lt;&lt;/if&gt;&gt;
+         &lt;&lt;/if&gt;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;lineage-node-species&quot;&gt;_nodeCreature.species&lt;/div&gt;
+   &lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+   &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;
+      &lt;div class=&quot;lineage-silhouette&quot;&gt;
+         &lt;img src=&quot;_nodeTemplate.silhouettes.female.small&quot; style=&quot;width:80px;height:80px;opacity:0.2;&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;lineage-node-name&quot;&gt;Unknown&lt;/div&gt;
+   &lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/widget&gt;&gt;
+
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="87" name="CreatureLineage" tags="" position="1050,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+
+   &lt;&lt;set _creature to findCreatureAnywhere($lineageCreatureId)&gt;&gt;
+   
+   &lt;&lt;run console.log(&quot;Lineage creature ID:&quot;, $lineageCreatureId, &quot;Found:&quot;, _creature ? _creature.species : &quot;null&quot;, &quot;Gender:&quot;, _creature ? _creature.gender : &quot;null&quot;)&gt;&gt;
+
+&lt;&lt;set _template to setup.creatureTemplates[_creature.species]&gt;&gt;
+&lt;&lt;set _creatureName to (_creature.petName &amp;&amp; _creature.petName !== &quot;&quot;) ? _creature.petName : _creature.species&gt;&gt;
+
+/* ── HEADER: Viewed Creature ── */
+&lt;h2&gt;_creatureName&#39;s Lineage&lt;/h2&gt;
+
+/* Sprite */
+&lt;&lt;set _size to _creature.displayTraits.size&gt;&gt;
+&lt;&lt;set _color to _creature.displayTraits.color&gt;&gt;
+&lt;&lt;set _pattern to _creature.displayTraits.pattern&gt;&gt;
+&lt;&lt;set _gender to _creature.gender.toLowerCase()&gt;&gt;
+
+
+
+&lt;&lt;if _creature.stage === &quot;egg&quot;&gt;&gt;
+   &lt;&lt;set _spriteSheet to null&gt;&gt;
+   &lt;&lt;set _dim to &quot;80px&quot;&gt;&gt;
+   &lt;&lt;set _xPos to 0&gt;&gt;
+&lt;&lt;elseif _creature.stage === &quot;baby&quot;&gt;&gt;
+   &lt;&lt;set _col to _template.babySpriteColumns[_color]&gt;&gt;
+   &lt;&lt;if _col === undefined&gt;&gt;
+      &lt;&lt;set _col to _template.babySpriteColumns[_template.colorDominance[0]]&gt;&gt;
+   &lt;&lt;/if&gt;&gt;
+   &lt;&lt;set _spriteSheet to _template.avatars[_gender].babySpriteSheets[_size]&gt;&gt;
+   &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _xPos to _col * -180&gt;&gt;&lt;&lt;set _dim to &quot;180px&quot;&gt;&gt;
+   &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _xPos to _col * -120&gt;&gt;&lt;&lt;set _dim to &quot;120px&quot;&gt;&gt;
+   &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _xPos to _col * -60&gt;&gt;&lt;&lt;set _dim to &quot;60px&quot;&gt;&gt;
+   &lt;&lt;/if&gt;&gt;
+&lt;&lt;else&gt;&gt;
+   &lt;&lt;set _colorPattern to setup.getSpriteKey(_creature.species, _color, _pattern)&gt;&gt;
+   &lt;&lt;set _col to _template.spriteColumns[_colorPattern]&gt;&gt;
+   &lt;&lt;if _col === undefined&gt;&gt;
+      &lt;&lt;set _col to _template.spriteColumns[_template.colorDominance[0] + &quot;_&quot; + _template.patternDominance[0]]&gt;&gt;
+   &lt;&lt;/if&gt;&gt;
+   &lt;&lt;set _spriteSheet to _template.avatars[_gender].patternSpriteSheets[_size]&gt;&gt;
+   &lt;&lt;if _size === &quot;large&quot;&gt;&gt;
+      &lt;&lt;set _xPos to _col * -240&gt;&gt;&lt;&lt;set _dim to &quot;240px&quot;&gt;&gt;
+   &lt;&lt;elseif _size === &quot;medium&quot;&gt;&gt;
+      &lt;&lt;set _xPos to _col * -160&gt;&gt;&lt;&lt;set _dim to &quot;160px&quot;&gt;&gt;
+   &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _xPos to _col * -80&gt;&gt;&lt;&lt;set _dim to &quot;80px&quot;&gt;&gt;
+   &lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;div class=&quot;lineage-subject&quot;&gt;
+&lt;&lt;if _creature.stage === &quot;egg&quot;&gt;&gt;
+   &lt;span style=&quot;font-size:4em;&quot;&gt;🥚&lt;/span&gt;
+&lt;&lt;else&gt;&gt;
+   &lt;div class=&quot;creature-layers&quot; @style=&quot;&#39;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;margin:0 auto;&#39;&quot;&gt;
+      &lt;div class=&quot;creature-sprite-pattern&quot;
+           @style=&quot;&#39;background-image:url(&#39; + _spriteSheet + &#39;);background-position:&#39; + _xPos + &#39;px 0px;width:&#39; + _dim + &#39;;height:&#39; + _dim + &#39;;&#39;&quot;&gt;
+      &lt;/div&gt;
+   &lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+   &lt;div class=&quot;lineage-subject-name&quot;&gt;_creatureName &lt;&lt;if _creature.gender === &quot;Male&quot;&gt;&gt;♂️&lt;&lt;else&gt;&gt;♀️&lt;&lt;/if&gt;&gt;&lt;/div&gt;
+   &lt;div class=&quot;lineage-subject-species&quot;&gt;_creature.species • Gen _creature.generation&lt;/div&gt;
+&lt;/div&gt;
+
+/* ── TABS ── */
+&lt;&lt;if ndef $lineageTab&gt;&gt;&lt;&lt;set $lineageTab to &quot;ancestors&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+
+&lt;div class=&quot;lineage-tabs&quot;&gt;
+   &lt;&lt;link &quot;Ancestors&quot;&gt;&gt;
+      &lt;&lt;set $lineageTab to &quot;ancestors&quot;&gt;&gt;
+      &lt;&lt;refresh&gt;&gt;
+   &lt;&lt;/link&gt;&gt;
+   &lt;&lt;link &quot;Descendants&quot;&gt;&gt;
+      &lt;&lt;set $lineageTab to &quot;descendants&quot;&gt;&gt;
+      &lt;&lt;refresh&gt;&gt;
+   &lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+
+/* ── ANCESTORS TAB ── */
+&lt;&lt;if $lineageTab === &quot;ancestors&quot;&gt;&gt;
+   &lt;&lt;if !_creature.parents&gt;&gt;
+      &lt;div class=&quot;lineage-empty&quot;&gt;No ancestry data available.&lt;/div&gt;
+   &lt;&lt;else&gt;&gt;
+      /* Parents */
+      &lt;&lt;set _mother to findCreatureAnywhere(_creature.parents.motherId)&gt;&gt;
+      &lt;&lt;set _father to findCreatureAnywhere(_creature.parents.fatherId)&gt;&gt;
+
+      /* If not found anywhere, build a stub from stored data */
+      &lt;&lt;if _mother === null &amp;&amp; _creature.parents.motherName&gt;&gt;
+         &lt;&lt;set _mother to {
+            id: _creature.parents.motherId,
+            species: _creature.parents.motherSpecies,
+            petName: _creature.parents.motherName,
+            gender: &quot;Female&quot;,
+            parents: null,
+            displayTraits: null
+         }&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+      &lt;&lt;if _father === null &amp;&amp; _creature.parents.fatherName&gt;&gt;
+         &lt;&lt;set _father to {
+            id: _creature.parents.fatherId,
+            species: _creature.parents.fatherSpecies,
+            petName: _creature.parents.fatherName,
+            gender: &quot;Male&quot;,
+            parents: null,
+            displayTraits: null
+         }&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+
+      &lt;div class=&quot;lineage-tree&quot;&gt;
+         /* Generation label */
+         &lt;div class=&quot;lineage-gen-label&quot;&gt;Parents&lt;/div&gt;
+         &lt;div class=&quot;lineage-row&quot;&gt;
+   &lt;&lt;lineageNode _mother &quot;mother&quot;&gt;&gt;
+   &lt;&lt;lineageNode _father &quot;father&quot;&gt;&gt;
+         &lt;/div&gt;
+
+         /* Grandparents */
+         &lt;&lt;if (_mother &amp;&amp; _mother.parents) || (_father &amp;&amp; _father.parents)&gt;&gt;
+            &lt;div class=&quot;lineage-gen-label&quot;&gt;Grandparents&lt;/div&gt;
+            &lt;div class=&quot;lineage-row&quot;&gt;
+               &lt;&lt;if _mother &amp;&amp; _mother.parents&gt;&gt;
+                  &lt;&lt;set _maternalGrandmother to findCreatureAnywhere(_mother.parents.motherId)&gt;&gt;
+                  &lt;&lt;set _maternalGrandfather to findCreatureAnywhere(_mother.parents.fatherId)&gt;&gt;
+                  &lt;&lt;if _maternalGrandmother === null &amp;&amp; _mother.parents.motherName&gt;&gt;
+                     &lt;&lt;set _maternalGrandmother to {
+                        id: _mother.parents.motherId,
+                        species: _mother.parents.motherSpecies,
+                        petName: _mother.parents.motherName,
+                        gender: &quot;Female&quot;,
+                        parents: null,
+                        displayTraits: null
+                     }&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                  &lt;&lt;if _maternalGrandfather === null &amp;&amp; _mother.parents.fatherName&gt;&gt;
+                     &lt;&lt;set _maternalGrandfather to {
+                        id: _mother.parents.fatherId,
+                        species: _mother.parents.fatherSpecies,
+                        petName: _mother.parents.fatherName,
+                        gender: &quot;Male&quot;,
+                        parents: null,
+                        displayTraits: null
+                     }&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                  &lt;&lt;lineageNode _maternalGrandmother &quot;mother&quot;&gt;&gt;
+                  &lt;&lt;lineageNode _maternalGrandfather &quot;father&quot;&gt;&gt;
+               &lt;&lt;else&gt;&gt;
+                  &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+                  &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+               &lt;&lt;/if&gt;&gt;
+               &lt;&lt;if _father &amp;&amp; _father.parents&gt;&gt;
+                  &lt;&lt;set _paternalGrandmother to findCreatureAnywhere(_father.parents.motherId)&gt;&gt;
+                  &lt;&lt;set _paternalGrandfather to findCreatureAnywhere(_father.parents.fatherId)&gt;&gt;
+                  &lt;&lt;if _paternalGrandmother === null &amp;&amp; _father.parents.motherName&gt;&gt;
+                     &lt;&lt;set _paternalGrandmother to {
+                        id: _father.parents.motherId,
+                        species: _father.parents.motherSpecies,
+                        petName: _father.parents.motherName,
+                        gender: &quot;Female&quot;,
+                        parents: null,
+                        displayTraits: null
+                     }&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                  &lt;&lt;if _paternalGrandfather === null &amp;&amp; _father.parents.fatherName&gt;&gt;
+                     &lt;&lt;set _paternalGrandfather to {
+                        id: _father.parents.fatherId,
+                        species: _father.parents.fatherSpecies,
+                        petName: _father.parents.fatherName,
+                        gender: &quot;Male&quot;,
+                        parents: null,
+                        displayTraits: null
+                     }&gt;&gt;
+                  &lt;&lt;/if&gt;&gt;
+                 &lt;&lt;lineageNode _paternalGrandmother &quot;mother&quot;&gt;&gt;
+                 &lt;&lt;lineageNode _paternalGrandfather &quot;father&quot;&gt;&gt;
+               &lt;&lt;else&gt;&gt;
+                  &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+                  &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+               &lt;&lt;/if&gt;&gt;
+            &lt;/div&gt;
+
+            /* Great-grandparents */
+            &lt;&lt;set _ggpSources to [_maternalGrandmother, _maternalGrandfather, _paternalGrandmother, _paternalGrandfather]&gt;&gt;
+            &lt;&lt;set _hasGGP to false&gt;&gt;
+            &lt;&lt;for _gi to 0; _gi &lt; _ggpSources.length; _gi++&gt;&gt;
+               &lt;&lt;if _ggpSources[_gi] &amp;&amp; _ggpSources[_gi].parents&gt;&gt;&lt;&lt;set _hasGGP to true&gt;&gt;&lt;&lt;/if&gt;&gt;
+            &lt;&lt;/for&gt;&gt;
+            &lt;&lt;if _hasGGP&gt;&gt;
+               &lt;div class=&quot;lineage-gen-label&quot;&gt;Great-Grandparents&lt;/div&gt;
+               &lt;div class=&quot;lineage-row&quot;&gt;
+                  &lt;&lt;for _gi to 0; _gi &lt; _ggpSources.length; _gi++&gt;&gt;
+                     &lt;&lt;capture _gi&gt;&gt;
+                        &lt;&lt;set _ggpSource to _ggpSources[_gi]&gt;&gt;
+                        &lt;&lt;if _ggpSource &amp;&amp; _ggpSource.parents&gt;&gt;
+                           &lt;&lt;set _ggpMother to findCreatureAnywhere(_ggpSource.parents.motherId)&gt;&gt;
+                           &lt;&lt;set _ggpFather to findCreatureAnywhere(_ggpSource.parents.fatherId)&gt;&gt;
+                           &lt;&lt;if _ggpMother === null &amp;&amp; _ggpSource.parents.motherName&gt;&gt;
+                              &lt;&lt;set _ggpMother to {
+                                 id: _ggpSource.parents.motherId,
+                                 species: _ggpSource.parents.motherSpecies,
+                                 petName: _ggpSource.parents.motherName,
+                                 gender: &quot;Female&quot;,
+                                 parents: null,
+                                 displayTraits: null
+                              }&gt;&gt;
+                           &lt;&lt;/if&gt;&gt;
+                           &lt;&lt;if _ggpFather === null &amp;&amp; _ggpSource.parents.fatherName&gt;&gt;
+                              &lt;&lt;set _ggpFather to {
+                                 id: _ggpSource.parents.fatherId,
+                                 species: _ggpSource.parents.fatherSpecies,
+                                 petName: _ggpSource.parents.fatherName,
+                                 gender: &quot;Male&quot;,
+                                 parents: null,
+                                 displayTraits: null
+                              }&gt;&gt;
+                           &lt;&lt;/if&gt;&gt;
+                           &lt;&lt;lineageNode _ggpMother &quot;mother&quot;&gt;&gt;
+                           &lt;&lt;lineageNode _ggpFather &quot;father&quot;&gt;&gt;
+                        &lt;&lt;else&gt;&gt;
+                           &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+                           &lt;div class=&quot;lineage-node lineage-node--unknown&quot;&gt;&lt;div class=&quot;lineage-node-name&quot;&gt;No Data&lt;/div&gt;&lt;/div&gt;
+                        &lt;&lt;/if&gt;&gt;
+                     &lt;&lt;/capture&gt;&gt;
+                  &lt;&lt;/for&gt;&gt;
+               &lt;/div&gt;
+            &lt;&lt;/if&gt;&gt;
+         &lt;&lt;/if&gt;&gt;
+      &lt;/div&gt;
+   &lt;&lt;/if&gt;&gt;
+
+/* ── DESCENDANTS TAB ── */
+&lt;&lt;elseif $lineageTab === &quot;descendants&quot;&gt;&gt;
+   &lt;&lt;set _allCreatures to [].concat(
+      $playerCreatures,
+      $deadCreatures,
+      $escapedCreatures,
+      $departedCreatures
+   )&gt;&gt;
+   &lt;&lt;set _directOffspring to _allCreatures.filter(function(c) {
+      return c.parents &amp;&amp; (c.parents.motherId === _creature.id || c.parents.fatherId === _creature.id);
+   })&gt;&gt;
+
+   &lt;&lt;if _directOffspring.length === 0&gt;&gt;
+      &lt;div class=&quot;lineage-empty&quot;&gt;No descendants found.&lt;/div&gt;
+   &lt;&lt;else&gt;&gt;
+      &lt;div class=&quot;lineage-tree&quot;&gt;
+         &lt;div class=&quot;lineage-gen-label&quot;&gt;Offspring&lt;/div&gt;
+         &lt;div class=&quot;lineage-row&quot;&gt;
+            &lt;&lt;for _oi to 0; _oi &lt; _directOffspring.length; _oi++&gt;&gt;
+               &lt;&lt;capture _oi&gt;&gt;
+                  &lt;&lt;set _offspring to _directOffspring[_oi]&gt;&gt;
+                  &lt;&lt;set _offspringRole to _offspring.gender === &quot;Female&quot; ? &quot;mother&quot; : &quot;father&quot;&gt;&gt;
+                  &lt;&lt;lineageNode _offspring _offspringRole&gt;&gt;
+               &lt;&lt;/capture&gt;&gt;
+            &lt;&lt;/for&gt;&gt;
+         &lt;/div&gt;
+
+         /* Grandchildren */
+         &lt;&lt;set _grandchildren to _allCreatures.filter(function(c) {
+            return c.parents &amp;&amp; _directOffspring.some(function(o) {
+               return c.parents.motherId === o.id || c.parents.fatherId === o.id;
+            });
+         })&gt;&gt;
+         &lt;&lt;if _grandchildren.length &gt; 0&gt;&gt;
+            &lt;div class=&quot;lineage-gen-label&quot;&gt;Grandchildren&lt;/div&gt;
+            &lt;div class=&quot;lineage-row&quot;&gt;
+               &lt;&lt;for _gci to 0; _gci &lt; _grandchildren.length; _gci++&gt;&gt;
+                  &lt;&lt;capture _gci&gt;&gt;
+                     &lt;&lt;set _grandchild to _grandchildren[_gci]&gt;&gt;
+                     &lt;&lt;set _grandchildRole to _grandchild.gender === &quot;Female&quot; ? &quot;mother&quot; : &quot;father&quot;&gt;&gt;
+                     &lt;&lt;lineageNode _grandchild _grandchildRole&gt;&gt;
+                  &lt;&lt;/capture&gt;&gt;
+               &lt;&lt;/for&gt;&gt;
+            &lt;/div&gt;
+
+            /* Great-grandchildren */
+            &lt;&lt;set _greatGrandchildren to _allCreatures.filter(function(c) {
+               return c.parents &amp;&amp; _grandchildren.some(function(gc) {
+                  return c.parents.motherId === gc.id || c.parents.fatherId === gc.id;
+               });
+            })&gt;&gt;
+            &lt;&lt;if _greatGrandchildren.length &gt; 0&gt;&gt;
+               &lt;div class=&quot;lineage-gen-label&quot;&gt;Great-Grandchildren&lt;/div&gt;
+               &lt;div class=&quot;lineage-row&quot;&gt;
+                  &lt;&lt;for _ggci to 0; _ggci &lt; _greatGrandchildren.length; _ggci++&gt;&gt;
+                     &lt;&lt;capture _ggci&gt;&gt;
+                        &lt;&lt;set _greatGrandchild to _greatGrandchildren[_ggci]&gt;&gt;
+                        &lt;&lt;set _greatGrandchildRole to _greatGrandchild.gender === &quot;Female&quot; ? &quot;mother&quot; : &quot;father&quot;&gt;&gt;
+                        &lt;&lt;lineageNode _greatGrandchild _greatGrandchildRole&gt;&gt;
+                     &lt;&lt;/capture&gt;&gt;
+                  &lt;&lt;/for&gt;&gt;
+               &lt;/div&gt;
+            &lt;&lt;/if&gt;&gt;
+         &lt;&lt;/if&gt;&gt;
+      &lt;/div&gt;
+   &lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+/* ── BACK BUTTON ── */
+&lt;div class=&quot;back-forth-buttons&quot;&gt;
+   &lt;div class=&quot;back-button&quot;&gt;
+      &lt;&lt;link &quot;Go Back&quot;&gt;&gt;
+   &lt;&lt;unset $lineageCreatureId&gt;&gt;
+   &lt;&lt;goto &quot;ViewCreature&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+   &lt;/div&gt;
+&lt;/div&gt;
+
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
